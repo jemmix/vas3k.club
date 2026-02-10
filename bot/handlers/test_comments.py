@@ -47,7 +47,7 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         update.message.reply_to_message = None
 
         context = MagicMock(spec=CallbackContext)
-        context.bot = self.bot
+        context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
         result = comment(update, context)
 
@@ -55,20 +55,17 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
 
     def test_skips_reply_to_other_user(self):
         """Should skip replies to other users (not bot)"""
-        BOT_ID = 123456
-
         update = create_reply_update(
             bot=self.bot,
             telegram_id=111,
             chat_id=12345,
             text="Reply to other user",
             reply_to_text="Original message",
-            reply_to_user_id=999  # Not the bot
+            reply_to_user_id=999  # Not the bot (bot.id will be 123456 from getMe)
         )
 
         context = MagicMock(spec=CallbackContext)
-        context.bot = MagicMock()
-        context.bot.id = BOT_ID
+        context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
         result = comment(update, context)
 
@@ -77,21 +74,19 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
     @patch('bot.handlers.comments.reply_to_comment')
     def test_routes_to_reply_to_comment(self, mock_reply_to_comment):
         """Should route to reply_to_comment when message starts with comment emoji"""
-        BOT_ID = 123456
-
         # Create update replying to a bot message with comment emoji
+        # Bot ID is 123456 (from getMe route in BaseTelegramTest)
         update = create_reply_update(
             bot=self.bot,
             telegram_id=111,
             chat_id=12345,
             text="My reply to the comment",
             reply_to_text="💬 Original comment text",
-            reply_to_user_id=BOT_ID  # Replying to bot
+            reply_to_user_id=123456  # Replying to bot
         )
 
         context = MagicMock(spec=CallbackContext)
-        context.bot = MagicMock()
-        context.bot.id = BOT_ID
+        context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
         comment(update, context)
 
@@ -100,21 +95,19 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
     @patch('bot.handlers.comments.comment_to_post')
     def test_routes_to_comment_to_post(self, mock_comment_to_post):
         """Should route to comment_to_post when message starts with post emoji"""
-        BOT_ID = 123456
-
         # Create update replying to a bot message with post emoji
+        # Bot ID is 123456 (from getMe route in BaseTelegramTest)
         update = create_reply_update(
             bot=self.bot,
             telegram_id=111,
             chat_id=12345,
             text="My comment on the post",
             reply_to_text="📝 Post title and text...",
-            reply_to_user_id=BOT_ID  # Replying to bot
+            reply_to_user_id=123456  # Replying to bot
         )
 
         context = MagicMock(spec=CallbackContext)
-        context.bot = MagicMock()
-        context.bot.id = BOT_ID
+        context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
         comment(update, context)
 

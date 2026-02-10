@@ -234,6 +234,20 @@ class BaseTelegramTest:
             base_url=f"http://127.0.0.1:{server_port}/",
             token=SendTelegramMessageTest.TOKEN,
         )
+
+        # Add getMe route so bot can initialize its ID (cached after first call)
+        get_me_path = f"/{SendTelegramMessageTest.TOKEN}/getMe"
+        get_me_response = json.dumps({
+            "ok": True,
+            "result": {
+                "id": 123456,  # Bot ID
+                "is_bot": True,
+                "first_name": "TestBot",
+                "username": "test_bot",
+            },
+        })
+        self.server.add_route(get_me_path, get_me_response)
+
         self.patcher = patch("notifications.telegram.common.bot", self.bot)
         self.patcher.start()
 
