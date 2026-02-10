@@ -1,6 +1,6 @@
 """Tests for bot/handlers/comments.py handlers."""
 
-from unittest.mock import patch, MagicMock, PropertyMock
+from unittest.mock import patch, MagicMock
 
 from django.test import TestCase, override_settings
 from telegram.ext import CallbackContext
@@ -67,9 +67,8 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         )
 
         context = MagicMock(spec=CallbackContext)
-        context.bot = self.bot
-        # Mock the bot.id property to avoid get_me() API call
-        type(context.bot).id = PropertyMock(return_value=BOT_ID)
+        context.bot = MagicMock()
+        context.bot.id = BOT_ID
 
         result = comment(update, context)
 
@@ -78,7 +77,6 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
     @patch('bot.handlers.comments.reply_to_comment')
     def test_routes_to_reply_to_comment(self, mock_reply_to_comment):
         """Should route to reply_to_comment when message starts with comment emoji"""
-        # Mock bot ID to avoid API call
         BOT_ID = 123456
 
         # Create update replying to a bot message with comment emoji
@@ -92,9 +90,8 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         )
 
         context = MagicMock(spec=CallbackContext)
-        context.bot = self.bot
-        # Mock the bot.id property to avoid get_me() API call
-        type(context.bot).id = PropertyMock(return_value=BOT_ID)
+        context.bot = MagicMock()
+        context.bot.id = BOT_ID
 
         comment(update, context)
 
@@ -103,7 +100,6 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
     @patch('bot.handlers.comments.comment_to_post')
     def test_routes_to_comment_to_post(self, mock_comment_to_post):
         """Should route to comment_to_post when message starts with post emoji"""
-        # Mock bot ID to avoid API call
         BOT_ID = 123456
 
         # Create update replying to a bot message with post emoji
@@ -117,9 +113,8 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         )
 
         context = MagicMock(spec=CallbackContext)
-        context.bot = self.bot
-        # Mock the bot.id property to avoid get_me() API call
-        type(context.bot).id = PropertyMock(return_value=BOT_ID)
+        context.bot = MagicMock()
+        context.bot.id = BOT_ID
 
         comment(update, context)
 
