@@ -375,10 +375,14 @@ def create_forwarded_message_update(
     )
 
     # Create the forwarded message (the one being replied to)
+    # The original author of the forwarded message
+    forward_from_user = TgUser(id=999, is_bot=False, first_name="OriginalAuthor")
+
     forwarded_message = Message(
         message_id=forward_from_message_id,
         date=int(time.time()) - 200,
         chat=tg_chat,
+        from_user=forward_from_user,
         text="[Forwarded question]",
         bot=bot,
     )

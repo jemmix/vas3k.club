@@ -3,10 +3,17 @@
 from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
+from telegram.ext import CallbackContext
 
-from bot.test_helpers import create_test_user
+from bot.test_helpers import (
+    create_test_user,
+    create_message_update,
+    create_reply_update,
+    create_forwarded_message_update,
+)
 from helpdeskbot.models import Question, Answer
 from helpdeskbot.room import Room
+from notifications.telegram.tests import BaseTelegramTest
 
 # Import handlers after patching token
 with patch("helpdeskbot.config.TELEGRAM_HELP_DESK_BOT_TOKEN", "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"):
@@ -19,8 +26,8 @@ with patch("helpdeskbot.config.TELEGRAM_HELP_DESK_BOT_TOKEN", "123456:ABC-DEF123
 
 
 @patch("helpdeskbot.config.TELEGRAM_HELP_DESK_BOT_TOKEN", "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11")
-class AnswersTestBase(TestCase):
-    """Base class with token patch for all answer handler tests"""
+class AnswersTestBase(BaseTelegramTest, TestCase):
+    """Base class with token patch and bot setup for all answer handler tests"""
     tags = {"telegram", "telegram_helpdesk"}
 
 
@@ -28,6 +35,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
     """Test handle_answer_from_channel function"""
 
     def setUp(self):
+        super().setUp()
         self.user = create_test_user(email="questioner@example.com", telegram_id="111")
 
         # Create a question
@@ -40,16 +48,23 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
     def tearDown(self):
         Question.objects.filter(id=self.question.id).delete()
         self.user.delete()
+        super().tearDown()
 
     @patch("helpdeskbot.handlers.answers.notify_user_about_answer")
     @patch("helpdeskbot.handlers.answers.Answer.create_from_update")
     def test_creates_answer_and_notifies_user(self, mock_create_answer, mock_notify):
         """Should create answer from update and notify user"""
-        # Create mock update
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message.forward_from_message_id = 12345
+        # Create update where user replies to a forwarded question from channel
+        update = create_forwarded_message_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-1001234567890,
+            text="This is the answer",
+            forward_from_chat_id=-1001234567890,
+            forward_from_message_id=12345
+        )
 
-        handle_answer_from_channel(mock_update)
+        handle_answer_from_channel(update)
 
         # Verify answer was created
         mock_create_answer.assert_called_once()
@@ -62,10 +77,18 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.log")
     def test_handles_missing_forward_message_id(self, mock_log):
         """Should log error when forward_from_message_id is None"""
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message.forward_from_message_id = None
+        # Create a reply update but without forward metadata
+        update = create_reply_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-1001234567890,
+            text="Answer",
+            reply_to_text="Question"
+        )
+        # Explicitly set forward_from_message_id to None
+        update.message.reply_to_message.forward_from_message_id = None
 
-        result = handle_answer_from_channel(mock_update)
+        result = handle_answer_from_channel(update)
 
         self.assertIsNone(result)
         mock_log.error.assert_called_once()
@@ -73,10 +96,17 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.log")
     def test_handles_question_not_found(self, mock_log):
         """Should log warning when question is not found"""
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message.forward_from_message_id = 99999  # Non-existent
+        # Create update with non-existent forward_from_message_id
+        update = create_forwarded_message_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-1001234567890,
+            text="Answer",
+            forward_from_chat_id=-1001234567890,
+            forward_from_message_id=99999  # Non-existent
+        )
 
-        result = handle_answer_from_channel(mock_update)
+        result = handle_answer_from_channel(update)
 
         self.assertIsNone(result)
         mock_log.warning.assert_called_once()
@@ -86,6 +116,7 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
     """Test handle_answer_from_room_chat function"""
 
     def setUp(self):
+        super().setUp()
         self.user = create_test_user(email="questioner@example.com", telegram_id="111")
 
         # Create a mock room
@@ -107,6 +138,7 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
     def tearDown(self):
         Question.objects.filter(id=self.question.id).delete()
         self.user.delete()
+        super().tearDown()
 
     @patch("helpdeskbot.handlers.answers.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID", "-1001234567890")
     @patch("helpdeskbot.handlers.answers.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_DISCUSSION_ID", "-100987654321")
@@ -117,14 +149,15 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
         self, mock_create_answer, mock_notify, mock_send
     ):
         """Should create answer, forward to channel, send confirmation, and notify user"""
-        # Create mock update
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message.message_id = 67890
-        mock_update.message.chat.id = -100123456789
-        mock_update.message.message_id = 99999
-        mock_update.message.text = "This is the answer"
-        mock_update.message.from_user.id = 222
-        mock_update.message.from_user.first_name = "Answerer"
+        # Create update where user replies to a question in a room chat
+        update = create_reply_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-100123456789,
+            text="This is the answer",
+            reply_to_text="Question posted in room",
+            reply_to_message_id=67890
+        )
 
         # Create a mock question with room
         mock_question = MagicMock()
@@ -140,7 +173,7 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
             with patch("helpdeskbot.handlers.answers.Question.objects") as mock_q:
                 mock_q.filter.return_value.select_related.return_value.first.return_value = mock_question
 
-                handle_answer_from_room_chat(mock_update)
+                handle_answer_from_room_chat(update)
 
         # Verify answer was created
         mock_create_answer.assert_called_once()
@@ -154,10 +187,18 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.log")
     def test_handles_missing_message_id(self, mock_log):
         """Should log error when reply_to_message.message_id is None"""
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message.message_id = None
+        # Create update with reply_to_message but no message_id
+        update = create_message_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-100123456789,
+            text="Answer"
+        )
+        # Add a reply_to_message but with None message_id
+        update.message.reply_to_message = MagicMock()
+        update.message.reply_to_message.message_id = None
 
-        result = handle_answer_from_room_chat(mock_update)
+        result = handle_answer_from_room_chat(update)
 
         self.assertIsNone(result)
         mock_log.error.assert_called_once()
@@ -167,6 +208,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
     """Test notify_user_about_answer function"""
 
     def setUp(self):
+        super().setUp()
         self.user = create_test_user(email="questioner@example.com", telegram_id="111")
 
         self.question = Question.objects.create(
@@ -178,6 +220,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
     def tearDown(self):
         Question.objects.filter(id=self.question.id).delete()
         self.user.delete()
+        super().tearDown()
 
     @patch("helpdeskbot.handlers.answers.send_message")
     @patch("helpdeskbot.handlers.answers.render_html_message")
@@ -185,13 +228,15 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
         """Should send notification to question author"""
         mock_render.return_value = "Notification text"
 
-        mock_update = MagicMock()
-        mock_update.message.from_user.id = 222  # Different from question author
-        mock_update.message.chat.id = -100123456
-        mock_update.message.message_id = 99999
-        mock_update.message.text = "Answer text"
+        update = create_message_update(
+            bot=self.bot,
+            telegram_id=222,  # Different from question author
+            chat_id=-100123456,
+            text="Answer text",
+            message_id=99999
+        )
 
-        notify_user_about_answer(mock_update, self.question)
+        notify_user_about_answer(update, self.question)
 
         # Verify message was sent to user
         mock_send.assert_called_once_with(
@@ -208,9 +253,14 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
             json_text={"title": "Test", "body": "Body"},
         )
 
-        mock_update = MagicMock()
+        update = create_message_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-100123456,
+            text="Answer"
+        )
 
-        result = notify_user_about_answer(mock_update, question_no_user)
+        result = notify_user_about_answer(update, question_no_user)
 
         self.assertIsNone(result)
         mock_log.info.assert_called_once()
@@ -220,10 +270,14 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.log")
     def test_skips_notification_for_self_reply(self, mock_log):
         """Should skip notification when user replies to their own question"""
-        mock_update = MagicMock()
-        mock_update.message.from_user.id = int(self.user.telegram_id)  # Same as question author
+        update = create_message_update(
+            bot=self.bot,
+            telegram_id=int(self.user.telegram_id),  # Same as question author
+            chat_id=-100123456,
+            text="Self reply"
+        )
 
-        result = notify_user_about_answer(mock_update, self.question)
+        result = notify_user_about_answer(update, self.question)
 
         self.assertIsNone(result)
         mock_log.debug.assert_called_once()
@@ -236,40 +290,68 @@ class OnReplyMessageTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID", "-1001234567890")
     def test_routes_to_channel_handler(self, mock_handle_channel):
         """Should route to channel handler when reply is forwarded from channel"""
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message.forward_from_chat.id = -1001234567890
-        mock_update.message.text = "Answer text"
+        # Create update replying to a forwarded message from channel
+        update = create_forwarded_message_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-1001234567890,
+            text="Answer text",
+            forward_from_chat_id=-1001234567890,
+            forward_from_message_id=12345
+        )
 
-        on_reply_message(mock_update, None)
+        on_reply_message(update, None)
 
-        mock_handle_channel.assert_called_once_with(mock_update)
+        mock_handle_channel.assert_called_once_with(update)
 
     @patch("helpdeskbot.handlers.answers.handle_answer_from_room_chat")
     def test_routes_to_room_handler(self, mock_handle_room):
         """Should route to room handler when reply is in a room chat"""
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message.forward_from_chat = None
-        mock_update.message.reply_to_message.chat.id = "-100123456"
-        mock_update.message.text = "Answer text"
+        # Create update replying to a message in a room (not forwarded)
+        update = create_reply_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=-100123456,
+            text="Answer text",
+            reply_to_text="Question in room"
+        )
+        # Explicitly set forward_from_chat to None (not forwarded)
+        update.message.reply_to_message.forward_from_chat = None
 
         with patch.dict("helpdeskbot.handlers.answers.rooms", {"-100123456": MagicMock()}, clear=False):
-            on_reply_message(mock_update, None)
+            on_reply_message(update, None)
 
-        mock_handle_room.assert_called_once_with(mock_update)
+        mock_handle_room.assert_called_once_with(update)
 
     def test_returns_none_for_invalid_update(self):
         """Should return None for updates without proper structure"""
         # No message
-        mock_update = MagicMock()
-        mock_update.message = None
-        self.assertIsNone(on_reply_message(mock_update, None))
+        update_no_msg = create_message_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=12345,
+            text="text"
+        )
+        update_no_msg.message = None
+        self.assertIsNone(on_reply_message(update_no_msg, None))
 
         # No reply_to_message
-        mock_update = MagicMock()
-        mock_update.message.reply_to_message = None
-        self.assertIsNone(on_reply_message(mock_update, None))
+        update_no_reply = create_message_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=12345,
+            text="text"
+        )
+        update_no_reply.message.reply_to_message = None
+        self.assertIsNone(on_reply_message(update_no_reply, None))
 
         # No text
-        mock_update = MagicMock()
-        mock_update.message.text = None
-        self.assertIsNone(on_reply_message(mock_update, None))
+        update_no_text = create_reply_update(
+            bot=self.bot,
+            telegram_id=222,
+            chat_id=12345,
+            text="reply",
+            reply_to_text="original"
+        )
+        update_no_text.message.text = None
+        self.assertIsNone(on_reply_message(update_no_text, None))
