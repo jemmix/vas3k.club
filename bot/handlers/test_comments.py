@@ -1,12 +1,14 @@
 """Tests for bot/handlers/comments.py handlers."""
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 
 from django.test import TestCase, override_settings
+from telegram.ext import CallbackContext
 
 from bot.handlers.comments import comment, reply_to_comment, comment_to_post
 from bot.test_helpers import (
     create_test_user,
+    create_message_update,
     create_reply_update,
 )
 from comments.models import Comment
@@ -35,10 +37,17 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
 
     def test_skips_non_reply(self):
         """Should skip messages that are not replies"""
-        update = MagicMock()
-        update.message = MagicMock()
+        update = create_message_update(
+            bot=self.bot,
+            telegram_id=111,
+            chat_id=12345,
+            text="Not a reply"
+        )
+        # Explicitly set reply_to_message to None
         update.message.reply_to_message = None
-        context = MagicMock()
+
+        context = MagicMock(spec=CallbackContext)
+        context.bot = self.bot
 
         result = comment(update, context)
 
@@ -46,13 +55,21 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
 
     def test_skips_reply_to_other_user(self):
         """Should skip replies to other users (not bot)"""
-        update = MagicMock()
-        update.message = MagicMock()
-        update.message.reply_to_message = MagicMock()
-        update.message.reply_to_message.from_user.id = 999  # Not the bot
-        context = MagicMock()
-        context.bot = MagicMock()
-        context.bot.id = 123456  # Bot ID
+        BOT_ID = 123456
+
+        update = create_reply_update(
+            bot=self.bot,
+            telegram_id=111,
+            chat_id=12345,
+            text="Reply to other user",
+            reply_to_text="Original message",
+            reply_to_user_id=999  # Not the bot
+        )
+
+        context = MagicMock(spec=CallbackContext)
+        context.bot = self.bot
+        # Mock the bot.id property to avoid get_me() API call
+        type(context.bot).id = PropertyMock(return_value=BOT_ID)
 
         result = comment(update, context)
 
@@ -61,16 +78,23 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
     @patch('bot.handlers.comments.reply_to_comment')
     def test_routes_to_reply_to_comment(self, mock_reply_to_comment):
         """Should route to reply_to_comment when message starts with comment emoji"""
+        # Mock bot ID to avoid API call
         BOT_ID = 123456
-        update = MagicMock()
-        update.message = MagicMock()
-        update.message.reply_to_message = MagicMock()
-        update.message.reply_to_message.from_user.id = BOT_ID
-        update.message.reply_to_message.text = "💬 Original comment text"
-        update.message.reply_to_message.caption = None
-        context = MagicMock()
-        context.bot = MagicMock()
-        context.bot.id = BOT_ID
+
+        # Create update replying to a bot message with comment emoji
+        update = create_reply_update(
+            bot=self.bot,
+            telegram_id=111,
+            chat_id=12345,
+            text="My reply to the comment",
+            reply_to_text="💬 Original comment text",
+            reply_to_user_id=BOT_ID  # Replying to bot
+        )
+
+        context = MagicMock(spec=CallbackContext)
+        context.bot = self.bot
+        # Mock the bot.id property to avoid get_me() API call
+        type(context.bot).id = PropertyMock(return_value=BOT_ID)
 
         comment(update, context)
 
@@ -79,16 +103,23 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
     @patch('bot.handlers.comments.comment_to_post')
     def test_routes_to_comment_to_post(self, mock_comment_to_post):
         """Should route to comment_to_post when message starts with post emoji"""
+        # Mock bot ID to avoid API call
         BOT_ID = 123456
-        update = MagicMock()
-        update.message = MagicMock()
-        update.message.reply_to_message = MagicMock()
-        update.message.reply_to_message.from_user.id = BOT_ID
-        update.message.reply_to_message.text = "📝 Post title and text..."
-        update.message.reply_to_message.caption = None
-        context = MagicMock()
-        context.bot = MagicMock()
-        context.bot.id = BOT_ID
+
+        # Create update replying to a bot message with post emoji
+        update = create_reply_update(
+            bot=self.bot,
+            telegram_id=111,
+            chat_id=12345,
+            text="My comment on the post",
+            reply_to_text="📝 Post title and text...",
+            reply_to_user_id=BOT_ID  # Replying to bot
+        )
+
+        context = MagicMock(spec=CallbackContext)
+        context.bot = self.bot
+        # Mock the bot.id property to avoid get_me() API call
+        type(context.bot).id = PropertyMock(return_value=BOT_ID)
 
         comment(update, context)
 
