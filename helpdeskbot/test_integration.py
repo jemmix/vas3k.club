@@ -39,7 +39,7 @@ class HelpdeskBotIntegrationTest(BaseTelegramTest, TestCase):
     tags = {"telegram", "telegram_helpdesk", "telegram_integration"}
 
     # Use a different token for helpdesk bot
-    HELPDESK_TOKEN = "999888777:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw"
+    HELPDESK_TOKEN = "987654321:kjihgfedcbAzyxWvutsrqpOnmlkjihGfeDCBA"
 
     # Telegram API responses
     SEND_MESSAGE_RESPONSE = json.dumps(
