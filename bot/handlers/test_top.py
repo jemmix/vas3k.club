@@ -3,6 +3,8 @@
 from datetime import datetime, timezone, timedelta
 from unittest.mock import patch, MagicMock
 
+from telegram.ext import CallbackContext
+
 from django.test import TestCase
 
 from bot.handlers.top import command_top
@@ -123,7 +125,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             command="/top",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -186,7 +188,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             command="/top",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(

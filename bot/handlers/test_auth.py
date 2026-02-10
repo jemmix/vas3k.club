@@ -3,6 +3,7 @@
 from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
+from telegram.ext import CallbackContext
 
 from bot.handlers.auth import command_auth
 from bot.test_helpers import (
@@ -59,7 +60,7 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             command="/auth",
             args="",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -88,7 +89,7 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             command="/auth",
             args="invalid_code_xyz",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -116,7 +117,7 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             command="/auth",
             args="approved_secret_123",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -160,7 +161,7 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             command="/auth",
             args="unapproved_secret_456",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(

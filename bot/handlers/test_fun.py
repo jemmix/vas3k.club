@@ -3,6 +3,8 @@
 from datetime import datetime, timezone, timedelta
 from unittest.mock import patch, MagicMock
 
+from telegram.ext import CallbackContext
+
 from django.test import TestCase
 
 from bot.handlers.fun import command_horo, command_random
@@ -45,7 +47,7 @@ class CommandHoroTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             command="/horo",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         expected_text = "Сегодня 42 день от сотворения Клуба, 🌕\n\nTest phase description"
 
@@ -120,7 +122,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             command="/random",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -165,7 +167,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             command="/random",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(

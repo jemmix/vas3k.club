@@ -2,6 +2,8 @@
 
 from unittest.mock import patch, MagicMock
 
+from telegram.ext import CallbackContext
+
 from django.test import TestCase
 from telegram import User as TgUser, Chat as TgChat
 
@@ -56,7 +58,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             command="/whois",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -91,7 +93,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
         reply_message.forward_date = None
         update.message.reply_to_message = reply_message
 
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -125,7 +127,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
         update.message.reply_to_message.from_user = unknown_user
         update.message.reply_to_message.forward_date = None
 
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -159,7 +161,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
         update.message.reply_to_message.from_user = target_tg_user
         update.message.reply_to_message.forward_date = None
 
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         expected_url = f"http://127.0.0.1:8000/user/{self.target_user.slug}/"
         expected_text = f'Кажется, это <a href="{expected_url}">{self.target_user.full_name}</a>'
@@ -197,7 +199,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
         update.message.forward_from = None
         update.message.forward_sender_name = "Скрытый Юзер"
 
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(

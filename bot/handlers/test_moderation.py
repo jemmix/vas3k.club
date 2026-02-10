@@ -3,6 +3,8 @@
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch, MagicMock
 
+from telegram.ext import CallbackContext
+
 from django.test import TestCase, override_settings
 
 from bot.handlers.common import UserRejectReason, PostRejectReason
@@ -81,7 +83,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"approve_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -137,7 +139,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"approve_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -185,7 +187,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"approve_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -268,7 +270,7 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"forgive_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -355,7 +357,7 @@ class RejectPostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"reject_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -398,7 +400,7 @@ class RejectPostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"reject_post_title:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -492,7 +494,7 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"approve_user:{self.user.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -549,7 +551,7 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"approve_user:{self.user.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -624,7 +626,7 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"reject_user:{self.user.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -666,7 +668,7 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"reject_user_ai:{self.user.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -711,7 +713,7 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"reject_user:{self.user.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(

@@ -3,6 +3,8 @@
 from datetime import datetime, timezone
 from unittest.mock import patch, MagicMock
 
+from telegram.ext import CallbackContext
+
 from django.test import TestCase
 
 from bot.handlers.upvotes import upvote_comment, upvote_post, upvote
@@ -63,7 +65,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"upvote_comment:{self.comment.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -103,7 +105,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"upvote_comment:{self.comment.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -129,7 +131,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data="upvote_comment:00000000-0000-0000-0000-000000000000",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         result = upvote_comment(update, context)
         self.assertIsNone(result)
@@ -142,7 +144,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"upvote_comment:{self.comment.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -200,7 +202,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"upvote_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -239,7 +241,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"upvote_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -265,7 +267,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data="upvote_post:00000000-0000-0000-0000-000000000000",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         result = upvote_post(update, context)
         self.assertIsNone(result)
@@ -278,7 +280,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data=f"upvote_post:{self.post.id}",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -361,7 +363,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             text="+1",
             reply_to_text="💬 Test comment text here",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -405,7 +407,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             text="+1",
             reply_to_text="💬 Test comment text here",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -435,7 +437,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             text="+1",
             reply_to_text="📝 Test post title",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -478,7 +480,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             text="+1",
             reply_to_text="📝 Test post title",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
@@ -505,7 +507,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             chat_id=12345,
             data="some_data",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         result = upvote(update, context)
         self.assertIsNone(result)
@@ -522,7 +524,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             text="+1",
             reply_to_text="💬 Test comment",
         )
-        context = MagicMock()
+        context = MagicMock(spec=CallbackContext)
 
         self.server.expect_requests([
             ExpectedRequest(
