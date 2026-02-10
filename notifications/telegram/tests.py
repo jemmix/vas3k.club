@@ -5,7 +5,7 @@ import logging
 import socketserver
 import threading
 import time
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 from unittest.mock import patch
 
 import django
@@ -45,38 +45,61 @@ class MockTelegramHandler(http.server.BaseHTTPRequestHandler):
     test_case: TestCase
 
     def _do_handle(self, request):
-        expected_request = self._get_server().pop_expected_request()
+        server = self._get_server()
 
-        if request != expected_request.request:
-            self.send_response(400)
-            self.end_headers()
-            self.wfile.write("Request doesn't match expected".encode())
+        # Always log the request
+        server.log_request(request)
 
-            request_json = json.dumps(request.__dict__, indent=2, sort_keys=True)
-            expected_json = json.dumps(
-                expected_request.request.__dict__, indent=2, sort_keys=True
-            )
-            diff = "\n".join(
-                difflib.unified_diff(
-                    expected_json.splitlines(),
-                    request_json.splitlines(),
-                    fromfile="expected",
-                    tofile="actual",
-                    lineterm="",
+        # Try expected requests first (strict mode)
+        expected_request = server.pop_expected_request()
+
+        if expected_request is not None:
+            # Strict matching mode
+            if request != expected_request.request:
+                self.send_response(400)
+                self.end_headers()
+                self.wfile.write("Request doesn't match expected".encode())
+
+                request_json = json.dumps(request.__dict__, indent=2, sort_keys=True)
+                expected_json = json.dumps(
+                    expected_request.request.__dict__, indent=2, sort_keys=True
                 )
-            )
-            log.error(f"Request mismatch diff:\n{diff}")
+                diff = "\n".join(
+                    difflib.unified_diff(
+                        expected_json.splitlines(),
+                        request_json.splitlines(),
+                        fromfile="expected",
+                        tofile="actual",
+                        lineterm="",
+                    )
+                )
+                log.error(f"Request mismatch diff:\n{diff}")
 
-            self._get_server().report_request_unsuccessful()
-            self._get_server().test_case.fail("Request mismatch")
+                server.report_request_unsuccessful()
+                server.test_case.fail("Request mismatch")
 
-        if expected_request.wait > 0:
-            time.sleep(expected_request.wait)
+            if expected_request.wait > 0:
+                time.sleep(expected_request.wait)
 
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
-        self.wfile.write(expected_request.response.encode())
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(expected_request.response.encode())
+        else:
+            # Fall back to route-based matching
+            route_response = server.get_route_response(request)
+
+            if route_response is None:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(f"No expected request or route for {request.path}".encode())
+                server.test_case.fail(f"Unexpected request to {request.path}")
+                return
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(route_response.encode())
 
     def do_POST(self):
         content_length = int(self.headers.get("Content-Length", 0))
@@ -123,10 +146,39 @@ class MockTelegramServer(socketserver.TCPServer):
     test_case: TelegramTestCaseProtocol
     remaining_expected_requests: list[ExpectedRequest] | None = None
     all_requests_successful = True
+    routes: dict[str, str | Callable[[Request], str]]
+    requests_received: list[Request]
 
     def __init__(self, test_case: TelegramTestCaseProtocol, *args, **kwargs) -> None:
         self.test_case = test_case
+        self.routes = {}
+        self.requests_received = []
         super().__init__(*args, **kwargs)
+
+    def add_route(self, path: str, response: str | Callable[[Request], str]):
+        """Register a route that responds to requests for the given path.
+
+        Args:
+            path: The request path to match (e.g., "/bot123/sendMessage")
+            response: Either a static response string or a callable that takes
+                     a Request and returns a response string
+        """
+        self.routes[path] = response
+
+    def get_route_response(self, request: Request) -> str | None:
+        """Get the response for a route-matched request."""
+        route = self.routes.get(request.path)
+        if route is None:
+            return None
+
+        if callable(route):
+            return route(request)
+        else:
+            return route
+
+    def log_request(self, request: Request):
+        """Log all requests received by the server."""
+        self.requests_received.append(request)
 
     def expect_requests(self, expected_requests: list[ExpectedRequest]):
         if self.remaining_expected_requests is not None:
@@ -136,7 +188,10 @@ class MockTelegramServer(socketserver.TCPServer):
 
     def pop_expected_request(self):
         if self.remaining_expected_requests is None:
-            raise RuntimeError("expect_requests not called")
+            return None
+
+        if len(self.remaining_expected_requests) == 0:
+            return None
 
         return self.remaining_expected_requests.pop(0)
 
@@ -463,3 +518,21 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
         send_telegram_image(
             self.test_chat, image_url, caption, parse_mode=telegram.ParseMode.MARKDOWN
         )
+
+
+class BaseNotificationTest:
+    """Base mixin for notification tests that mock send_telegram_message/send_telegram_image."""
+
+    tags = {"telegram", "telegram_notifications"}
+
+    def setUp(self):
+        super().setUp()
+        self.send_msg_patcher = patch("notifications.telegram.common.send_telegram_message")
+        self.send_img_patcher = patch("notifications.telegram.common.send_telegram_image")
+        self.mock_send_msg = self.send_msg_patcher.start()
+        self.mock_send_img = self.send_img_patcher.start()
+
+    def tearDown(self):
+        self.send_msg_patcher.stop()
+        self.send_img_patcher.stop()
+        super().tearDown()

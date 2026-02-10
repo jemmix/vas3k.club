@@ -44,7 +44,7 @@ def unsubscribe(update: Update, context: CallbackContext) -> None:
     if not post:
         return None
 
-    is_unsubscribed = PostSubscription.unsubscribe(
+    deleted_count, _ = PostSubscription.unsubscribe(
         user=user,
         post=post,
     )
@@ -55,9 +55,9 @@ def unsubscribe(update: Update, context: CallbackContext) -> None:
             "post_slug": post.slug,
         })
 
-        if is_unsubscribed:
+        if deleted_count > 0:
             update.callback_query.answer(
-                text=f"Вы отписались от о комментариев к посту «{post.title}» 🔕"
+                text=f"Вы отписались от комментариев к посту «{post.title}» 🔕"
             )
         else:
             update.callback_query.answer(

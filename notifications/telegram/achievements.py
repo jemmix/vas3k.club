@@ -27,10 +27,10 @@ def notify_user_new_achievement(user_achievement: UserAchievement):
             )
 
 
-def notify_admins_on_achievement(user_achievement: UserAchievement, from_user: User = None):
+def notify_admins_on_achievement(user_achievement: UserAchievement, from_user: User | None = None):
     user_profile_url = settings.APP_HOST + reverse("profile", kwargs={"user_slug": user_achievement.user.slug})
     text = f"🏆 Юзеру <b><a href=\"{user_profile_url}\">{user_achievement.user.full_name}</a></b> " \
         f"дали ачивку «{user_achievement.achievement.name} (выдал: {from_user.full_name if from_user else None})»"
 
-    for chat in [VIBES_CHAT]:
-        send_telegram_message(chat=chat, text=text)
+    if VIBES_CHAT is not None:
+        send_telegram_message(chat=VIBES_CHAT, text=text)

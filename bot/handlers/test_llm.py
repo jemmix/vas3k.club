@@ -63,10 +63,15 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         )
         self.close_old_connections_patch.start()
 
+        # Mock rate limiter to avoid Redis connection
+        self.rate_limiter_patch = patch("bot.handlers.llm.is_rate_limited", return_value=False)
+        self.rate_limiter_patch.start()
+
     def tearDown(self):
         super().tearDown()
         self.test_user.delete()
         self.close_old_connections_patch.stop()
+        self.rate_limiter_patch.stop()
 
     def _create_update(
         self, message_text: str, reply_to_text: Optional[str] = None
@@ -74,7 +79,8 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         """Create a test Update object"""
         telegram_id = int(self.test_user.telegram_id or "")
         tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
-        tg_chat = TgChat(id=12345, type="private")
+        # Chat needs bot parameter to support chat.send_message()
+        tg_chat = TgChat(id=12345, type="private", bot=self.bot)
 
         message = Message(
             message_id=1,
