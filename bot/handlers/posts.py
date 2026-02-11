@@ -12,7 +12,7 @@ from posts.models.subscriptions import PostSubscription
 log = logging.getLogger(__name__)
 
 
-def subscribe(update: Update, context: CallbackContext) -> None:
+async def subscribe(update: Update, context: CallbackContext) -> None:
     user = get_club_user(update)
     if not user or not user.telegram_id:
         return None
@@ -29,12 +29,12 @@ def subscribe(update: Update, context: CallbackContext) -> None:
     )
 
     if user.telegram_id:
-        update.callback_query.answer(
+        await update.callback_query.answer(
             text=f"Вы подписались на уведомления о новых комментариях к посту «{post.title}» 🔔"
         )
 
 
-def unsubscribe(update: Update, context: CallbackContext) -> None:
+async def unsubscribe(update: Update, context: CallbackContext) -> None:
     user = get_club_user(update)
     if not user or not user.telegram_id:
         return None
@@ -56,10 +56,10 @@ def unsubscribe(update: Update, context: CallbackContext) -> None:
         })
 
         if deleted_count > 0:
-            update.callback_query.answer(
+            await update.callback_query.answer(
                 text=f"Вы отписались от комментариев к посту «{post.title}» 🔕"
             )
         else:
-            update.callback_query.answer(
+            await update.callback_query.answer(
                 text="Вы и не были подписаны на уведомления к этому посту ❌"
             )
