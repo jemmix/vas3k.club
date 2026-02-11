@@ -20,7 +20,7 @@ async def command_auth(update: Update, context: CallbackContext) -> None:
         return None
 
     secret_code = update.message.text.split(" ", 1)[1].strip()
-    user = User.objects.filter(secret_hash=secret_code).first()
+    user = await User.objects.filter(secret_hash=secret_code).afirst()
 
     if not user:
         await update.effective_chat.send_message("Пользователь с таким кодом не найден")
@@ -34,7 +34,7 @@ async def command_auth(update: Update, context: CallbackContext) -> None:
         "last_name": update.effective_user.last_name,
         "language_code": update.effective_user.language_code,
     }
-    user.save()
+    await user.asave()
 
     try:
         await update.effective_chat.send_message(f"Отличный код! Приятно познакомиться, {user.slug}")

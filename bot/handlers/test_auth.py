@@ -71,7 +71,6 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "☝️ Нужно прислать мне секретный код. Напиши /auth и код из <a href=\"https://vas3k.club/user/me/edit/bot/\">профиля в Клубе</a> через пробел. Только не публикуй его в публичных чатах!",
                         "parse_mode": "HTML",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -99,7 +98,6 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "Пользователь с таким кодом не найден",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -127,7 +125,6 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"Отличный код! Приятно познакомиться, {self.user_approved.slug}",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -148,7 +145,7 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
         await command_auth(update, context)
 
         # Verify user was updated
-        self.user_approved.refresh_from_db()
+        await self.user_approved.arefresh_from_db()
         self.assertEqual(self.user_approved.telegram_id, "111")
         self.assertIsNotNone(self.user_approved.telegram_data)
 
@@ -171,7 +168,6 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"Отличный код! Приятно познакомиться, {self.user_unapproved.slug}",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -194,7 +190,6 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "Теперь осталось пройти модерацию. Бот заработает сразу после этого",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123457, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -204,6 +199,6 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
         await command_auth(update, context)
 
         # Verify user was updated
-        self.user_unapproved.refresh_from_db()
+        await self.user_unapproved.arefresh_from_db()
         self.assertEqual(self.user_unapproved.telegram_id, "222")
         self.assertIsNotNone(self.user_unapproved.telegram_data)
