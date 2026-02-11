@@ -83,17 +83,6 @@ def start_server() -> Server:
     base_url = getattr(settings, 'TELEGRAM_BASE_URL', None)
     if base_url:
         builder = builder.base_url(base_url)
-        # For testing: disable connection pooling to avoid conflicts with mock server
-        from telegram.request import HTTPXRequest
-        from httpx import Limits
-        request = HTTPXRequest(
-            connection_pool_size=1,  # Minimal pool to force new connections
-            read_timeout=5.0,
-            connect_timeout=5.0,
-            pool_timeout=5.0,
-            http_version="1.1",  # Force HTTP/1.1
-        )
-        builder = builder.request(request)
 
     application = builder.build()
 
