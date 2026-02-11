@@ -1,7 +1,7 @@
 """Tests for bot/handlers/top.py handlers."""
 
 from datetime import datetime, timezone, timedelta
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 from telegram.ext import CallbackContext
 
@@ -136,8 +136,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "Rendered top content message",
                         "parse_mode": "HTML",
-                        "disable_web_page_preview": "True",
-                        "disable_notification": "False",
+                        "link_preview_options": '{"is_disabled": true}',
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -162,13 +161,20 @@ class CommandTopTest(BaseTelegramTest, TestCase):
     @patch("bot.handlers.top.render_html_message")
     async def test_handles_no_content(self, mock_render, mock_post_visible, mock_comment_visible):
         """Should send message even when no top content found"""
-        # Mock empty querysets
+        # Mock empty querysets with async iteration support
+        async def async_iter_empty():
+            return
+            yield  # Make this an async generator
+
         mock_post_qs = MagicMock()
         mock_post_qs.filter.return_value = mock_post_qs
         mock_post_qs.exclude.return_value = mock_post_qs
         mock_post_qs.select_related.return_value = mock_post_qs
         mock_post_qs.order_by.return_value = mock_post_qs
-        mock_post_qs.__getitem__ = MagicMock(return_value=[])
+        # Make __getitem__ return an async iterable mock
+        empty_qs = MagicMock()
+        empty_qs.__aiter__ = lambda self: async_iter_empty()
+        mock_post_qs.__getitem__ = MagicMock(return_value=empty_qs)
         mock_post_visible.return_value = mock_post_qs
 
         mock_comment_qs = MagicMock()
@@ -176,7 +182,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
         mock_comment_qs.exclude.return_value = mock_comment_qs
         mock_comment_qs.select_related.return_value = mock_comment_qs
         mock_comment_qs.order_by.return_value = mock_comment_qs
-        mock_comment_qs.first.return_value = None
+        mock_comment_qs.afirst = AsyncMock(return_value=None)
         mock_comment_visible.return_value = mock_comment_qs
 
         # Mock template rendering with empty data
@@ -199,8 +205,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "No top content available message",
                         "parse_mode": "HTML",
-                        "disable_web_page_preview": "True",
-                        "disable_notification": "False",
+                        "link_preview_options": '{"is_disabled": true}',
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),

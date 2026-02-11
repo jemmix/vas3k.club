@@ -17,32 +17,35 @@ TOP_TIMEDELTA = timedelta(days=3)
 @is_club_member
 async def command_top(update: Update, context: CallbackContext) -> None:
     # Top posts
-    top_posts = Post.visible_objects()\
+    top_posts_qs = Post.visible_objects()\
         .filter(published_at__gte=datetime.utcnow() - TOP_TIMEDELTA)\
         .filter(Q(moderation_status=Post.MODERATION_APPROVED) | Q(upvotes__gte=settings.COMMUNITY_APPROVE_UPVOTES)) \
         .exclude(type__in=[Post.TYPE_INTRO, Post.TYPE_WEEKLY_DIGEST])\
         .order_by("-upvotes")[:5]
+    top_posts = [p async for p in top_posts_qs]
 
     # Hot posts
-    hot_posts = Post.visible_objects()\
+    hot_posts_qs = Post.visible_objects()\
         .exclude(type__in=[Post.TYPE_INTRO, Post.TYPE_WEEKLY_DIGEST]) \
         .exclude(id__in=[p.id for p in top_posts]) \
         .order_by("-hotness")[:3]
+    hot_posts = [p async for p in hot_posts_qs]
 
     # Top intros
-    top_intros = Post.visible_objects()\
+    top_intros_qs = Post.visible_objects()\
         .filter(type=Post.TYPE_INTRO, published_at__gte=datetime.utcnow() - TOP_TIMEDELTA)\
         .select_related("author")\
         .order_by("-upvotes")[:3]
+    top_intros = [p async for p in top_intros_qs]
 
     # Top comments
-    top_comment = Comment.visible_objects() \
+    top_comment = await Comment.visible_objects() \
         .filter(created_at__gte=datetime.utcnow() - TOP_TIMEDELTA) \
         .filter(is_deleted=False)\
         .exclude(post__type=Post.TYPE_BATTLE) \
         .select_related("author") \
         .order_by("-upvotes") \
-        .first()
+        .afirst()
 
     await update.effective_chat.send_message(
         render_html_message(
