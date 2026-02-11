@@ -160,6 +160,7 @@ def create_message_update(
     # Detect group chats by negative ID starting with -100
     chat_type = "supergroup" if str(chat_id).startswith("-100") else "private"
     tg_chat = TgChat(id=chat_id, type=chat_type)
+    tg_chat.set_bot(bot)
 
     message = Message(
         message_id=message_id,
@@ -167,8 +168,8 @@ def create_message_update(
         chat=tg_chat,
         from_user=tg_user,
         text=text,
-        bot=bot,
     )
+    message.set_bot(bot)
 
     if reply_to_message:
         message.reply_to_message = reply_to_message
@@ -258,6 +259,7 @@ def create_command_update(
 
     tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
     tg_chat = TgChat(id=chat_id, type="private")
+    tg_chat.set_bot(bot)
 
     message = Message(
         message_id=1,
@@ -265,9 +267,9 @@ def create_command_update(
         chat=tg_chat,
         from_user=tg_user,
         text=text,
-        bot=bot,
         entities=[entity],
     )
+    message.set_bot(bot)
 
     return Update(update_id=1, message=message)
 
@@ -300,16 +302,17 @@ def create_reply_update(
     """
     reply_to_user = TgUser(id=reply_to_user_id, is_bot=False, first_name="ReplyUser")
     chat_type = "supergroup" if str(chat_id).startswith("-100") else "private"
-    tg_chat = TgChat(id=chat_id, type=chat_type, bot=bot)
+    tg_chat = TgChat(id=chat_id, type=chat_type)
+    tg_chat.set_bot(bot)
 
     reply_to_message = Message(
         message_id=reply_to_message_id,
         date=int(time.time()) - 100,
         chat=tg_chat,
         text=reply_to_text,
-        bot=bot,
         from_user=reply_to_user,
     )
+    reply_to_message.set_bot(bot)
 
     if reply_to_entities:
         reply_to_message.entities = reply_to_entities
@@ -364,14 +367,15 @@ def create_forwarded_message_update(
         # update.message.reply_to_message.forward_from_chat.id == -1001234567890
     """
     tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
-    tg_chat = TgChat(id=chat_id, type="supergroup" if str(chat_id).startswith("-100") else "private", bot=bot)
+    tg_chat = TgChat(id=chat_id, type="supergroup" if str(chat_id).startswith("-100") else "private")
+    tg_chat.set_bot(bot)
 
     # Create the forwarded-from chat
     forward_from_chat = TgChat(
         id=forward_from_chat_id,
         type="channel" if str(forward_from_chat_id).startswith("-100") else "private",
-        bot=bot
     )
+    forward_from_chat.set_bot(bot)
 
     # Create the forwarded message (the one being replied to)
     # The original author of the forwarded message
@@ -383,8 +387,8 @@ def create_forwarded_message_update(
         chat=tg_chat,
         from_user=forward_from_user,
         text="[Forwarded question]",
-        bot=bot,
     )
+    forwarded_message.set_bot(bot)
     # Set forward metadata
     forwarded_message.forward_from_chat = forward_from_chat
     forwarded_message.forward_from_message_id = forward_from_message_id
@@ -397,8 +401,8 @@ def create_forwarded_message_update(
         chat=tg_chat,
         from_user=tg_user,
         text=text,
-        bot=bot,
         reply_to_message=forwarded_message,
     )
+    reply_message.set_bot(bot)
 
     return Update(update_id=1, message=reply_message)
