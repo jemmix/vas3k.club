@@ -6,14 +6,14 @@ from helpdeskbot import config
 bot = Bot(token=config.TELEGRAM_HELP_DESK_BOT_TOKEN)
 
 
-def send_message(
+async def send_message(
     chat_id: int,
     text: str,
     reply_to_message_id: int = None,
     parse_mode: ParseMode = ParseMode.HTML,
     disable_web_page_preview=True
 ):
-    return bot.send_message(
+    return await bot.send_message(
         chat_id=chat_id,
         text=text,
         reply_to_message_id=reply_to_message_id,
@@ -22,23 +22,23 @@ def send_message(
     )
 
 
-def edit_message(
+async def edit_message(
     chat_id: int,
     message_id: int,
     new_text: str,
     parse_mode: ParseMode = ParseMode.HTML
 ):
-    return bot.edit_message_text(text=new_text, chat_id=chat_id, message_id=message_id, parse_mode=parse_mode)
+    return await bot.edit_message_text(text=new_text, chat_id=chat_id, message_id=message_id, parse_mode=parse_mode)
 
 
-def send_reply(
+async def send_reply(
     update: Update,
     text: str,
     parse_mode: ParseMode = ParseMode.HTML,
     reply_markup: ReplyMarkup = None,
     disable_web_page_preview: bool = True,
 ):
-    update.message.reply_text(
+    await update.message.reply_text(
         text=text,
         parse_mode=parse_mode,
         reply_markup=reply_markup,

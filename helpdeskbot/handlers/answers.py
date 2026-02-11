@@ -16,7 +16,7 @@ rooms = {r.chat_id: r for r in get_rooms()}
 
 
 @ensure_fresh_db_connection
-def on_reply_message(update: Update, context: CallbackContext) -> None:
+async def on_reply_message(update: Update, context: CallbackContext) -> None:
     if not update.message or not update.message.reply_to_message or not update.message.text:
         return None
 
@@ -24,13 +24,13 @@ def on_reply_message(update: Update, context: CallbackContext) -> None:
 
     if reply_to.forward_from_chat:
         if reply_to.forward_from_chat.id == int(config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID):
-            return handle_answer_from_channel(update)
+            return await handle_answer_from_channel(update)
     else:
         if str(reply_to.chat.id) in rooms.keys():
-            return handle_answer_from_room_chat(update)
+            return await handle_answer_from_room_chat(update)
 
 
-def handle_answer_from_channel(update: Update) -> None:
+async def handle_answer_from_channel(update: Update) -> None:
     channel_msg_id = update.message.reply_to_message.forward_from_message_id
     if not channel_msg_id:
         log.error(f"forward_from_message_id is null")
@@ -47,10 +47,10 @@ def handle_answer_from_channel(update: Update) -> None:
 
     Answer.create_from_update(question, update)
 
-    notify_user_about_answer(update, question)
+    await notify_user_about_answer(update, question)
 
 
-def handle_answer_from_room_chat(update: Update) -> None:
+async def handle_answer_from_room_chat(update: Update) -> None:
     room_chat_msg_id = update.message.reply_to_message.message_id
     if not room_chat_msg_id:
         log.error(f"reply_to_message.message_id is null")
@@ -70,10 +70,10 @@ def handle_answer_from_room_chat(update: Update) -> None:
 
     Answer.create_from_update(question, update)
 
-    notify_user_about_answer(update, question)
+    await notify_user_about_answer(update, question)
 
     # Forward message to the main channel
-    send_message(
+    await send_message(
         chat_id=config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_DISCUSSION_ID,
         text=render_html_message(
             template="helpdeskbot_answer_from_room.html",
@@ -88,7 +88,7 @@ def handle_answer_from_room_chat(update: Update) -> None:
 
     # Send confirmation to the room
     question_channel_id = config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID.replace("-100", "")
-    send_message(
+    await send_message(
         chat_id=int(room_chat_id),
         text=f"➜ <a "
              f"href=\"https://t.me/c/{question_channel_id}/{question.channel_msg_id}\">"
@@ -96,7 +96,7 @@ def handle_answer_from_room_chat(update: Update) -> None:
     )
 
 
-def notify_user_about_answer(update: Update, question: Question) -> None:
+async def notify_user_about_answer(update: Update, question: Question) -> None:
     if not question.user:
         log.info(f"User is null for question {question.id}")
         return None
@@ -109,7 +109,7 @@ def notify_user_about_answer(update: Update, question: Question) -> None:
         return None
 
     # Send notification to the user
-    send_message(
+    await send_message(
         chat_id=int(user_id),
         text=render_html_message(
             template="helpdeskbot_answer_notification.html",
