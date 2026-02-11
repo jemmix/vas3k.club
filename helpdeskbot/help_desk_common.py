@@ -1,7 +1,11 @@
-from telegram import Bot, Update, ReplyMarkup
+from telegram import Bot, Update, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply
 from telegram.constants import ParseMode
+from typing import Union
 
 from helpdeskbot import config
+
+# Type alias for reply markup (v20+ doesn't export ReplyMarkup)
+ReplyMarkup = Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply, None]
 
 bot = Bot(token=config.TELEGRAM_HELP_DESK_BOT_TOKEN)
 
