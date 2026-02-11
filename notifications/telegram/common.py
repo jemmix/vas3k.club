@@ -2,6 +2,7 @@ import asyncio
 from collections import namedtuple
 
 import telegram
+from telegram.constants import ParseMode
 from django.conf import settings
 from django.template import loader
 
@@ -24,7 +25,7 @@ PHOTO_TEXT_LIMIT = 1024
 async def _send_telegram_message_async(
     chat: Chat,
     text: str,
-    parse_mode: str = telegram.ParseMode.HTML,
+    parse_mode: str = ParseMode.HTML,
     reply_markup: telegram.InlineKeyboardMarkup | None = None,
     reply_to_message_id: int | None = None,
     disable_preview: bool = True,
@@ -68,7 +69,7 @@ async def _send_telegram_message_async(
 def send_telegram_message(
     chat: Chat,
     text: str,
-    parse_mode: str = telegram.ParseMode.HTML,
+    parse_mode: str = ParseMode.HTML,
     reply_markup: telegram.InlineKeyboardMarkup | None = None,
     reply_to_message_id: int | None = None,
     disable_preview: bool = True,
@@ -88,7 +89,7 @@ async def _send_telegram_image_async(
     chat: Chat,
     image_url: str,
     text: str,
-    parse_mode: str = telegram.ParseMode.HTML,
+    parse_mode: str = ParseMode.HTML,
 ):
     """Actual async implementation for telegram image sending"""
     if not bot:
@@ -112,7 +113,7 @@ def send_telegram_image(
     chat: Chat,
     image_url: str,
     text: str,
-    parse_mode: str = telegram.ParseMode.HTML,
+    parse_mode: str = ParseMode.HTML,
 ):
     """Sync wrapper for async telegram calls (called from django_q background tasks)"""
     return asyncio.run(_send_telegram_image_async(
