@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 from typing import Optional
 
+from asgiref.sync import sync_to_async
 from django.db import close_old_connections
 from telegram import Update
 from telegram.constants import ParseMode
@@ -40,17 +41,18 @@ class PostRejectReason(Enum):
     false_dilemma = "false_dilemma"
 
 
-def get_club_user(update: Update):
+async def get_club_user(update: Update):
     # HACK: Django 5+ kills long-running db connections randomly,
     # this could help, but I'm not sure
-    close_old_connections()
+    await sync_to_async(close_old_connections)()
 
-    user = User.objects.filter(telegram_id=update.effective_user.id).first()
+    # Use Django's native async ORM (available in Django 4.1+)
+    user = await User.objects.filter(telegram_id=update.effective_user.id).afirst()
     if not user:
         if update.callback_query:
-            update.callback_query.answer(text=f"☝️ Привяжи бота к профилю, братишка")
+            await update.callback_query.answer(text=f"☝️ Привяжи бота к профилю, братишка")
         else:
-            update.message.reply_text(
+            await update.message.reply_text(
                 f"😐 Привяжи <a href=\"https://vas3k.club/user/me/edit/bot/\">бота</a> к профилю, братишка",
                 parse_mode=ParseMode.HTML
             )
@@ -58,22 +60,22 @@ def get_club_user(update: Update):
 
     if user.is_banned:
         if update.callback_query:
-            update.callback_query.answer(text=f"🙈 Ты в бане, мы больше не дружим")
+            await update.callback_query.answer(text=f"🙈 Ты в бане, мы больше не дружим")
         else:
-            update.message.reply_text(f"🙈 Ты в бане, мы больше не дружим")
+            await update.message.reply_text(f"🙈 Ты в бане, мы больше не дружим")
         return None
 
     if not user.is_member:
         if update.callback_query:
-            update.callback_query.answer(text=f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
+            await update.callback_query.answer(text=f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
         else:
-            update.message.reply_text(f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
+            await update.message.reply_text(f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
         return None
 
     return user
 
 
-def get_club_comment(update: Update) -> Optional[Comment]:
+async def get_club_comment(update: Update) -> Optional[Comment]:
     entities = update.message.reply_to_message.entities or update.message.reply_to_message.caption_entities or []
     url_entities = [
         entity["url"] for entity in entities if entity["type"] == "text_link"
@@ -89,15 +91,16 @@ def get_club_comment(update: Update) -> Optional[Comment]:
         log.warning(f"Comment URL not found in message: {update.message.reply_to_message}")
         return None
 
-    comment = Comment.objects.filter(id=comment_id).first()
+    # Use Django's native async ORM
+    comment = await Comment.objects.filter(id=comment_id).afirst()
     if not comment:
-        update.message.reply_text(f"🤨 Коммент '{comment_id}' был удален или куда-то делся")
+        await update.message.reply_text(f"🤨 Коммент '{comment_id}' был удален или куда-то делся")
         return None
 
     return comment
 
 
-def get_club_post(update: Update) -> Optional[Post]:
+async def get_club_post(update: Update) -> Optional[Post]:
     entities = update.message.reply_to_message.entities or update.message.reply_to_message.caption_entities or []
     url_entities = [
         entity["url"] for entity in entities if entity["type"] == "text_link"
@@ -113,9 +116,10 @@ def get_club_post(update: Update) -> Optional[Post]:
         log.warning(f"Post URL not found in message: {update.message.reply_to_message}")
         return None
 
-    post = Post.objects.filter(slug=post_id).first()
+    # Use Django's native async ORM
+    post = await Post.objects.filter(slug=post_id).afirst()
     if not post or not post.is_commentable:
-        update.message.reply_text(f"🤨 Пост был удален, скрыт или украден, сорян")
+        await update.message.reply_text(f"🤨 Пост был удален, скрыт или украден, сорян")
         return None
 
     return post
