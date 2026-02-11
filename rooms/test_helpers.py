@@ -1,7 +1,7 @@
 """Tests for rooms/helpers.py functions."""
 
 import logging
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, call
 
 from django.test import TestCase
 from telegram import ChatMember, User as TgUser
@@ -19,7 +19,7 @@ class BanUserInAllChatsTest(BaseTelegramTest, TestCase):
     tags = {"telegram", "telegram_bot"}
 
     GET_CHAT_MEMBER_PATH = f"/{BaseTelegramTest.TOKEN}/getChatMember"
-    KICK_CHAT_MEMBER_PATH = f"/{BaseTelegramTest.TOKEN}/kickChatMember"
+    BAN_CHAT_MEMBER_PATH = f"/{BaseTelegramTest.TOKEN}/banChatMember"
     UNBAN_CHAT_MEMBER_PATH = f"/{BaseTelegramTest.TOKEN}/unbanChatMember"
 
     def setUp(self):
@@ -64,11 +64,11 @@ class BanUserInAllChatsTest(BaseTelegramTest, TestCase):
             return '{"ok": true, "result": {"user": {"id": 111, "is_bot": false, "first_name": "Test"}, "status": "member"}}'
 
         # Mock kickChatMember to return success
-        def handle_kick_chat_member(request):
+        def handle_ban_chat_member(request):
             return '{"ok": true, "result": true}'
 
         self.server.add_route(self.GET_CHAT_MEMBER_PATH, handle_get_chat_member)
-        self.server.add_route(self.KICK_CHAT_MEMBER_PATH, handle_kick_chat_member)
+        self.server.add_route(self.BAN_CHAT_MEMBER_PATH, handle_ban_chat_member)
 
         ban_user_in_all_chats(self.user, is_permanent=True)
 
@@ -79,9 +79,9 @@ class BanUserInAllChatsTest(BaseTelegramTest, TestCase):
         self.assertEqual(chat_ids, {self.room1.chat_id, self.room2.chat_id})
 
         # Verify kickChatMember was called for both rooms
-        kick_requests = [r for r in self.server.requests_received if r.path == self.KICK_CHAT_MEMBER_PATH]
-        self.assertEqual(len(kick_requests), 2)
-        kick_chat_ids = {r.body["chat_id"] for r in kick_requests}
+        ban_requests = [r for r in self.server.requests_received if r.path == self.BAN_CHAT_MEMBER_PATH]
+        self.assertEqual(len(ban_requests), 2)
+        kick_chat_ids = {r.body["chat_id"] for r in ban_requests}
         self.assertEqual(kick_chat_ids, {self.room1.chat_id, self.room2.chat_id})
 
         # Verify unbanChatMember was NOT called (permanent ban)
@@ -95,7 +95,7 @@ class BanUserInAllChatsTest(BaseTelegramTest, TestCase):
             return '{"ok": true, "result": {"user": {"id": 111, "is_bot": false, "first_name": "Test"}, "status": "member"}}'
 
         # Mock kickChatMember to return success
-        def handle_kick_chat_member(request):
+        def handle_ban_chat_member(request):
             return '{"ok": true, "result": true}'
 
         # Mock unbanChatMember to return success
@@ -103,7 +103,7 @@ class BanUserInAllChatsTest(BaseTelegramTest, TestCase):
             return '{"ok": true, "result": true}'
 
         self.server.add_route(self.GET_CHAT_MEMBER_PATH, handle_get_chat_member)
-        self.server.add_route(self.KICK_CHAT_MEMBER_PATH, handle_kick_chat_member)
+        self.server.add_route(self.BAN_CHAT_MEMBER_PATH, handle_ban_chat_member)
         self.server.add_route(self.UNBAN_CHAT_MEMBER_PATH, handle_unban_chat_member)
 
         ban_user_in_all_chats(self.user, is_permanent=False)
@@ -113,8 +113,8 @@ class BanUserInAllChatsTest(BaseTelegramTest, TestCase):
         self.assertEqual(len(get_member_requests), 2)
 
         # Verify kickChatMember was called
-        kick_requests = [r for r in self.server.requests_received if r.path == self.KICK_CHAT_MEMBER_PATH]
-        self.assertEqual(len(kick_requests), 2)
+        ban_requests = [r for r in self.server.requests_received if r.path == self.BAN_CHAT_MEMBER_PATH]
+        self.assertEqual(len(ban_requests), 2)
 
         # Verify unbanChatMember WAS called (non-permanent ban = kick)
         unban_requests = [r for r in self.server.requests_received if r.path == self.UNBAN_CHAT_MEMBER_PATH]
@@ -140,45 +140,44 @@ class BanUserInAllChatsTest(BaseTelegramTest, TestCase):
     def test_handles_telegram_error(self):
         """Should handle TelegramError and continue to next room"""
         # Mock get_chat_member to raise TelegramError for first room, succeed for second
-        original_get_chat_member = self.bot.get_chat_member
         call_count = {"count": 0}
+        original_get_chat_member = self.bot.get_chat_member
 
-        def mock_get_chat_member(chat_id, user_id, *args, **kwargs):
+        def get_chat_member_side_effect(chat_id, user_id, *args, **kwargs):
             call_count["count"] += 1
             if call_count["count"] == 1:
                 # First call (room1) - raise TelegramError
                 raise TelegramError("Bad Request: user not found")
             else:
-                # Second call (room2) - use real method
+                # Second call (room2) - use real bot's method
                 return original_get_chat_member(chat_id, user_id, *args, **kwargs)
 
-        self.bot.get_chat_member = mock_get_chat_member
+        with patch.object(self.bot, 'get_chat_member', side_effect=get_chat_member_side_effect):
+            # Set up route for successful kick
+            def handle_ban_chat_member(request):
+                return '{"ok": true, "result": true}'
 
-        # Set up route for successful kick
-        def handle_kick_chat_member(request):
-            return '{"ok": true, "result": true}'
+            self.server.add_route(self.BAN_CHAT_MEMBER_PATH, handle_ban_chat_member)
 
-        self.server.add_route(self.KICK_CHAT_MEMBER_PATH, handle_kick_chat_member)
+            # Need route for getChatMember for second room
+            def handle_get_chat_member(request):
+                return '{"ok": true, "result": {"user": {"id": 111, "is_bot": false, "first_name": "Test"}, "status": "member"}}'
 
-        # Need route for getChatMember for second room
-        def handle_get_chat_member(request):
-            return '{"ok": true, "result": {"user": {"id": 111, "is_bot": false, "first_name": "Test"}, "status": "member"}}'
+            self.server.add_route(self.GET_CHAT_MEMBER_PATH, handle_get_chat_member)
 
-        self.server.add_route(self.GET_CHAT_MEMBER_PATH, handle_get_chat_member)
+            with self.assertLogs("rooms.helpers", level=logging.WARNING) as logs:
+                ban_user_in_all_chats(self.user)
 
-        with self.assertLogs("rooms.helpers", level=logging.WARNING) as logs:
-            ban_user_in_all_chats(self.user)
+            # Verify warning was logged
+            self.assertTrue(any("Failed to ban user" in log for log in logs.output))
 
-        # Verify warning was logged
-        self.assertTrue(any("Failed to ban user" in log for log in logs.output))
-
-        # Verify getChatMember was called once via HTTP (for room2)
-        get_member_requests = [r for r in self.server.requests_received if r.path == self.GET_CHAT_MEMBER_PATH]
-        self.assertEqual(len(get_member_requests), 1)
+            # Verify getChatMember was called once via HTTP (for room2)
+            get_member_requests = [r for r in self.server.requests_received if r.path == self.GET_CHAT_MEMBER_PATH]
+            self.assertEqual(len(get_member_requests), 1)
 
         # Verify kickChatMember was only called for room2 (room1 failed)
-        kick_requests = [r for r in self.server.requests_received if r.path == self.KICK_CHAT_MEMBER_PATH]
-        self.assertEqual(len(kick_requests), 1)
+        ban_requests = [r for r in self.server.requests_received if r.path == self.BAN_CHAT_MEMBER_PATH]
+        self.assertEqual(len(ban_requests), 1)
 
 
 class UnbanUserInAllChatsTest(BaseTelegramTest, TestCase):
@@ -254,32 +253,31 @@ class UnbanUserInAllChatsTest(BaseTelegramTest, TestCase):
     def test_handles_telegram_error(self):
         """Should handle TelegramError and continue to next room"""
         # Mock unban_chat_member to raise TelegramError for first room, succeed for second
-        original_unban_chat_member = self.bot.unban_chat_member
         call_count = {"count": 0}
+        original_unban_chat_member = self.bot.unban_chat_member
 
-        def mock_unban_chat_member(chat_id, user_id, *args, **kwargs):
+        def unban_side_effect(chat_id, user_id, *args, **kwargs):
             call_count["count"] += 1
             if call_count["count"] == 1:
                 # First call (room1) - raise TelegramError
                 raise TelegramError("Bad Request: user is not a member")
             else:
-                # Second call (room2) - use real method
+                # Second call (room2) - use real bot's method
                 return original_unban_chat_member(chat_id, user_id, *args, **kwargs)
 
-        self.bot.unban_chat_member = mock_unban_chat_member
+        with patch.object(self.bot, 'unban_chat_member', side_effect=unban_side_effect):
+            # Set up route for successful unban (room2)
+            def handle_unban_chat_member(request):
+                return '{"ok": true, "result": true}'
 
-        # Set up route for successful unban (room2)
-        def handle_unban_chat_member(request):
-            return '{"ok": true, "result": true}'
+            self.server.add_route(self.UNBAN_CHAT_MEMBER_PATH, handle_unban_chat_member)
 
-        self.server.add_route(self.UNBAN_CHAT_MEMBER_PATH, handle_unban_chat_member)
+            with self.assertLogs("rooms.helpers", level=logging.WARNING) as logs:
+                unban_user_in_all_chats(self.user)
 
-        with self.assertLogs("rooms.helpers", level=logging.WARNING) as logs:
-            unban_user_in_all_chats(self.user)
+            # Verify warning was logged
+            self.assertTrue(any("Can't unban user" in log for log in logs.output))
 
-        # Verify warning was logged
-        self.assertTrue(any("Can't unban user" in log for log in logs.output))
-
-        # Verify unbanChatMember was called once via HTTP (for room2)
-        unban_requests = [r for r in self.server.requests_received if r.path == self.UNBAN_CHAT_MEMBER_PATH]
-        self.assertEqual(len(unban_requests), 1)
+            # Verify unbanChatMember was called once via HTTP (for room2)
+            unban_requests = [r for r in self.server.requests_received if r.path == self.UNBAN_CHAT_MEMBER_PATH]
+            self.assertEqual(len(unban_requests), 1)

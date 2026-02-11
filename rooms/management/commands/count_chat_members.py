@@ -1,7 +1,7 @@
 import logging
 
-import telegram
 from django.core.management import BaseCommand
+from telegram.error import TelegramError
 
 from rooms.models import Room
 from notifications.telegram.bot import bot
@@ -17,7 +17,7 @@ class Command(BaseCommand):
             try:
                 chat = bot.get_chat(room.chat_id)
 
-                member_count = chat.get_members_count()
+                member_count = chat.member_count
 
                 # Store the count in the database
                 room.chat_member_count = member_count
@@ -25,7 +25,7 @@ class Command(BaseCommand):
 
                 log.info(f"Updated member count for chat {room.slug}: {member_count} members")
 
-            except telegram.TelegramError as ex:
+            except TelegramError as ex:
                 log.warning(f"Failed to get member count for chat {room.slug}: {ex}")
 
         self.stdout.write("Done 🥙")

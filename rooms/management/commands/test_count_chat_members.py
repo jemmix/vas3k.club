@@ -56,32 +56,14 @@ class CountChatMembersCommandTest(BaseTelegramTest, TestCase):
 
     def test_updates_member_counts(self):
         """Should update chat_member_count for all rooms with chat_id"""
-        # Mock getChat to return chats with member counts
-        call_count = {"count": 0}
-
         def handle_get_chat(request):
-            call_count["count"] += 1
             chat_id = request.body["chat_id"]
             if chat_id == self.room1.chat_id:
                 # Return chat with 42 members
-                return '{"ok": true, "result": {"id": -100123456, "type": "supergroup", "title": "Test Room 1"}}'
+                return '{"ok": true, "result": {"id": -100123456, "type": "supergroup", "title": "Test Room 1", "member_count": 42}}'
             else:
                 # Return chat with 99 members
-                return '{"ok": true, "result": {"id": -100789012, "type": "supergroup", "title": "Test Room 2"}}'
-
-        # Mock get_members_count method on Chat objects
-        original_get_chat = self.bot.get_chat
-
-        def mock_get_chat(chat_id, *args, **kwargs):
-            chat = original_get_chat(chat_id, *args, **kwargs)
-            # Patch get_members_count on the returned chat
-            if chat_id == self.room1.chat_id:
-                chat.get_members_count = lambda: 42
-            else:
-                chat.get_members_count = lambda: 99
-            return chat
-
-        self.bot.get_chat = mock_get_chat
+                return '{"ok": true, "result": {"id": -100789012, "type": "supergroup", "title": "Test Room 2", "member_count": 99}}'
 
         self.server.add_route(self.GET_CHAT_PATH, handle_get_chat)
 
@@ -110,26 +92,16 @@ class CountChatMembersCommandTest(BaseTelegramTest, TestCase):
 
     def test_handles_telegram_error(self):
         """Should handle TelegramError and continue to next room"""
-        # Mock get_chat to raise TelegramError for first room, succeed for second
-        original_get_chat = self.bot.get_chat
         call_count = {"count": 0}
 
-        def mock_get_chat(chat_id, *args, **kwargs):
+        def handle_get_chat(request):
             call_count["count"] += 1
             if call_count["count"] == 1:
-                # First call (room1) - raise TelegramError
-                raise TelegramError("Bad Request: chat not found")
+                # First call (room1) - return error
+                return '{"ok": false, "error_code": 400, "description": "Bad Request: chat not found"}'
             else:
                 # Second call (room2) - succeed
-                chat = original_get_chat(chat_id, *args, **kwargs)
-                chat.get_members_count = lambda: 99
-                return chat
-
-        self.bot.get_chat = mock_get_chat
-
-        # Set up route for successful getChat (room2)
-        def handle_get_chat(request):
-            return '{"ok": true, "result": {"id": -100789012, "type": "supergroup", "title": "Test Room 2"}}'
+                return '{"ok": true, "result": {"id": -100789012, "type": "supergroup", "title": "Test Room 2", "member_count": 99}}'
 
         self.server.add_route(self.GET_CHAT_PATH, handle_get_chat)
 
