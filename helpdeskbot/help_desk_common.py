@@ -1,4 +1,5 @@
-from telegram import Bot, ParseMode, Update, ReplyMarkup
+from telegram import Bot, Update, ReplyMarkup
+from telegram.constants import ParseMode
 
 from helpdeskbot import config
 

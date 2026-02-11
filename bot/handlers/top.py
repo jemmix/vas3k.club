@@ -2,7 +2,8 @@ from datetime import timedelta, datetime
 
 from django.conf import settings
 from django.db.models import Q
-from telegram import Update, ParseMode
+from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
 from bot.decorators import is_club_member

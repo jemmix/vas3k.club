@@ -12,8 +12,9 @@ django.setup()
 # THE END
 
 from django.conf import settings
-from telegram import Update, ParseMode
-from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, Filters, \
+from telegram import Update
+from telegram.constants import ParseMode
+from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext, filters, \
     CallbackQueryHandler
 
 from bot.cache import cached_telegram_users
@@ -79,24 +80,24 @@ def start_server() -> Server:
     dispatcher.add_handler(CallbackQueryHandler(upvotes.upvote_post, pattern=r"^upvote_post:.+"))
     dispatcher.add_handler(CallbackQueryHandler(upvotes.upvote_comment, pattern=r"^upvote_comment:.+"))
     dispatcher.add_handler(
-        MessageHandler(Filters.reply & Filters.regex(r"^\+[+\d ]*$"), upvotes.upvote)
+        MessageHandler(filters.REPLY & filters.Regex(r"^\+[+\d ]*$"), upvotes.upvote)
     )
 
     # AI
     dispatcher.add_handler(
-        MessageHandler(Filters.text & Filters.regex(BOT_MENTION_RE), llm.llm_response)
+        MessageHandler(filters.TEXT & filters.Regex(BOT_MENTION_RE), llm.llm_response)
     )
 
     # Handle comments to posts and replies
     dispatcher.add_handler(
-        MessageHandler(Filters.reply & ~Filters.chat(int(settings.TELEGRAM_ADMIN_CHAT_ID)), comments.comment)
+        MessageHandler(filters.REPLY & ~filters.Chat(int(settings.TELEGRAM_ADMIN_CHAT_ID)), comments.comment)
     )
 
     # Private chat with bot
-    dispatcher.add_handler(CommandHandler("start", auth.command_auth, Filters.private))
-    dispatcher.add_handler(CommandHandler("auth", auth.command_auth, Filters.private))
-    dispatcher.add_handler(MessageHandler(Filters.forwarded & Filters.private, whois.command_whois))
-    dispatcher.add_handler(MessageHandler(Filters.private, private_message))
+    dispatcher.add_handler(CommandHandler("start", auth.command_auth, filters.ChatType.PRIVATE))
+    dispatcher.add_handler(CommandHandler("auth", auth.command_auth, filters.ChatType.PRIVATE))
+    dispatcher.add_handler(MessageHandler(filters.FORWARDED & filters.ChatType.PRIVATE, whois.command_whois))
+    dispatcher.add_handler(MessageHandler(filters.ChatType.PRIVATE, private_message))
 
     # Start the bot
     if settings.DEBUG:

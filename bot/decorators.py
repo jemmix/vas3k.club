@@ -2,7 +2,8 @@ from functools import wraps
 
 from django.conf import settings
 from django.db import close_old_connections
-from telegram import Update, ParseMode
+from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
 from bot.cache import cached_telegram_users

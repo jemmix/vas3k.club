@@ -1,6 +1,7 @@
 from django.urls import reverse
-from telegram import Update, ParseMode
+from telegram import Update
 from telegram import Chat as TGChat
+from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
 from bot.decorators import is_club_member, ensure_fresh_db_connection

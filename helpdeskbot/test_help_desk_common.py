@@ -3,7 +3,7 @@
 from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
-from telegram import ParseMode
+from telegram.constants import ParseMode
 
 
 @patch("helpdeskbot.config.TELEGRAM_HELP_DESK_BOT_TOKEN", "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11")

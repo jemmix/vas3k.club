@@ -1,4 +1,5 @@
-from telegram import Update, ParseMode
+from telegram import Update
+from telegram.constants import ParseMode
 from telegram.error import Unauthorized
 from telegram.ext import CallbackContext
 

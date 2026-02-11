@@ -15,8 +15,9 @@ from helpdeskbot.handlers.question import update_discussion_message_id, Question
 from helpdeskbot.handlers.answers import on_reply_message
 
 from django.conf import settings
-from telegram import Update, ParseMode
-from telegram.ext import Updater, CommandHandler, CallbackContext, Filters, MessageHandler
+from telegram import Update
+from telegram.constants import ParseMode
+from telegram.ext import Updater, CommandHandler, CallbackContext, filters, MessageHandler
 
 log = logging.getLogger(__name__)
 
@@ -54,8 +55,8 @@ def main() -> None:
     # Set handlers
     dispatcher.add_handler(CommandHandler("help", on_help_command))
     dispatcher.add_handler(QuestionHandler("start"))
-    dispatcher.add_handler(MessageHandler(Filters.reply & ~Filters.command, on_reply_message))
-    dispatcher.add_handler(MessageHandler(Filters.user(config.TELEGRAM_ADMIN_BOT_ID), on_telegram_admin_bot_message))
+    dispatcher.add_handler(MessageHandler(filters.REPLY & ~filters.COMMAND, on_reply_message))
+    dispatcher.add_handler(MessageHandler(filters.User(config.TELEGRAM_ADMIN_BOT_ID), on_telegram_admin_bot_message))
 
     # Start the bot
     if settings.DEBUG:

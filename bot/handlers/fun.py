@@ -2,7 +2,8 @@ from datetime import timedelta, datetime
 from random import randint
 
 from django.conf import settings
-from telegram import Update, ParseMode
+from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
 from common.flat_earth import parse_horoscope

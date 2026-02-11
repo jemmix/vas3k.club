@@ -3,7 +3,8 @@ from enum import Enum
 from typing import Optional
 
 from django.db import close_old_connections
-from telegram import Update, ParseMode
+from telegram import Update
+from telegram.constants import ParseMode
 
 from bot.config import COMMENT_URL_RE, POST_URL_RE
 from comments.models import Comment
