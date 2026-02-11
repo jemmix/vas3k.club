@@ -30,7 +30,7 @@ async def llm_response(update: Update, context: CallbackContext) -> None:
         )
 
     # only club members can use the bot
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user or not user.is_active_member:
         await update.message.reply_text(
             "🙈 Я отвечаю только чувакам с активной подпиской в Клубе. Иди продлевай! https://vas3k.club/user/me/",

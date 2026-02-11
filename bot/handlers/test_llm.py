@@ -4,6 +4,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from unittest.mock import patch, MagicMock
+from asgiref.sync import sync_to_async
 
 import django
 from django.test import TestCase
@@ -79,8 +80,20 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         """Create a test Update object"""
         telegram_id = int(self.test_user.telegram_id or "")
         tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
-        # Chat needs bot parameter to support chat.send_message()
-        tg_chat = TgChat(id=12345, type="private", bot=self.bot)
+        # Chat needs bot to support chat.send_message()
+        tg_chat = TgChat(id=12345, type="private")
+        tg_chat.set_bot(self.bot)
+
+        reply_message = None
+        if reply_to_text:
+            reply_message = Message(
+                message_id=0,
+                date=int(time.time()),
+                chat=tg_chat,
+                text=reply_to_text,
+                from_user=telegram.User(id=6789, is_bot=False, first_name="First"),
+            )
+            reply_message.set_bot(self.bot)
 
         message = Message(
             message_id=1,
@@ -88,19 +101,9 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             chat=tg_chat,
             from_user=tg_user,
             text=message_text,
-            bot=self.bot,
+            reply_to_message=reply_message,
         )
-
-        if reply_to_text:
-            reply_message = Message(
-                message_id=0,
-                date=int(time.time()),
-                chat=tg_chat,
-                text=reply_to_text,
-                bot=self.bot,
-                from_user=telegram.User(id=6789, is_bot=False, first_name="First"),
-            )
-            message.reply_to_message = reply_message
+        message.set_bot(self.bot)
 
         update = Update(update_id=1, message=message)
         return update
@@ -135,8 +138,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
                             "chat_id": "12345",
                             "text": "This is a test response",
                             "parse_mode": "HTML",
-                            "disable_web_page_preview": "True",
-                            "disable_notification": "False",
+                            "link_preview_options": '{"is_disabled": true}',
                         },
                     ),
                     self.RESPONSE,
@@ -183,8 +185,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
                             "chat_id": "12345",
                             "text": "Replied to previous message",
                             "parse_mode": "HTML",
-                            "disable_web_page_preview": "True",
-                            "disable_notification": "False",
+                            "link_preview_options": '{"is_disabled": true}',
                         },
                     ),
                     self.RESPONSE,
@@ -204,7 +205,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         self.test_user.membership_expires_at = datetime.now(timezone.utc) - timedelta(
             days=1
         )
-        self.test_user.save()
+        await sync_to_async(self.test_user.save)()
 
         update = self._create_update("Hello bot")
         context = MagicMock(spec=CallbackContext)
@@ -219,8 +220,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
                         {
                             "chat_id": "12345",
                             "text": "🙈 Я отвечаю только чувакам с активной подпиской в Клубе. Иди продлевай! https://vas3k.club/user/me/",
-                            "disable_web_page_preview": "True",
-                            "disable_notification": "False",
+                            "link_preview_options": '{"is_disabled": true}',
                         },
                     ),
                     self.RESPONSE,
@@ -263,7 +263,6 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
                         {
                             "chat_id": "12345",
                             "text": "Чот я устал отвечать на вопросы... давай потом",
-                            "disable_notification": "False",
                         },
                     ),
                     self.RESPONSE,
@@ -283,6 +282,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         telegram_id = int(self.test_user.telegram_id or "")
         tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
         tg_chat = TgChat(id=12345, type="private")
+        tg_chat.set_bot(self.bot)
 
         message = Message(
             message_id=1,
@@ -290,8 +290,8 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             chat=tg_chat,
             from_user=tg_user,
             caption="Image caption text",
-            bot=self.bot,
         )
+        message.set_bot(self.bot)
 
         update = Update(update_id=1, message=message)
         context = MagicMock(spec=CallbackContext)
@@ -318,8 +318,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
                             "chat_id": "12345",
                             "text": "Response to caption",
                             "parse_mode": "HTML",
-                            "disable_web_page_preview": "True",
-                            "disable_notification": "False",
+                            "link_preview_options": '{"is_disabled": true}',
                         },
                     ),
                     self.RESPONSE,
@@ -339,14 +338,15 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         telegram_id = int(self.test_user.telegram_id or "")
         tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
         tg_chat = TgChat(id=12345, type="private")
+        tg_chat.set_bot(self.bot)
 
         message = Message(
             message_id=1,
             date=int(time.time()),
             chat=tg_chat,
             from_user=tg_user,
-            bot=self.bot,
         )
+        message.set_bot(self.bot)
 
         update = Update(update_id=1, message=message)
         context = MagicMock(spec=CallbackContext)
@@ -389,8 +389,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
                             "chat_id": "12345",
                             "text": "First paragraph\n\nSecond paragraph\n\nThird paragraph",
                             "parse_mode": "HTML",
-                            "disable_web_page_preview": "True",
-                            "disable_notification": "False",
+                            "link_preview_options": '{"is_disabled": true}',
                         },
                     ),
                     self.RESPONSE,
