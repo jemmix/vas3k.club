@@ -119,9 +119,9 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
 
         self.bot_server = None
 
-    def tearDown(self):
+    async def tearDown(self):
         if self.bot_server:
-            self.bot_server.stop()
+            await self.bot_server.stop()
 
         # Clean up
         self.test_user.delete()
@@ -139,6 +139,7 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
         telegram_id = int(self.test_user.telegram_id or "")
         tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
         tg_chat = TgChat(id=12345, type="private")
+        tg_chat.set_bot(self.bot)
 
         message = Message(
             message_id=1,
@@ -146,8 +147,8 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
             chat=tg_chat,
             from_user=tg_user,
             text=message_text,
-            bot=self.bot,
         )
+        message.set_bot(self.bot)
 
         if reply_to_text:
             reply_message = Message(
@@ -155,17 +156,19 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
                 date=int(time.time()),
                 chat=tg_chat,
                 text=reply_to_text,
-                bot=self.bot,
                 from_user=telegram.User(id=6789, is_bot=False, first_name="First"),
             )
+            reply_message.set_bot(self.bot)
             message.reply_to_message = reply_message
 
-        update = Update(update_id=1, message=message, entities=123)
+        update = Update(update_id=1, message=message)
         return update
 
     def _create_command_update(self, cmd="/help") -> Update:
         update = self._create_update(cmd)
         assert isinstance(update.message, Message)
+        if update.message.entities is None:
+            update.message.entities = []
         update.message.entities.append(
             telegram.MessageEntity(type="bot_command", offset=0, length=len(cmd))
         )
