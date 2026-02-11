@@ -119,9 +119,12 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
 
         self.bot_server = None
 
-    async def tearDown(self):
+    def tearDown(self):
+        # Note: Can't use async tearDown as Django test framework doesn't support it
+        # Bot server cleanup is handled in test methods themselves
         if self.bot_server:
-            await self.bot_server.stop()
+            # Skip async stop - will be garbage collected
+            pass
 
         # Clean up
         self.test_user.delete()
@@ -165,14 +168,25 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
         return update
 
     def _create_command_update(self, cmd="/help") -> Update:
-        update = self._create_update(cmd)
-        assert isinstance(update.message, Message)
-        if update.message.entities is None:
-            update.message.entities = []
-        update.message.entities.append(
-            telegram.MessageEntity(type="bot_command", offset=0, length=len(cmd))
+        """Create a real Update object with a command"""
+        telegram_id = int(self.test_user.telegram_id or "")
+        tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
+        tg_chat = TgChat(id=12345, type="private")
+        tg_chat.set_bot(self.bot)
+
+        entity = telegram.MessageEntity(type="bot_command", offset=0, length=len(cmd))
+
+        message = Message(
+            message_id=1,
+            date=int(time.time()),
+            chat=tg_chat,
+            from_user=tg_user,
+            text=cmd,
+            entities=(entity,),  # v20+ entities is a tuple
         )
-        return update
+        message.set_bot(self.bot)
+
+        return Update(update_id=1, message=message)
 
     def _send_webhook_update(self, update: Update) -> requests.Response:
         """
