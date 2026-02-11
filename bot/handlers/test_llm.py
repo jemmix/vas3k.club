@@ -4,7 +4,6 @@ import time
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from unittest.mock import patch, MagicMock
-from asgiref.sync import sync_to_async
 
 import django
 from django.test import TestCase
@@ -205,7 +204,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         self.test_user.membership_expires_at = datetime.now(timezone.utc) - timedelta(
             days=1
         )
-        await sync_to_async(self.test_user.save)()
+        await self.test_user.asave()
 
         update = self._create_update("Hello bot")
         context = MagicMock(spec=CallbackContext)
