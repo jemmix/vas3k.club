@@ -28,12 +28,12 @@ async def command_random(update: Update, context: CallbackContext) -> None:
             seconds=randint(0, int((datetime.utcnow() - settings.LAUNCH_DATE).total_seconds())),
         )
 
-        post = Post.visible_objects() \
+        post = await Post.visible_objects() \
             .filter(published_at__lte=random_date, published_at__gte=random_date - timedelta(days=2)) \
             .filter(moderation_status=Post.MODERATION_APPROVED) \
             .exclude(type__in=[Post.TYPE_INTRO, Post.TYPE_WEEKLY_DIGEST]) \
             .order_by("?") \
-            .first()
+            .afirst()
 
     await update.effective_chat.send_message(
         render_html_message("channel_post_announce.html", post=post),

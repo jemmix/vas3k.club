@@ -1,7 +1,7 @@
 """Tests for bot/handlers/fun.py handlers."""
 
 from datetime import datetime, timezone, timedelta
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 from telegram.ext import CallbackContext
 
@@ -59,7 +59,6 @@ class CommandHoroTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": expected_text,
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -110,7 +109,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
         mock_qs.filter.return_value = mock_qs
         mock_qs.exclude.return_value = mock_qs
         mock_qs.order_by.return_value = mock_qs
-        mock_qs.first.return_value = self.post
+        mock_qs.afirst = AsyncMock(return_value=self.post)
         mock_visible.return_value = mock_qs
 
         # Mock template rendering
@@ -133,8 +132,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "Rendered random post message",
                         "parse_mode": "HTML",
-                        "disable_web_page_preview": "True",
-                        "disable_notification": "False",
+                        "link_preview_options": '{"is_disabled": true}',
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -155,7 +153,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
         mock_qs.filter.return_value = mock_qs
         mock_qs.exclude.return_value = mock_qs
         mock_qs.order_by.return_value = mock_qs
-        mock_qs.first.return_value = None
+        mock_qs.afirst = AsyncMock(return_value=None)
         mock_visible.return_value = mock_qs
 
         # Mock template rendering with None post
@@ -178,8 +176,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "No random post found message",
                         "parse_mode": "HTML",
-                        "disable_web_page_preview": "True",
-                        "disable_notification": "False",
+                        "link_preview_options": '{"is_disabled": true}',
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
