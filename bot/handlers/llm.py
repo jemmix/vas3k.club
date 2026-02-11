@@ -8,7 +8,7 @@ from bot.handlers.common import get_club_user
 from common.markdown.markdown import markdown_tg
 
 
-def llm_response(update: Update, context: CallbackContext) -> None:
+async def llm_response(update: Update, context: CallbackContext) -> None:
     if not update.message:
         return None
 
@@ -32,17 +32,17 @@ def llm_response(update: Update, context: CallbackContext) -> None:
     # only club members can use the bot
     user = get_club_user(update)
     if not user or not user.is_active_member:
-        update.message.reply_text(
+        await update.message.reply_text(
             "🙈 Я отвечаю только чувакам с активной подпиской в Клубе. Иди продлевай! https://vas3k.club/user/me/",
             disable_web_page_preview=True
         )
         return None
 
     # send typing action
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
 
     if is_rate_limited("ai_bot"):
-        update.message.reply_text("Чот я устал отвечать на вопросы... давай потом")
+        await update.message.reply_text("Чот я устал отвечать на вопросы... давай потом")
         return None
 
     user_input = [
@@ -54,7 +54,7 @@ def llm_response(update: Update, context: CallbackContext) -> None:
 
     answer = ask_assistant("\n".join(user_input))
     if answer:
-        update.message.reply_text(
+        await update.message.reply_text(
             markdown_tg("\n\n".join(answer)),
             parse_mode=ParseMode.HTML,
             disable_web_page_preview=True
