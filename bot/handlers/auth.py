@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.constants import ParseMode
-from telegram.error import Unauthorized
+from telegram.error import Forbidden
 from telegram.ext import CallbackContext
 
 from bot.cache import flush_users_cache, cached_telegram_users
@@ -38,7 +38,7 @@ async def command_auth(update: Update, context: CallbackContext) -> None:
 
     try:
         await update.effective_chat.send_message(f"Отличный код! Приятно познакомиться, {user.slug}")
-    except Unauthorized:
+    except Forbidden:
         return None
 
     await update.message.delete()
