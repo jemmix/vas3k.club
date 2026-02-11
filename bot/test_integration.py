@@ -8,9 +8,12 @@ Tests the bot with real Telegram library calls (no mocking of telegram lib), usi
 - Actual HTTP requests to webhook server
 """
 
+import asyncio
 import contextlib
+import httpx
 import json
 import logging
+import socket
 import threading
 import time
 import unittest
@@ -36,6 +39,18 @@ from notifications.telegram.tests import BaseTelegramTest, ExpectedRequest, Requ
 from users.models.user import User
 
 log = logging.getLogger(__name__)
+
+
+def wait_for_port(host: str, port: int, timeout: float = 5.0) -> bool:
+    """Wait for a TCP port to be listening."""
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            with socket.create_connection((host, port), timeout=0.5):
+                return True
+        except (socket.timeout, ConnectionRefusedError, OSError):
+            time.sleep(0.1)
+    return False
 
 
 class BotIntegrationTest(BaseTelegramTest, TestCase):
@@ -108,11 +123,14 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
         )
         self.close_old_connections_patch.start()
 
+        # Build the webhook URL that the bot will tell Telegram to use
+        webhook_url = f"http://{settings.TELEGRAM_BOT_WEBHOOK_HOST}:{settings.TELEGRAM_BOT_WEBHOOK_PORT}/"
+
         self.settings_override = override_settings(
-            TELEGRAM_BASE_URL=telegram_base_url,
+            TELEGRAM_BASE_URL=telegram_base_url,  # Mock Telegram API server
             TELEGRAM_TOKEN=BaseTelegramTest.TOKEN,
             TELEGRAM_ADMIN_CHAT_ID="123456789",
-            TELEGRAM_BOT_WEBHOOK_URL=telegram_base_url,
+            TELEGRAM_BOT_WEBHOOK_URL=webhook_url,  # Actual webhook server URL
             DEBUG=False,
         )
         self.settings_override.enable()
@@ -188,15 +206,18 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
 
         return Update(update_id=1, message=message)
 
-    def _send_webhook_update(self, update: Update) -> requests.Response:
+    async def _send_webhook_update(self, update: Update) -> httpx.Response:
         """
         Send an update to the webhook server via HTTP POST.
         """
-        webhook_url = f"http://{settings.TELEGRAM_BOT_WEBHOOK_HOST}:{settings.TELEGRAM_BOT_WEBHOOK_PORT}/{self.TELEGRAM_TOKEN_VALUE}"
+        # Use 127.0.0.1 for connection (can't connect to 0.0.0.0)
+        host = "127.0.0.1" if settings.TELEGRAM_BOT_WEBHOOK_HOST == "0.0.0.0" else settings.TELEGRAM_BOT_WEBHOOK_HOST
+        webhook_url = f"http://{host}:{settings.TELEGRAM_BOT_WEBHOOK_PORT}/{self.TELEGRAM_TOKEN_VALUE}"
         update_dict = update.to_dict()
         try:
-            response = requests.post(webhook_url, json=update_dict, timeout=5)
-            return response
+            async with httpx.AsyncClient() as client:
+                response = await client.post(webhook_url, json=update_dict, timeout=5.0)
+                return response
         except Exception as e:
             log.error(f"Failed to send webhook update: {e}")
             raise
@@ -221,11 +242,17 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
             message_sent_event.set()
             return self.SEND_MESSAGE_RESPONSE
 
+        # Build expected webhook URL (host:port/token)
+        expected_webhook_url = (
+            f"http://{settings.TELEGRAM_BOT_WEBHOOK_HOST}:"
+            f"{settings.TELEGRAM_BOT_WEBHOOK_PORT}/{self.TELEGRAM_TOKEN_VALUE}"
+        )
+
         self.server.expect_requests(
             [
                 ExpectedRequest(
                     Request(
-                        "GET",
+                        "POST",  # v20+ uses POST for all API calls
                         f"/{self.TELEGRAM_TOKEN_VALUE}/getMe",
                         {},
                     ),
@@ -236,8 +263,7 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
                         "POST",
                         f"/{self.TELEGRAM_TOKEN_VALUE}/setWebhook",
                         {
-                            "url": settings.TELEGRAM_BOT_WEBHOOK_URL
-                            + self.TELEGRAM_TOKEN_VALUE,
+                            "url": expected_webhook_url,
                             "max_connections": "40",
                         },
                     ),
@@ -250,23 +276,68 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
         self.server.add_route(SEND_MESSAGE_PATH, handle_send_message)
 
         self.bot_server = start_server()
+        log.info(f"Created bot server: {self.bot_server}")
 
-        response = self._send_webhook_update(self._create_command_update("/help"))
-        self.assertIn(response.status_code, [200, 202, 204])
+        # Start the webhook server in the background
+        log.info(f"Starting webhook on {settings.TELEGRAM_BOT_WEBHOOK_HOST}:{settings.TELEGRAM_BOT_WEBHOOK_PORT}")
+        webhook_task = asyncio.create_task(
+            self.bot_server.start_webhook(
+                host=settings.TELEGRAM_BOT_WEBHOOK_HOST,
+                port=settings.TELEGRAM_BOT_WEBHOOK_PORT,
+                url_path=self.TELEGRAM_TOKEN_VALUE,
+            )
+        )
+        log.info(f"Webhook task created: {webhook_task}")
 
-        # Wait for bot to send message (with timeout)
-        if not message_sent_event.wait(timeout=5):
-            self.fail("Bot did not send message within 5 seconds")
+        # Give the task a chance to start running
+        await asyncio.sleep(0.5)  # Give more time for startup
+        log.info(f"After sleep, task done={webhook_task.done()}")
 
-        # Verify the exact message sent
-        send_message_requests = [r for r in self.server.requests_received if r.path == SEND_MESSAGE_PATH]
-        self.assertEqual(len(send_message_requests), 1)
+        # Check if the task failed immediately
+        if webhook_task.done():
+            try:
+                webhook_task.result()
+            except Exception as e:
+                self.fail(f"Webhook task failed to start: {e}")
 
-        sent_request = send_message_requests[0]
-        self.assertEqual(sent_request.body["chat_id"], "12345")
-        self.assertEqual(sent_request.body["text"], bot.config.WELCOME_MESSAGE)
-        self.assertEqual(sent_request.body["parse_mode"], "HTML")
-        self.assertEqual(sent_request.body["disable_notification"], "False")
+        # Wait for the webhook server to be ready (listening on port)
+        # Use localhost instead of 0.0.0.0 for connection test
+        if not wait_for_port("127.0.0.1", settings.TELEGRAM_BOT_WEBHOOK_PORT, timeout=10.0):
+            # Check if task failed while we were waiting
+            if webhook_task.done():
+                try:
+                    webhook_task.result()
+                except Exception as e:
+                    self.fail(f"Webhook task failed: {e}")
+            self.fail(f"Webhook server did not start listening on port {settings.TELEGRAM_BOT_WEBHOOK_PORT}")
+
+        try:
+            response = await self._send_webhook_update(self._create_command_update("/help"))
+            self.assertIn(response.status_code, [200, 202, 204])
+
+            # Wait for bot to send message (with timeout)
+            if not message_sent_event.wait(timeout=10):
+                # Log what requests were actually received
+                log.error(f"Requests received by mock server: {[r.path for r in self.server.requests_received]}")
+                self.fail("Bot did not send message within 10 seconds")
+
+            # Verify the exact message sent
+            send_message_requests = [r for r in self.server.requests_received if r.path == SEND_MESSAGE_PATH]
+            self.assertEqual(len(send_message_requests), 1)
+
+            sent_request = send_message_requests[0]
+            self.assertEqual(sent_request.body["chat_id"], "12345")
+            self.assertEqual(sent_request.body["text"], bot.config.WELCOME_MESSAGE)
+            self.assertEqual(sent_request.body["parse_mode"], "HTML")
+            self.assertEqual(sent_request.body["disable_notification"], "False")
+        finally:
+            # Clean up: stop the bot server
+            await self.bot_server.stop()
+            webhook_task.cancel()
+            try:
+                await webhook_task
+            except asyncio.CancelledError:
+                pass
 
     @override_settings(DEBUG=True)
     async def test_polling_help_command(self):
@@ -315,7 +386,7 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
             [
                 ExpectedRequest(
                     Request(
-                        "GET",
+                        "POST",  # v20+ uses POST for all API calls
                         f"/{self.TELEGRAM_TOKEN_VALUE}/getMe",
                         {},
                     ),
@@ -338,16 +409,28 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
 
         self.bot_server = start_server()
 
-        # Wait for bot to send message (with timeout)
-        if not message_sent_event.wait(timeout=5):
-            self.fail("Bot did not send message within 5 seconds")
+        # Start polling in the background
+        polling_task = asyncio.create_task(self.bot_server.run_blocking())
 
-        # Verify the exact message sent
-        send_message_requests = [r for r in self.server.requests_received if r.path == SEND_MESSAGE_PATH]
-        self.assertEqual(len(send_message_requests), 1)
+        try:
+            # Wait for bot to send message (with timeout)
+            if not message_sent_event.wait(timeout=5):
+                self.fail("Bot did not send message within 5 seconds")
 
-        sent_request = send_message_requests[0]
-        self.assertEqual(sent_request.body["chat_id"], "12345")
-        self.assertEqual(sent_request.body["text"], bot.config.WELCOME_MESSAGE)
-        self.assertEqual(sent_request.body["parse_mode"], "HTML")
-        self.assertEqual(sent_request.body["disable_notification"], "False")
+            # Verify the exact message sent
+            send_message_requests = [r for r in self.server.requests_received if r.path == SEND_MESSAGE_PATH]
+            self.assertEqual(len(send_message_requests), 1)
+
+            sent_request = send_message_requests[0]
+            self.assertEqual(sent_request.body["chat_id"], "12345")
+            self.assertEqual(sent_request.body["text"], bot.config.WELCOME_MESSAGE)
+            self.assertEqual(sent_request.body["parse_mode"], "HTML")
+            self.assertEqual(sent_request.body["disable_notification"], "False")
+        finally:
+            # Clean up: stop the bot server
+            await self.bot_server.stop()
+            polling_task.cancel()
+            try:
+                await polling_task
+            except asyncio.CancelledError:
+                pass

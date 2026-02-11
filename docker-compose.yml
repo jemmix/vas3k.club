@@ -57,6 +57,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=vas3k_club
+    ports:
+      - "5432:5432"
 
   redis:
     image: redis:alpine

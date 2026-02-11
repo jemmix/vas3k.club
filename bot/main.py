@@ -55,8 +55,28 @@ class Server:
             await self.application.updater.start_polling()
             await asyncio.Event().wait()  # Run forever
 
+    async def start_webhook(self, host: str, port: int, url_path: str):
+        """Start the application and webhook server for testing"""
+        log.info(f"Server.start_webhook called with host={host}, port={port}, url_path={url_path}")
+        log.info("Initializing application...")
+        await self.application.initialize()
+        log.info("Starting application...")
+        await self.application.start()
+        log.info("Starting webhook updater...")
+        await self.application.updater.start_webhook(
+            listen=host,
+            port=port,
+            url_path=url_path,
+        )
+        log.info("Webhook started, waiting for event...")
+        # Keep the event loop alive while webhook server runs
+        await asyncio.Event().wait()
+
     async def stop(self):
-        await self.application.stop()
+        if self.application.updater and self.application.updater.running:
+            await self.application.updater.stop()
+        if self.application.running:
+            await self.application.stop()
         await self.application.shutdown()
 
 

@@ -5,6 +5,7 @@ import logging
 import socketserver
 import threading
 import time
+import urllib.parse
 from typing import Any, Callable, Protocol
 from unittest.mock import patch
 
@@ -48,6 +49,7 @@ class MockTelegramHandler(http.server.BaseHTTPRequestHandler):
         server = self._get_server()
 
         # Always log the request
+        log.info(f"Mock server received request: {request.method} {request.path}")
         server.log_request(request)
 
         # Try expected requests first (strict mode)
@@ -106,10 +108,23 @@ class MockTelegramHandler(http.server.BaseHTTPRequestHandler):
         body = self.rfile.read(content_length)
         body_str = body.decode("utf-8") if body else ""
 
+        # Parse body based on Content-Type header
+        content_type = self.headers.get("Content-Type", "")
+        if not body_str:
+            parsed_body = {}
+        elif "application/json" in content_type:
+            parsed_body = json.loads(body_str)
+        elif "application/x-www-form-urlencoded" in content_type:
+            # Parse form data
+            parsed_body = dict(urllib.parse.parse_qsl(body_str))
+        else:
+            # Default to empty dict if unknown content type
+            parsed_body = {}
+
         request = Request(
             path=self.path,
             method=self.command,
-            body=json.loads(body_str),
+            body=parsed_body,
         )
 
         self._do_handle(request)
@@ -142,12 +157,15 @@ class TelegramTestCaseProtocol(Protocol):
     def fail(self, msg=None): ...
 
 
-class MockTelegramServer(socketserver.TCPServer):
+class MockTelegramServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     test_case: TelegramTestCaseProtocol
     remaining_expected_requests: list[ExpectedRequest] | None = None
     all_requests_successful = True
     routes: dict[str, str | Callable[[Request], str]]
     requests_received: list[Request]
+
+    # Enable daemon threads so they don't prevent test exit
+    daemon_threads = True
 
     def __init__(self, test_case: TelegramTestCaseProtocol, *args, **kwargs) -> None:
         self.test_case = test_case
