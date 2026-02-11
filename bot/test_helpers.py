@@ -157,10 +157,9 @@ def create_message_update(
         telegram.Update with a Message
     """
     tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
-    # Chat needs bot parameter to support chat.send_message()
     # Detect group chats by negative ID starting with -100
     chat_type = "supergroup" if str(chat_id).startswith("-100") else "private"
-    tg_chat = TgChat(id=chat_id, type=chat_type, bot=bot)
+    tg_chat = TgChat(id=chat_id, type=chat_type)
 
     message = Message(
         message_id=message_id,
@@ -258,7 +257,7 @@ def create_command_update(
     )
 
     tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
-    tg_chat = TgChat(id=chat_id, type="private", bot=bot)
+    tg_chat = TgChat(id=chat_id, type="private")
 
     message = Message(
         message_id=1,
