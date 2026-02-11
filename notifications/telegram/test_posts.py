@@ -66,7 +66,7 @@ class PostNotificationTestBase(TestCase):
 class SendPublishedPostToModeratorsTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_admin_chat_with_reply_markup(self, mock_render, mock_send):
+    async def test_sends_to_admin_chat_with_reply_markup(self, mock_render, mock_send):
         send_published_post_to_moderators(self.post)
 
         mock_send.assert_called_once()
@@ -75,7 +75,7 @@ class SendPublishedPostToModeratorsTest(PostNotificationTestBase):
         self.assertEqual(kwargs["text"], "rendered_template")
         self.assertIsInstance(kwargs["reply_markup"], telegram.InlineKeyboardMarkup)
 
-    def test_reply_markup_contains_approve_reject_forgive_buttons(self, mock_render, mock_send):
+    async def test_reply_markup_contains_approve_reject_forgive_buttons(self, mock_render, mock_send):
         send_published_post_to_moderators(self.post)
 
         kwargs = mock_send.call_args[1]
@@ -86,7 +86,7 @@ class SendPublishedPostToModeratorsTest(PostNotificationTestBase):
         self.assertIn(f"reject_post:{self.post.id}", callback_data_values)
         self.assertIn(f"forgive_post:{self.post.id}", callback_data_values)
 
-    def test_reply_markup_contains_reason_buttons_for_post_type(self, mock_render, mock_send):
+    async def test_reply_markup_contains_reason_buttons_for_post_type(self, mock_render, mock_send):
         send_published_post_to_moderators(self.post)
 
         kwargs = mock_send.call_args[1]
@@ -98,7 +98,7 @@ class SendPublishedPostToModeratorsTest(PostNotificationTestBase):
         self.assertIn(f"reject_post_value:{self.post.id}", callback_data_values)
         self.assertIn(f"reject_post_inside:{self.post.id}", callback_data_values)
 
-    def test_renders_moderator_new_post_review_template(self, mock_render, mock_send):
+    async def test_renders_moderator_new_post_review_template(self, mock_render, mock_send):
         send_published_post_to_moderators(self.post)
 
         mock_render.assert_called_once_with("moderator_new_post_review.html", post=self.post)
@@ -109,7 +109,7 @@ class SendPublishedPostToModeratorsTest(PostNotificationTestBase):
 class SendIntroChangesToModeratorsTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_for_intro_type(self, mock_render, mock_send):
+    async def test_sends_for_intro_type(self, mock_render, mock_send):
         self.post.type = Post.TYPE_INTRO
         self.post.save()
 
@@ -125,7 +125,7 @@ class SendIntroChangesToModeratorsTest(PostNotificationTestBase):
             intro=self.post,
         )
 
-    def test_skips_non_intro_type(self, mock_render, mock_send):
+    async def test_skips_non_intro_type(self, mock_render, mock_send):
         send_intro_changes_to_moderators(self.post)
 
         mock_send.assert_not_called()
@@ -137,7 +137,7 @@ class SendIntroChangesToModeratorsTest(PostNotificationTestBase):
 class AnnounceInOnlineChannelTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_club_online(self, mock_render, mock_send):
+    async def test_sends_to_club_online(self, mock_render, mock_send):
         announce_in_online_channel(self.post)
 
         mock_send.assert_called_once()
@@ -147,7 +147,7 @@ class AnnounceInOnlineChannelTest(PostNotificationTestBase):
         self.assertEqual(kwargs["parse_mode"], telegram.ParseMode.HTML)
         self.assertTrue(kwargs["disable_preview"])
 
-    def test_renders_channel_post_announce_template(self, mock_render, mock_send):
+    async def test_renders_channel_post_announce_template(self, mock_render, mock_send):
         announce_in_online_channel(self.post)
 
         mock_render.assert_called_once_with("channel_post_announce.html", post=self.post)
@@ -159,7 +159,7 @@ class AnnounceInOnlineChannelTest(PostNotificationTestBase):
 class AnnounceInClubChannelTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_text_without_image(self, mock_render, mock_send, mock_send_image):
+    async def test_sends_text_without_image(self, mock_render, mock_send, mock_send_image):
         announce_in_club_channel(self.post)
 
         mock_send.assert_called_once()
@@ -170,7 +170,7 @@ class AnnounceInClubChannelTest(PostNotificationTestBase):
         self.assertEqual(kwargs["parse_mode"], telegram.ParseMode.HTML)
         mock_send_image.assert_not_called()
 
-    def test_sends_image_when_provided(self, mock_render, mock_send, mock_send_image):
+    async def test_sends_image_when_provided(self, mock_render, mock_send, mock_send_image):
         announce_in_club_channel(self.post, image="https://example.com/image.jpg")
 
         mock_send_image.assert_called_once()
@@ -180,7 +180,7 @@ class AnnounceInClubChannelTest(PostNotificationTestBase):
         self.assertEqual(kwargs["text"], "rendered_template")
         mock_send.assert_not_called()
 
-    def test_uses_custom_announce_text_when_provided(self, mock_render, mock_send, mock_send_image):
+    async def test_uses_custom_announce_text_when_provided(self, mock_render, mock_send, mock_send_image):
         announce_in_club_channel(self.post, announce_text="Custom text")
 
         mock_send.assert_called_once()
@@ -195,7 +195,7 @@ class AnnounceInClubChannelTest(PostNotificationTestBase):
 class AnnounceInClubChatsTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_club_chat_for_everywhere_visibility(self, mock_render, mock_send, mock_markup):
+    async def test_sends_to_club_chat_for_everywhere_visibility(self, mock_render, mock_send, mock_markup):
         self.post.visibility = Post.VISIBILITY_EVERYWHERE
         self.post.save()
 
@@ -207,7 +207,7 @@ class AnnounceInClubChatsTest(PostNotificationTestBase):
         self.assertEqual(kwargs["parse_mode"], telegram.ParseMode.HTML)
         self.assertTrue(kwargs["disable_preview"])
 
-    def test_sends_to_club_chat_when_no_room(self, mock_render, mock_send, mock_markup):
+    async def test_sends_to_club_chat_when_no_room(self, mock_render, mock_send, mock_markup):
         self.post.room = None
         self.post.save()
 
@@ -216,7 +216,7 @@ class AnnounceInClubChatsTest(PostNotificationTestBase):
         called_chats = [c[1]["chat"] for c in mock_send.call_args_list]
         self.assertIn(CLUB_CHAT, called_chats)
 
-    def test_sends_to_room_chat_when_room_has_chat_id(self, mock_render, mock_send, mock_markup):
+    async def test_sends_to_room_chat_when_room_has_chat_id(self, mock_render, mock_send, mock_markup):
         room = Room.objects.create(slug="testroom", title="Test Room", color="#000000", chat_id="room_chat_123")
         self.post.room = room
         self.post.visibility = Post.VISIBILITY_EVERYWHERE
@@ -229,7 +229,7 @@ class AnnounceInClubChatsTest(PostNotificationTestBase):
         self.assertIn(CLUB_CHAT, called_chats)
         room.delete()
 
-    def test_does_not_send_to_room_chat_when_send_new_posts_disabled(self, mock_render, mock_send, mock_markup):
+    async def test_does_not_send_to_room_chat_when_send_new_posts_disabled(self, mock_render, mock_send, mock_markup):
         room = Room.objects.create(
             slug="quietroom", title="Quiet Room", color="#000000",
             chat_id="quiet_chat_123", send_new_posts_to_chat=False,
@@ -250,7 +250,7 @@ class AnnounceInClubChatsTest(PostNotificationTestBase):
 class NotifyPostApprovedTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_author_with_telegram_id(self, mock_render, mock_send):
+    async def test_sends_to_author_with_telegram_id(self, mock_render, mock_send):
         notify_post_approved(self.post)
 
         mock_send.assert_called_once()
@@ -259,7 +259,7 @@ class NotifyPostApprovedTest(PostNotificationTestBase):
         self.assertEqual(kwargs["text"], "rendered_template")
         mock_render.assert_called_once_with("post_approved.html", post=self.post)
 
-    def test_skips_without_telegram_id(self, mock_render, mock_send):
+    async def test_skips_without_telegram_id(self, mock_render, mock_send):
         post = Post.objects.create(
             author=self.user,
             title="No TG Post",
@@ -271,7 +271,7 @@ class NotifyPostApprovedTest(PostNotificationTestBase):
         self.assertIsNone(result)
         post.delete()
 
-    def test_uses_room_template_for_room_only_post(self, mock_render, mock_send):
+    async def test_uses_room_template_for_room_only_post(self, mock_render, mock_send):
         room = Room.objects.create(slug="approveroom", title="Approve Room", color="#111111")
         self.post.room = room
         self.post.is_room_only = True
@@ -288,7 +288,7 @@ class NotifyPostApprovedTest(PostNotificationTestBase):
 class NotifyPostRejectedTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_with_reason(self, mock_render, mock_send):
+    async def test_sends_with_reason(self, mock_render, mock_send):
         reason = MagicMock(value="title")
         notify_post_rejected(self.post, reason)
 
@@ -298,7 +298,7 @@ class NotifyPostRejectedTest(PostNotificationTestBase):
         self.assertEqual(kwargs["chat"], Chat(id="111222"))
         self.assertEqual(kwargs["text"], "rendered_template")
 
-    def test_falls_back_to_draft_template_on_missing_template(self, mock_render, mock_send):
+    async def test_falls_back_to_draft_template_on_missing_template(self, mock_render, mock_send):
         mock_render.side_effect = [TemplateDoesNotExist("post_rejected/unknown.html"), "fallback_rendered"]
         reason = MagicMock(value="unknown")
 
@@ -308,7 +308,7 @@ class NotifyPostRejectedTest(PostNotificationTestBase):
         mock_render.assert_any_call("post_rejected/unknown.html", post=self.post)
         mock_render.assert_any_call("post_rejected/draft.html", post=self.post)
 
-    def test_skips_without_telegram_id(self, mock_render, mock_send):
+    async def test_skips_without_telegram_id(self, mock_render, mock_send):
         post = Post.objects.create(
             author=self.user,
             title="No TG Post",
@@ -327,7 +327,7 @@ class NotifyPostRejectedTest(PostNotificationTestBase):
 class NotifyPostCollectibleTagOwnersTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_notifies_tag_owners(self, mock_render, mock_send, mock_markup):
+    async def test_notifies_tag_owners(self, mock_render, mock_send, mock_markup):
         now = datetime.now(timezone.utc)
         tag_owner = User.objects.create(
             full_name="Tag Owner",
@@ -353,7 +353,7 @@ class NotifyPostCollectibleTagOwnersTest(PostNotificationTestBase):
         tag.delete()
         tag_owner.delete()
 
-    def test_skips_without_collectible_tag_code(self, mock_render, mock_send, mock_markup):
+    async def test_skips_without_collectible_tag_code(self, mock_render, mock_send, mock_markup):
         self.post.collectible_tag_code = None
         self.post.save()
 
@@ -361,7 +361,7 @@ class NotifyPostCollectibleTagOwnersTest(PostNotificationTestBase):
 
         mock_send.assert_not_called()
 
-    def test_skips_tag_owner_without_telegram_id(self, mock_render, mock_send, mock_markup):
+    async def test_skips_tag_owner_without_telegram_id(self, mock_render, mock_send, mock_markup):
         now = datetime.now(timezone.utc)
         tag_owner_no_tg = User.objects.create(
             full_name="No TG Tag Owner",
@@ -390,7 +390,7 @@ class NotifyPostCollectibleTagOwnersTest(PostNotificationTestBase):
 class NotifyAuthorFriendsTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_notifies_mentioned_users(self, mock_render, mock_send):
+    async def test_notifies_mentioned_users(self, mock_render, mock_send):
         now = datetime.now(timezone.utc)
         mentioned_user = User.objects.create(
             full_name="Mentioned User",
@@ -412,7 +412,7 @@ class NotifyAuthorFriendsTest(PostNotificationTestBase):
 
         mentioned_user.delete()
 
-    def test_notifies_friends(self, mock_render, mock_send):
+    async def test_notifies_friends(self, mock_render, mock_send):
         now = datetime.now(timezone.utc)
         friend_user = User.objects.create(
             full_name="Friend User",
@@ -435,7 +435,7 @@ class NotifyAuthorFriendsTest(PostNotificationTestBase):
         Friend.objects.filter(user_from=friend_user).delete()
         friend_user.delete()
 
-    def test_deduplicates_mentioned_user_who_is_also_friend(self, mock_render, mock_send):
+    async def test_deduplicates_mentioned_user_who_is_also_friend(self, mock_render, mock_send):
         now = datetime.now(timezone.utc)
         dual_user = User.objects.create(
             full_name="Dual User",
@@ -458,7 +458,7 @@ class NotifyAuthorFriendsTest(PostNotificationTestBase):
         Friend.objects.filter(user_from=dual_user).delete()
         dual_user.delete()
 
-    def test_skips_friend_not_subscribed_to_posts(self, mock_render, mock_send):
+    async def test_skips_friend_not_subscribed_to_posts(self, mock_render, mock_send):
         now = datetime.now(timezone.utc)
         unsub_friend = User.objects.create(
             full_name="Unsub Friend",
@@ -488,7 +488,7 @@ class NotifyAuthorFriendsTest(PostNotificationTestBase):
 class NotifyPostRoomSubscribersTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_notifies_subscribers(self, mock_render, mock_send, mock_markup):
+    async def test_notifies_subscribers(self, mock_render, mock_send, mock_markup):
         now = datetime.now(timezone.utc)
         subscriber_user = User.objects.create(
             full_name="Subscriber",
@@ -513,7 +513,7 @@ class NotifyPostRoomSubscribersTest(PostNotificationTestBase):
         room.delete()
         subscriber_user.delete()
 
-    def test_skips_without_room(self, mock_render, mock_send, mock_markup):
+    async def test_skips_without_room(self, mock_render, mock_send, mock_markup):
         self.post.room = None
         self.post.save()
 
@@ -521,7 +521,7 @@ class NotifyPostRoomSubscribersTest(PostNotificationTestBase):
 
         mock_send.assert_not_called()
 
-    def test_skips_subscriber_without_telegram_id(self, mock_render, mock_send, mock_markup):
+    async def test_skips_subscriber_without_telegram_id(self, mock_render, mock_send, mock_markup):
         now = datetime.now(timezone.utc)
         no_tg_subscriber = User.objects.create(
             full_name="No TG Sub",
@@ -549,14 +549,14 @@ class NotifyPostRoomSubscribersTest(PostNotificationTestBase):
 class PostReplyMarkupTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_returns_inline_keyboard_markup(self, mock_settings, mock_reverse):
+    async def test_returns_inline_keyboard_markup(self, mock_settings, mock_reverse):
         mock_settings.APP_HOST = "https://example.com"
 
         result = post_reply_markup(self.post)
 
         self.assertIsInstance(result, telegram.InlineKeyboardMarkup)
 
-    def test_contains_upvote_link_subscribe_buttons(self, mock_settings, mock_reverse):
+    async def test_contains_upvote_link_subscribe_buttons(self, mock_settings, mock_reverse):
         mock_settings.APP_HOST = "https://example.com"
 
         result = post_reply_markup(self.post)
@@ -576,7 +576,7 @@ class PostReplyMarkupTest(PostNotificationTestBase):
 class NotifyPostLabelChangedTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_label_set_to_admin_chat(self, mock_render, mock_send):
+    async def test_sends_label_set_to_admin_chat(self, mock_render, mock_send):
         post = MagicMock()
         post.label_code = "good"
         post.label = {"notify": False}
@@ -589,7 +589,7 @@ class NotifyPostLabelChangedTest(PostNotificationTestBase):
         self.assertEqual(kwargs["chat"], ADMIN_CHAT)
         mock_render.assert_called_once_with("moderator_label_set.html", post=post)
 
-    def test_sends_label_removed_to_admin_chat(self, mock_render, mock_send):
+    async def test_sends_label_removed_to_admin_chat(self, mock_render, mock_send):
         post = MagicMock()
         post.label_code = None
 
@@ -600,7 +600,7 @@ class NotifyPostLabelChangedTest(PostNotificationTestBase):
         self.assertEqual(kwargs["chat"], ADMIN_CHAT)
         mock_render.assert_called_once_with("moderator_label_removed.html", post=post)
 
-    def test_sends_to_author_when_label_has_notify_true(self, mock_render, mock_send):
+    async def test_sends_to_author_when_label_has_notify_true(self, mock_render, mock_send):
         post = MagicMock()
         post.label_code = "good"
         post.label = {"notify": True}
@@ -616,7 +616,7 @@ class NotifyPostLabelChangedTest(PostNotificationTestBase):
         author_kwargs = mock_send.call_args_list[1][1]
         self.assertEqual(author_kwargs["chat"], Chat(id="111222"))
 
-    def test_does_not_send_to_author_when_label_notify_false(self, mock_render, mock_send):
+    async def test_does_not_send_to_author_when_label_notify_false(self, mock_render, mock_send):
         post = MagicMock()
         post.label_code = "meh"
         post.label = {"notify": False}
@@ -626,7 +626,7 @@ class NotifyPostLabelChangedTest(PostNotificationTestBase):
 
         self.assertEqual(mock_send.call_count, 1)
 
-    def test_does_not_send_to_author_without_telegram_id(self, mock_render, mock_send):
+    async def test_does_not_send_to_author_without_telegram_id(self, mock_render, mock_send):
         post = MagicMock()
         post.label_code = "good"
         post.label = {"notify": True}
@@ -641,7 +641,7 @@ class NotifyPostLabelChangedTest(PostNotificationTestBase):
 class NotifyAdminsOnPostLabelChangedTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_admin_and_vibes_chat(self, mock_send):
+    async def test_sends_to_admin_and_vibes_chat(self, mock_send):
         post = MagicMock()
         post.title = "Test Post"
         post.label_code = "good"
@@ -653,7 +653,7 @@ class NotifyAdminsOnPostLabelChangedTest(PostNotificationTestBase):
         self.assertIn(ADMIN_CHAT, chats_called)
         self.assertIn(VIBES_CHAT, chats_called)
 
-    def test_message_contains_post_title_and_label(self, mock_send):
+    async def test_message_contains_post_title_and_label(self, mock_send):
         post = MagicMock()
         post.title = "My Great Post"
         post.label_code = "excellent"
@@ -669,7 +669,7 @@ class NotifyAdminsOnPostLabelChangedTest(PostNotificationTestBase):
 class NotifyPostCoauthorsChangedTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_notifies_added_and_removed_coauthors(self, mock_notify):
+    async def test_notifies_added_and_removed_coauthors(self, mock_notify):
         post = MagicMock()
         post.coauthors = ["alice", "bob"]
 
@@ -691,7 +691,7 @@ class NotifyPostCoauthorsChangedTest(PostNotificationTestBase):
         self.assertEqual(removed_call[0][0], {"charlie"})
         self.assertEqual(removed_call[0][1], "coauthor_removed.html")
 
-    def test_treats_no_history_as_empty_old_coauthors(self, mock_notify):
+    async def test_treats_no_history_as_empty_old_coauthors(self, mock_notify):
         post = MagicMock()
         post.coauthors = ["alice"]
 
@@ -712,7 +712,7 @@ class NotifyPostCoauthorsChangedTest(PostNotificationTestBase):
 class NotifyUsersByUsernameTest(PostNotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_users_by_slug(self, mock_render, mock_send):
+    async def test_sends_to_users_by_slug(self, mock_render, mock_send):
         notify_users_by_username({self.user_with_telegram.slug}, "coauthor_added.html", self.post)
 
         mock_send.assert_called_once()
@@ -720,17 +720,17 @@ class NotifyUsersByUsernameTest(PostNotificationTestBase):
         self.assertEqual(kwargs["chat"], Chat(id="111222"))
         mock_render.assert_called_once_with("coauthor_added.html", post=self.post)
 
-    def test_skips_user_without_telegram_id(self, mock_render, mock_send):
+    async def test_skips_user_without_telegram_id(self, mock_render, mock_send):
         notify_users_by_username({self.user.slug}, "coauthor_added.html", self.post)
 
         mock_send.assert_not_called()
 
-    def test_skips_nonexistent_user(self, mock_render, mock_send):
+    async def test_skips_nonexistent_user(self, mock_render, mock_send):
         notify_users_by_username({"nonexistentuser"}, "coauthor_added.html", self.post)
 
         mock_send.assert_not_called()
 
-    def test_sends_to_multiple_users(self, mock_render, mock_send):
+    async def test_sends_to_multiple_users(self, mock_render, mock_send):
         now = datetime.now(timezone.utc)
         another_user = User.objects.create(
             full_name="Another TG User",

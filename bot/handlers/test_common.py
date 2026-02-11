@@ -53,7 +53,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
         self.inactive_user.delete()
         self.close_old_connections_patch.stop()
 
-    def test_returns_active_user(self):
+    async def test_returns_active_user(self):
         """Should return user for active member"""
         update = create_message_update(
             bot=self.bot,
@@ -67,7 +67,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
         self.assertIsNotNone(user)
         self.assertEqual(user.id, self.active_user.id)
 
-    def test_rejects_unknown_user_via_message(self):
+    async def test_rejects_unknown_user_via_message(self):
         """Should send reply_text for unknown user via message"""
         update = create_message_update(
             bot=self.bot,
@@ -96,7 +96,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
 
         self.assertIsNone(user)
 
-    def test_rejects_unknown_user_via_callback_query(self):
+    async def test_rejects_unknown_user_via_callback_query(self):
         """Should send callback_query.answer for unknown user via callback"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -123,7 +123,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
 
         self.assertIsNone(user)
 
-    def test_rejects_banned_user_via_message(self):
+    async def test_rejects_banned_user_via_message(self):
         """Should reject banned user via message"""
         update = create_message_update(
             bot=self.bot,
@@ -151,7 +151,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
 
         self.assertIsNone(user)
 
-    def test_rejects_banned_user_via_callback_query(self):
+    async def test_rejects_banned_user_via_callback_query(self):
         """Should reject banned user via callback_query"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -178,7 +178,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
 
         self.assertIsNone(user)
 
-    def test_rejects_inactive_user_via_message(self):
+    async def test_rejects_inactive_user_via_message(self):
         """Should reject inactive user via message"""
         update = create_message_update(
             bot=self.bot,
@@ -235,7 +235,7 @@ class GetClubCommentTest(BaseTelegramTest, TestCase):
         Post.objects.filter(id=self.post.id).delete()
         self.user.delete()
 
-    def test_finds_comment_from_url_entity(self):
+    async def test_finds_comment_from_url_entity(self):
         """Should find comment from text_link entity"""
         comment_url = f"https://vas3k.club/post/test-post/#comment-{self.comment.id}"
 
@@ -261,7 +261,7 @@ class GetClubCommentTest(BaseTelegramTest, TestCase):
         self.assertIsNotNone(comment)
         self.assertEqual(comment.id, self.comment.id)
 
-    def test_returns_none_when_no_url_entity(self):
+    async def test_returns_none_when_no_url_entity(self):
         """Should return None when no URL entity found"""
         update = create_reply_update(
             bot=self.bot,
@@ -275,7 +275,7 @@ class GetClubCommentTest(BaseTelegramTest, TestCase):
 
         self.assertIsNone(comment)
 
-    def test_sends_message_when_comment_deleted(self):
+    async def test_sends_message_when_comment_deleted(self):
         """Should send message when comment ID not found"""
         # Use a valid UUID that doesn't exist
         fake_uuid = "00000000-0000-0000-0000-000000000000"
@@ -341,7 +341,7 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
         Post.objects.filter(id=self.post.id).delete()
         self.user.delete()
 
-    def test_finds_post_from_url_entity(self):
+    async def test_finds_post_from_url_entity(self):
         """Should find post from text_link entity"""
         post_url = f"https://vas3k.club/post/{self.post.slug}/"
 
@@ -366,7 +366,7 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
         self.assertIsNotNone(post)
         self.assertEqual(post.id, self.post.id)
 
-    def test_returns_none_when_no_url_entity(self):
+    async def test_returns_none_when_no_url_entity(self):
         """Should return None when no URL entity found"""
         update = create_reply_update(
             bot=self.bot,
@@ -380,7 +380,7 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
 
         self.assertIsNone(post)
 
-    def test_sends_message_when_post_not_found(self):
+    async def test_sends_message_when_post_not_found(self):
         """Should send message when post not found"""
         post_url = "https://vas3k.club/post/nonexistent-post/"
 
@@ -419,7 +419,7 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
 
         self.assertIsNone(post)
 
-    def test_sends_message_when_post_not_commentable(self):
+    async def test_sends_message_when_post_not_commentable(self):
         """Should send message when post is not commentable"""
         # Make post non-commentable
         self.post.is_commentable = False

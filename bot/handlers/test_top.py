@@ -114,7 +114,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
         self.cached_users_patch.stop()
 
     @patch("bot.handlers.top.render_html_message")
-    def test_sends_top_content(self, mock_render):
+    async def test_sends_top_content(self, mock_render):
         """Should send top posts, hot posts, intros, and comments"""
         # Mock template rendering
         mock_render.return_value = "Rendered top content message"
@@ -144,7 +144,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_top(update, context)
+        await command_top(update, context)
 
         # Verify template was called with correct parameters
         mock_render.assert_called_once()
@@ -160,7 +160,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
     @patch("bot.handlers.top.Comment.visible_objects")
     @patch("bot.handlers.top.Post.visible_objects")
     @patch("bot.handlers.top.render_html_message")
-    def test_handles_no_content(self, mock_render, mock_post_visible, mock_comment_visible):
+    async def test_handles_no_content(self, mock_render, mock_post_visible, mock_comment_visible):
         """Should send message even when no top content found"""
         # Mock empty querysets
         mock_post_qs = MagicMock()
@@ -207,7 +207,7 @@ class CommandTopTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_top(update, context)
+        await command_top(update, context)
 
         # Verify template was called with empty data
         mock_render.assert_called_once()

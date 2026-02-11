@@ -37,7 +37,7 @@ class NotifyUserNewAchievementTest(TestCase):
 
     @patch("notifications.telegram.achievements.render_html_message", return_value="<b>rendered</b>")
     @patch("notifications.telegram.achievements.send_telegram_image")
-    def test_sends_image_when_achievement_has_image(self, mock_send_image, mock_render):
+    async def test_sends_image_when_achievement_has_image(self, mock_send_image, mock_render):
         user = _create_user(telegram_id="123456")
         achievement = _create_achievement(code="img_test")
         user_achievement = UserAchievement.objects.create(user=user, achievement=achievement)
@@ -57,7 +57,7 @@ class NotifyUserNewAchievementTest(TestCase):
 
     @patch("notifications.telegram.achievements.send_telegram_message")
     @patch("notifications.telegram.achievements.send_telegram_image")
-    def test_sends_custom_message_when_present(self, mock_send_image, mock_send_message):
+    async def test_sends_custom_message_when_present(self, mock_send_image, mock_send_message):
         user = _create_user(telegram_id="123456")
         achievement = _create_achievement(code="msg_test", image="", custom_message="Congrats!")
         user_achievement = UserAchievement.objects.create(user=user, achievement=achievement)
@@ -73,7 +73,7 @@ class NotifyUserNewAchievementTest(TestCase):
     @patch("notifications.telegram.achievements.render_html_message", return_value="<b>rendered</b>")
     @patch("notifications.telegram.achievements.send_telegram_message")
     @patch("notifications.telegram.achievements.send_telegram_image")
-    def test_sends_both_image_and_custom_message(self, mock_send_image, mock_send_message, mock_render):
+    async def test_sends_both_image_and_custom_message(self, mock_send_image, mock_send_message, mock_render):
         user = _create_user(telegram_id="123456")
         achievement = _create_achievement(code="both_test", custom_message="Well done!")
         user_achievement = UserAchievement.objects.create(user=user, achievement=achievement)
@@ -92,7 +92,7 @@ class NotifyUserNewAchievementTest(TestCase):
 
     @patch("notifications.telegram.achievements.send_telegram_message")
     @patch("notifications.telegram.achievements.send_telegram_image")
-    def test_skips_non_member(self, mock_send_image, mock_send_message):
+    async def test_skips_non_member(self, mock_send_image, mock_send_message):
         user = _create_user(telegram_id="123456", moderation_status=User.MODERATION_STATUS_INTRO)
         achievement = _create_achievement(code="skip_nonmember", custom_message="Hello")
         user_achievement = UserAchievement.objects.create(user=user, achievement=achievement)
@@ -104,7 +104,7 @@ class NotifyUserNewAchievementTest(TestCase):
 
     @patch("notifications.telegram.achievements.send_telegram_message")
     @patch("notifications.telegram.achievements.send_telegram_image")
-    def test_skips_user_without_telegram_id(self, mock_send_image, mock_send_message):
+    async def test_skips_user_without_telegram_id(self, mock_send_image, mock_send_message):
         user = _create_user(telegram_id=None)
         achievement = _create_achievement(code="skip_notg", custom_message="Hello")
         user_achievement = UserAchievement.objects.create(user=user, achievement=achievement)
@@ -119,7 +119,7 @@ class NotifyAdminsOnAchievementTest(TestCase):
     tags = {"telegram", "telegram_notifications"}
 
     @patch("notifications.telegram.achievements.send_telegram_message")
-    def test_sends_to_vibes_chat(self, mock_send_message):
+    async def test_sends_to_vibes_chat(self, mock_send_message):
         user = _create_user(telegram_id="123456")
         achievement = _create_achievement(code="admin_test")
         user_achievement = UserAchievement.objects.create(user=user, achievement=achievement)
@@ -133,7 +133,7 @@ class NotifyAdminsOnAchievementTest(TestCase):
         self.assertIn(achievement.name, call_kwargs.kwargs["text"])
 
     @patch("notifications.telegram.achievements.send_telegram_message")
-    def test_includes_from_user_when_provided(self, mock_send_message):
+    async def test_includes_from_user_when_provided(self, mock_send_message):
         user = _create_user(telegram_id="123456")
         from_user = _create_user(
             telegram_id="654321",
@@ -149,7 +149,7 @@ class NotifyAdminsOnAchievementTest(TestCase):
         self.assertIn("Admin User", call_kwargs.kwargs["text"])
 
     @patch("notifications.telegram.achievements.send_telegram_message")
-    def test_handles_no_from_user(self, mock_send_message):
+    async def test_handles_no_from_user(self, mock_send_message):
         user = _create_user(telegram_id="123456")
         achievement = _create_achievement(code="no_from_test")
         user_achievement = UserAchievement.objects.create(user=user, achievement=achievement)

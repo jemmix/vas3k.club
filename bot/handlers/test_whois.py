@@ -50,7 +50,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
         self.django_close_patch.stop()
         self.cached_users_patch.stop()
 
-    def test_no_reply_or_forward(self):
+    async def test_no_reply_or_forward(self):
         """Should reject command without reply or forward"""
         update = create_command_update(
             bot=self.bot,
@@ -75,9 +75,9 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_whois(update, context)
+        await command_whois(update, context)
 
-    def test_reply_to_bot(self):
+    async def test_reply_to_bot(self):
         """Should reject whois on bot"""
         update = create_command_update(
             bot=self.bot,
@@ -111,9 +111,9 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_whois(update, context)
+        await command_whois(update, context)
 
-    def test_user_not_in_club(self):
+    async def test_user_not_in_club(self):
         """Should report when user not found in club"""
         update = create_command_update(
             bot=self.bot,
@@ -145,9 +145,9 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_whois(update, context)
+        await command_whois(update, context)
 
-    def test_successful_whois(self):
+    async def test_successful_whois(self):
         """Should return user profile for club member"""
         update = create_command_update(
             bot=self.bot,
@@ -183,9 +183,9 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_whois(update, context)
+        await command_whois(update, context)
 
-    def test_forwarded_message_hidden_profile(self):
+    async def test_forwarded_message_hidden_profile(self):
         """Should handle forwarded message with hidden profile"""
         update = create_command_update(
             bot=self.bot,
@@ -216,4 +216,4 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_whois(update, context)
+        await command_whois(update, context)

@@ -51,7 +51,7 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
         self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_allows_moderator_in_admin_chat(self):
+    async def test_allows_moderator_in_admin_chat(self):
         """Moderator in admin chat should be allowed"""
         mock_handler = MagicMock(return_value="success")
         decorated_handler = is_moderator(mock_handler)
@@ -66,13 +66,13 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
         context.bot = self.bot
 
         # No HTTP requests expected - handler should execute directly
-        result = decorated_handler(update, context)
+        result = await decorated_handler(update, context)
 
         self.assertEqual(result, "success")
         mock_handler.assert_called_once_with(update, context)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_non_admin_chat(self):
+    async def test_rejects_non_admin_chat(self):
         """Should reject when not in admin chat"""
         mock_handler = MagicMock()
         decorated_handler = is_moderator(mock_handler)
@@ -101,13 +101,13 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
             )
         ])
 
-        result = decorated_handler(update, context)
+        result = await decorated_handler(update, context)
 
         self.assertIsNone(result)
         mock_handler.assert_not_called()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_non_moderator(self):
+    async def test_rejects_non_moderator(self):
         """Should reject regular user even in admin chat"""
         mock_handler = MagicMock()
         decorated_handler = is_moderator(mock_handler)
@@ -136,13 +136,13 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
             )
         ])
 
-        result = decorated_handler(update, context)
+        result = await decorated_handler(update, context)
 
         self.assertIsNone(result)
         mock_handler.assert_not_called()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_unknown_telegram_user(self):
+    async def test_rejects_unknown_telegram_user(self):
         """Should reject user not in database"""
         mock_handler = MagicMock()
         decorated_handler = is_moderator(mock_handler)
@@ -171,7 +171,7 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
             )
         ])
 
-        result = decorated_handler(update, context)
+        result = await decorated_handler(update, context)
 
         self.assertIsNone(result)
         mock_handler.assert_not_called()
@@ -197,7 +197,7 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
         self.member_user.delete()
 
     @patch("bot.decorators.cached_telegram_users")
-    def test_allows_club_member(self, mock_cached_users):
+    async def test_allows_club_member(self, mock_cached_users):
         """Club member should be allowed"""
         mock_cached_users.return_value = {"333": self.member_user}
         mock_handler = MagicMock(return_value="success")
@@ -212,13 +212,13 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
         context = MagicMock(spec=CallbackContext)
         context.bot = self.bot
 
-        result = decorated_handler(update, context)
+        result = await decorated_handler(update, context)
 
         self.assertEqual(result, "success")
         mock_handler.assert_called_once_with(update, context)
 
     @patch("bot.decorators.cached_telegram_users")
-    def test_rejects_non_member_via_message(self, mock_cached_users):
+    async def test_rejects_non_member_via_message(self, mock_cached_users):
         """Non-member via message should get reply_text"""
         mock_cached_users.return_value = {}  # Empty cache
         mock_handler = MagicMock()
@@ -249,13 +249,13 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
             )
         ])
 
-        result = decorated_handler(update, context)
+        result = await decorated_handler(update, context)
 
         self.assertIsNone(result)
         mock_handler.assert_not_called()
 
     @patch("bot.decorators.cached_telegram_users")
-    def test_rejects_non_member_via_callback_query(self, mock_cached_users):
+    async def test_rejects_non_member_via_callback_query(self, mock_cached_users):
         """Non-member via callback_query should get answer"""
         mock_cached_users.return_value = {}  # Empty cache
         mock_handler = MagicMock()
@@ -284,7 +284,7 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
             )
         ])
 
-        result = decorated_handler(update, context)
+        result = await decorated_handler(update, context)
 
         self.assertIsNone(result)
         mock_handler.assert_not_called()

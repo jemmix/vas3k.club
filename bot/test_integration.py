@@ -185,7 +185,7 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
             raise
 
     @override_settings(DEBUG=False)
-    def test_webhook_help_command(self):
+    async def test_webhook_help_command(self):
         """
         Test: Send /help command via webhook and verify bot sends help message
 
@@ -252,7 +252,7 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
         self.assertEqual(sent_request.body["disable_notification"], "False")
 
     @override_settings(DEBUG=True)
-    def test_polling_help_command(self):
+    async def test_polling_help_command(self):
         """
         Test: Send /help command via polling and verify bot sends help message
 

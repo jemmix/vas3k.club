@@ -22,7 +22,7 @@ class NotifyUserBanTest(TestCase):
         )
 
     @patch("notifications.telegram.ban.send_telegram_message")
-    def test_sends_message_to_user_with_telegram_id(self, mock_send_msg):
+    async def test_sends_message_to_user_with_telegram_id(self, mock_send_msg):
         from notifications.telegram.ban import notify_user_ban
 
         notify_user_ban(self.user, days=7, reason="spam")
@@ -34,7 +34,7 @@ class NotifyUserBanTest(TestCase):
         self.assertIn("spam", call_kwargs.kwargs["text"])
 
     @patch("notifications.telegram.ban.send_telegram_message")
-    def test_skips_user_without_telegram_id(self, mock_send_msg):
+    async def test_skips_user_without_telegram_id(self, mock_send_msg):
         from notifications.telegram.ban import notify_user_ban
 
         self.user.telegram_id = None
@@ -59,7 +59,7 @@ class NotifyAdminsOnBanTest(TestCase):
         )
 
     @patch("notifications.telegram.ban.send_telegram_message")
-    def test_sends_to_admin_and_vibes_chats(self, mock_send_msg):
+    async def test_sends_to_admin_and_vibes_chats(self, mock_send_msg):
         from notifications.telegram.ban import notify_admins_on_ban
 
         notify_admins_on_ban(self.user, days=3, reason="toxicity")

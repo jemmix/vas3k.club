@@ -51,7 +51,7 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
         self.cached_users_patch.stop()
         self.close_db_patch.stop()
 
-    def test_no_code_provided(self):
+    async def test_no_code_provided(self):
         """Should send error message when no code provided"""
         update = create_command_update(
             bot=self.bot,
@@ -78,9 +78,9 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_auth(update, context)
+        await command_auth(update, context)
 
-    def test_invalid_code(self):
+    async def test_invalid_code(self):
         """Should send error message for invalid code"""
         update = create_command_update(
             bot=self.bot,
@@ -106,9 +106,9 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_auth(update, context)
+        await command_auth(update, context)
 
-    def test_success_approved_user(self):
+    async def test_success_approved_user(self):
         """Should link approved user and delete message"""
         update = create_command_update(
             bot=self.bot,
@@ -145,14 +145,14 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_auth(update, context)
+        await command_auth(update, context)
 
         # Verify user was updated
         self.user_approved.refresh_from_db()
         self.assertEqual(self.user_approved.telegram_id, "111")
         self.assertIsNotNone(self.user_approved.telegram_data)
 
-    def test_success_unapproved_user(self):
+    async def test_success_unapproved_user(self):
         """Should link unapproved user and send moderation message"""
         update = create_command_update(
             bot=self.bot,
@@ -201,7 +201,7 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_auth(update, context)
+        await command_auth(update, context)
 
         # Verify user was updated
         self.user_unapproved.refresh_from_db()

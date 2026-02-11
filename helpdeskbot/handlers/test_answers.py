@@ -52,7 +52,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
 
     @patch("helpdeskbot.handlers.answers.notify_user_about_answer")
     @patch("helpdeskbot.handlers.answers.Answer.create_from_update")
-    def test_creates_answer_and_notifies_user(self, mock_create_answer, mock_notify):
+    async def test_creates_answer_and_notifies_user(self, mock_create_answer, mock_notify):
         """Should create answer from update and notify user"""
         # Create update where user replies to a forwarded question from channel
         update = create_forwarded_message_update(
@@ -75,7 +75,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
         mock_notify.assert_called_once()
 
     @patch("helpdeskbot.handlers.answers.log")
-    def test_handles_missing_forward_message_id(self, mock_log):
+    async def test_handles_missing_forward_message_id(self, mock_log):
         """Should log error when forward_from_message_id is None"""
         # Create a reply update but without forward metadata
         update = create_reply_update(
@@ -94,7 +94,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
         mock_log.error.assert_called_once()
 
     @patch("helpdeskbot.handlers.answers.log")
-    def test_handles_question_not_found(self, mock_log):
+    async def test_handles_question_not_found(self, mock_log):
         """Should log warning when question is not found"""
         # Create update with non-existent forward_from_message_id
         update = create_forwarded_message_update(
@@ -145,7 +145,7 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.send_message")
     @patch("helpdeskbot.handlers.answers.notify_user_about_answer")
     @patch("helpdeskbot.handlers.answers.Answer.create_from_update")
-    def test_creates_answer_forwards_to_channel_and_notifies(
+    async def test_creates_answer_forwards_to_channel_and_notifies(
         self, mock_create_answer, mock_notify, mock_send
     ):
         """Should create answer, forward to channel, send confirmation, and notify user"""
@@ -185,7 +185,7 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
         self.assertEqual(mock_send.call_count, 2)
 
     @patch("helpdeskbot.handlers.answers.log")
-    def test_handles_missing_message_id(self, mock_log):
+    async def test_handles_missing_message_id(self, mock_log):
         """Should log error when reply_to_message.message_id is None"""
         # Create update with reply_to_message but no message_id
         update = create_message_update(
@@ -224,7 +224,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
 
     @patch("helpdeskbot.handlers.answers.send_message")
     @patch("helpdeskbot.handlers.answers.render_html_message")
-    def test_sends_notification_to_question_author(self, mock_render, mock_send):
+    async def test_sends_notification_to_question_author(self, mock_render, mock_send):
         """Should send notification to question author"""
         mock_render.return_value = "Notification text"
 
@@ -245,7 +245,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
         )
 
     @patch("helpdeskbot.handlers.answers.log")
-    def test_handles_question_without_user(self, mock_log):
+    async def test_handles_question_without_user(self, mock_log):
         """Should log info when question has no user"""
         question_no_user = Question.objects.create(
             user=None,
@@ -268,7 +268,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
         question_no_user.delete()
 
     @patch("helpdeskbot.handlers.answers.log")
-    def test_skips_notification_for_self_reply(self, mock_log):
+    async def test_skips_notification_for_self_reply(self, mock_log):
         """Should skip notification when user replies to their own question"""
         update = create_message_update(
             bot=self.bot,
@@ -288,7 +288,7 @@ class OnReplyMessageTest(AnswersTestBase):
 
     @patch("helpdeskbot.handlers.answers.handle_answer_from_channel")
     @patch("helpdeskbot.handlers.answers.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID", "-1001234567890")
-    def test_routes_to_channel_handler(self, mock_handle_channel):
+    async def test_routes_to_channel_handler(self, mock_handle_channel):
         """Should route to channel handler when reply is forwarded from channel"""
         # Create update replying to a forwarded message from channel
         update = create_forwarded_message_update(
@@ -305,7 +305,7 @@ class OnReplyMessageTest(AnswersTestBase):
         mock_handle_channel.assert_called_once_with(update)
 
     @patch("helpdeskbot.handlers.answers.handle_answer_from_room_chat")
-    def test_routes_to_room_handler(self, mock_handle_room):
+    async def test_routes_to_room_handler(self, mock_handle_room):
         """Should route to room handler when reply is in a room chat"""
         # Create update replying to a message in a room (not forwarded)
         update = create_reply_update(
@@ -323,7 +323,7 @@ class OnReplyMessageTest(AnswersTestBase):
 
         mock_handle_room.assert_called_once_with(update)
 
-    def test_returns_none_for_invalid_update(self):
+    async def test_returns_none_for_invalid_update(self):
         """Should return None for updates without proper structure"""
         # No message
         update_no_msg = create_message_update(

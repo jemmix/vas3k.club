@@ -190,7 +190,7 @@ class HelpdeskBotIntegrationTest(BaseTelegramTest, TestCase):
             raise
 
     @override_settings(DEBUG=False)
-    def test_webhook_help_command(self):
+    async def test_webhook_help_command(self):
         """
         Test: Send /help command via webhook and verify bot sends help message
 
@@ -274,7 +274,7 @@ class HelpdeskBotIntegrationTest(BaseTelegramTest, TestCase):
         self.assertEqual(sent_request.body["parse_mode"], "HTML")
 
     @override_settings(DEBUG=True)
-    def test_polling_help_command(self):
+    async def test_polling_help_command(self):
         """
         Test: Send /help command via polling and verify bot sends help message
 

@@ -28,7 +28,7 @@ class NotifyAdminsOnMuteTest(TestCase):
         )
 
     @patch("notifications.telegram.muted.send_telegram_message")
-    def test_sends_to_admin_and_vibes_chats(self, mock_send_msg):
+    async def test_sends_to_admin_and_vibes_chats(self, mock_send_msg):
         from notifications.telegram.muted import notify_admins_on_mute
 
         notify_admins_on_mute(self.user_from, self.user_to, comment="rude behavior")
@@ -40,7 +40,7 @@ class NotifyAdminsOnMuteTest(TestCase):
         self.assertIn(VIBES_CHAT, chats_called)
 
     @patch("notifications.telegram.muted.send_telegram_message")
-    def test_text_contains_user_names(self, mock_send_msg):
+    async def test_text_contains_user_names(self, mock_send_msg):
         from notifications.telegram.muted import notify_admins_on_mute
 
         notify_admins_on_mute(self.user_from, self.user_to, comment="being mean")

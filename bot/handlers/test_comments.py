@@ -35,7 +35,7 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         self.user.delete()
         self.close_old_connections_patch.stop()
 
-    def test_skips_non_reply(self):
+    async def test_skips_non_reply(self):
         """Should skip messages that are not replies"""
         update = create_message_update(
             bot=self.bot,
@@ -49,11 +49,11 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         context = MagicMock(spec=CallbackContext)
         context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
-        result = comment(update, context)
+        result = await comment(update, context)
 
         self.assertIsNone(result)
 
-    def test_skips_reply_to_other_user(self):
+    async def test_skips_reply_to_other_user(self):
         """Should skip replies to other users (not bot)"""
         update = create_reply_update(
             bot=self.bot,
@@ -67,12 +67,12 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         context = MagicMock(spec=CallbackContext)
         context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
-        result = comment(update, context)
+        result = await comment(update, context)
 
         self.assertIsNone(result)
 
     @patch('bot.handlers.comments.reply_to_comment')
-    def test_routes_to_reply_to_comment(self, mock_reply_to_comment):
+    async def test_routes_to_reply_to_comment(self, mock_reply_to_comment):
         """Should route to reply_to_comment when message starts with comment emoji"""
         # Create update replying to a bot message with comment emoji
         # Bot ID is 123456 (from getMe route in BaseTelegramTest)
@@ -88,12 +88,12 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         context = MagicMock(spec=CallbackContext)
         context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
-        comment(update, context)
+        await comment(update, context)
 
         mock_reply_to_comment.assert_called_once_with(update, context)
 
     @patch('bot.handlers.comments.comment_to_post')
-    def test_routes_to_comment_to_post(self, mock_comment_to_post):
+    async def test_routes_to_comment_to_post(self, mock_comment_to_post):
         """Should route to comment_to_post when message starts with post emoji"""
         # Create update replying to a bot message with post emoji
         # Bot ID is 123456 (from getMe route in BaseTelegramTest)
@@ -109,7 +109,7 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         context = MagicMock(spec=CallbackContext)
         context.bot = self.bot  # Use real bot (getMe is handled by mock server)
 
-        comment(update, context)
+        await comment(update, context)
 
         mock_comment_to_post.assert_called_once_with(update, context)
 
@@ -174,7 +174,7 @@ class ReplyToCommentTest(BaseTelegramTest, TestCase):
         self.cached_users_patch.stop()
 
     @override_settings(APP_HOST="https://vas3k.club")
-    def test_creates_reply_comment(self):
+    async def test_creates_reply_comment(self):
         """Should create a reply to existing comment"""
         comment_url = f"https://vas3k.club/post/{self.post.slug}/#comment-{self.comment.id}"
 
@@ -201,7 +201,7 @@ class ReplyToCommentTest(BaseTelegramTest, TestCase):
         )
         context = MagicMock()
 
-        reply_to_comment(update, context)
+        await reply_to_comment(update, context)
 
         # Verify comment was created
         new_comment = Comment.objects.filter(post=self.post, reply_to=self.comment).first()
@@ -226,7 +226,7 @@ class ReplyToCommentTest(BaseTelegramTest, TestCase):
         self.assertEqual(sent_request.body["disable_notification"], "False")
 
     @patch("bot.handlers.comments.is_comment_rate_limit_exceeded", return_value=True)
-    def test_rejects_rate_limited_user(self, mock_rate_limit):
+    async def test_rejects_rate_limited_user(self, mock_rate_limit):
         """Should reject user who exceeded rate limit"""
         comment_url = f"https://vas3k.club/post/{self.post.slug}/#comment-{self.comment.id}"
 
@@ -253,7 +253,7 @@ class ReplyToCommentTest(BaseTelegramTest, TestCase):
         )
         context = MagicMock()
 
-        reply_to_comment(update, context)
+        await reply_to_comment(update, context)
 
         # Verify no comment was created
         new_comment = Comment.objects.filter(post=self.post, reply_to=self.comment).first()
@@ -324,7 +324,7 @@ class CommentToPostTest(BaseTelegramTest, TestCase):
         self.cached_users_patch.stop()
 
     @override_settings(APP_HOST="https://vas3k.club")
-    def test_creates_top_level_comment(self):
+    async def test_creates_top_level_comment(self):
         """Should create a top-level comment on post"""
         post_url = f"https://vas3k.club/post/{self.post.slug}/"
 
@@ -353,7 +353,7 @@ class CommentToPostTest(BaseTelegramTest, TestCase):
         )
         context = MagicMock()
 
-        comment_to_post(update, context)
+        await comment_to_post(update, context)
 
         # Verify comment was created
         new_comment = Comment.objects.filter(post=self.post, reply_to=None).first()
@@ -376,7 +376,7 @@ class CommentToPostTest(BaseTelegramTest, TestCase):
         self.assertEqual(sent_request.body["disable_web_page_preview"], "True")
         self.assertEqual(sent_request.body["disable_notification"], "False")
 
-    def test_rejects_short_comment(self):
+    async def test_rejects_short_comment(self):
         """Should reject comments shorter than MIN_COMMENT_LEN"""
         post_url = f"https://vas3k.club/post/{self.post.slug}/"
 
@@ -403,7 +403,7 @@ class CommentToPostTest(BaseTelegramTest, TestCase):
         )
         context = MagicMock()
 
-        comment_to_post(update, context)
+        await comment_to_post(update, context)
 
         # Verify no comment was created
         new_comment = Comment.objects.filter(post=self.post, reply_to=None).first()

@@ -34,7 +34,7 @@ class NotifyModeratorsOnMentionTest(TestCase):
 
     @patch("notifications.telegram.moderation.render_html_message")
     @patch("notifications.telegram.moderation.send_telegram_message")
-    def test_sends_to_admin_and_vibes_chats(self, mock_send_msg, mock_render):
+    async def test_sends_to_admin_and_vibes_chats(self, mock_send_msg, mock_render):
         from notifications.telegram.moderation import notify_moderators_on_mention
 
         mock_render.return_value = "<b>Moderator mention</b>"
@@ -49,7 +49,7 @@ class NotifyModeratorsOnMentionTest(TestCase):
 
     @patch("notifications.telegram.moderation.render_html_message")
     @patch("notifications.telegram.moderation.send_telegram_message")
-    def test_renders_template_with_comment(self, mock_send_msg, mock_render):
+    async def test_renders_template_with_comment(self, mock_send_msg, mock_render):
         from notifications.telegram.moderation import notify_moderators_on_mention
 
         mock_render.return_value = "<b>rendered</b>"

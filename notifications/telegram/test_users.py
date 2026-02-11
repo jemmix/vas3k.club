@@ -49,7 +49,7 @@ class NotificationTestBase(TestCase):
 class NotifyProfileNeedsReviewTest(NotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_admin_chat_with_reply_markup(self, mock_render, mock_send):
+    async def test_sends_to_admin_chat_with_reply_markup(self, mock_render, mock_send):
         intro = Post.objects.create(
             author=self.user_with_telegram,
             title="My Intro",
@@ -69,7 +69,7 @@ class NotifyProfileNeedsReviewTest(NotificationTestBase):
             intro=intro,
         )
 
-    def test_reply_markup_contains_approve_and_reject_buttons(self, mock_render, mock_send):
+    async def test_reply_markup_contains_approve_and_reject_buttons(self, mock_render, mock_send):
         intro = Post.objects.create(
             author=self.user_with_telegram,
             title="My Intro",
@@ -99,14 +99,14 @@ class NotifyProfileNeedsReviewTest(NotificationTestBase):
 class NotifyUserProfileApprovedTest(NotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_user_with_telegram_id(self, mock_send):
+    async def test_sends_to_user_with_telegram_id(self, mock_send):
         notify_user_profile_approved(self.user_with_telegram)
 
         mock_send.assert_called_once()
         kwargs = mock_send.call_args[1]
         self.assertEqual(kwargs["chat"], Chat(id="123456"))
 
-    def test_skips_user_without_telegram_id(self, mock_send):
+    async def test_skips_user_without_telegram_id(self, mock_send):
         notify_user_profile_approved(self.user)
 
         mock_send.assert_not_called()
@@ -117,7 +117,7 @@ class NotifyUserProfileApprovedTest(NotificationTestBase):
 class NotifyUserProfileRejectedTest(NotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_with_reason_template(self, mock_render, mock_send):
+    async def test_sends_with_reason_template(self, mock_render, mock_send):
         notify_user_profile_rejected(self.user_with_telegram, UserRejectReason.intro)
 
         mock_render.assert_called_once_with("rejected/intro.html", user=self.user_with_telegram)
@@ -126,12 +126,12 @@ class NotifyUserProfileRejectedTest(NotificationTestBase):
         self.assertEqual(kwargs["chat"], Chat(id="123456"))
         self.assertEqual(kwargs["text"], "<b>rejected</b>")
 
-    def test_skips_user_without_telegram_id(self, mock_render, mock_send):
+    async def test_skips_user_without_telegram_id(self, mock_render, mock_send):
         notify_user_profile_rejected(self.user, UserRejectReason.intro)
 
         mock_send.assert_not_called()
 
-    def test_falls_back_to_intro_template_on_missing_template(self, mock_render, mock_send):
+    async def test_falls_back_to_intro_template_on_missing_template(self, mock_render, mock_send):
         from django.template import TemplateDoesNotExist
 
         mock_render.side_effect = [TemplateDoesNotExist("rejected/ai.html"), "<b>fallback</b>"]
@@ -147,7 +147,7 @@ class NotifyUserProfileRejectedTest(NotificationTestBase):
 class NotifyUserPingTest(NotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_user_with_telegram_id(self, mock_send):
+    async def test_sends_to_user_with_telegram_id(self, mock_send):
         notify_user_ping(self.user_with_telegram, "Please update your profile")
 
         mock_send.assert_called_once()
@@ -155,7 +155,7 @@ class NotifyUserPingTest(NotificationTestBase):
         self.assertEqual(kwargs["chat"], Chat(id="123456"))
         self.assertIn("Please update your profile", kwargs["text"])
 
-    def test_skips_user_without_telegram_id(self, mock_send):
+    async def test_skips_user_without_telegram_id(self, mock_send):
         notify_user_ping(self.user, "Please update your profile")
 
         mock_send.assert_not_called()
@@ -165,7 +165,7 @@ class NotifyUserPingTest(NotificationTestBase):
 class NotifyAdminUserPingTest(NotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_admin_chat(self, mock_send):
+    async def test_sends_to_admin_chat(self, mock_send):
         notify_admin_user_ping(self.user, "Please update your profile")
 
         mock_send.assert_called_once()
@@ -179,7 +179,7 @@ class NotifyAdminUserPingTest(NotificationTestBase):
 class NotifyAdminUserUnmoderateTest(NotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_to_admin_chat(self, mock_send):
+    async def test_sends_to_admin_chat(self, mock_send):
         notify_admin_user_unmoderate(self.user)
 
         mock_send.assert_called_once()
@@ -192,7 +192,7 @@ class NotifyAdminUserUnmoderateTest(NotificationTestBase):
 class NotifyUserAuthTest(NotificationTestBase):
     tags = {"telegram", "telegram_notifications"}
 
-    def test_sends_code_to_user_with_telegram_id(self, mock_send):
+    async def test_sends_code_to_user_with_telegram_id(self, mock_send):
         code = MagicMock(code="123456")
         notify_user_auth(self.user_with_telegram, code)
 
@@ -201,7 +201,7 @@ class NotifyUserAuthTest(NotificationTestBase):
         self.assertEqual(kwargs["chat"], Chat(id="123456"))
         self.assertIn("123456", kwargs["text"])
 
-    def test_skips_user_without_telegram_id(self, mock_send):
+    async def test_skips_user_without_telegram_id(self, mock_send):
         code = MagicMock(code="123456")
         notify_user_auth(self.user, code)
 

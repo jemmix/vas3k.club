@@ -75,7 +75,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         self.close_old_connections_patch.stop()
 
     @override_settings(APP_HOST="https://vas3k.club", TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_approves_post(self):
+    async def test_approves_post(self):
         """Should approve post and send confirmation"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -112,7 +112,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        approve_post(update, context)
+        await approve_post(update, context)
 
         self.post.refresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_APPROVED)
@@ -120,7 +120,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         self.assertIsNotNone(self.post.published_at)
 
     @override_settings(APP_HOST="https://vas3k.club", TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_approves_room_only_post(self):
+    async def test_approves_room_only_post(self):
         """Should approve room-only post with different message"""
         from rooms.models import Room
 
@@ -168,7 +168,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        approve_post(update, context)
+        await approve_post(update, context)
 
         self.post.refresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_APPROVED)
@@ -176,7 +176,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         room.delete()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_already_moderated_post(self):
+    async def test_rejects_already_moderated_post(self):
         """Should reject post that was already moderated"""
         self.post.moderation_status = Post.MODERATION_APPROVED
         self.post.save()
@@ -215,7 +215,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        approve_post(update, context)
+        await approve_post(update, context)
 
         # Should not change status
         self.post.refresh_from_db()
@@ -262,7 +262,7 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
         self.close_old_connections_patch.stop()
 
     @override_settings(APP_HOST="https://vas3k.club", TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_forgives_post(self):
+    async def test_forgives_post(self):
         """Should forgive post and remove collectible tag"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -299,7 +299,7 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        forgive_post(update, context)
+        await forgive_post(update, context)
 
         self.post.refresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_FORGIVEN)
@@ -349,7 +349,7 @@ class RejectPostTest(BaseTelegramTest, TestCase):
         self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_post_with_default_reason(self):
+    async def test_rejects_post_with_default_reason(self):
         """Should reject post with default reason"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -385,14 +385,14 @@ class RejectPostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        reject_post(update, context)
+        await reject_post(update, context)
 
         self.post.refresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_REJECTED)
         self.assertEqual(self.post.visibility, Post.VISIBILITY_DRAFT)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_post_with_specific_reason(self):
+    async def test_rejects_post_with_specific_reason(self):
         """Should reject post with specific reason"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -428,7 +428,7 @@ class RejectPostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        reject_post(update, context)
+        await reject_post(update, context)
 
         self.post.refresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_REJECTED)
@@ -486,7 +486,7 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
         self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_approves_user_profile(self):
+    async def test_approves_user_profile(self):
         """Should approve user and intro"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -522,7 +522,7 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        approve_user_profile(update, context)
+        await approve_user_profile(update, context)
 
         self.user.refresh_from_db()
         self.intro.refresh_from_db()
@@ -540,7 +540,7 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
         self.assertIsNotNone(subscription)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_already_approved_user(self):
+    async def test_rejects_already_approved_user(self):
         """Should reject if user already approved"""
         self.user.moderation_status = User.MODERATION_STATUS_APPROVED
         self.user.save()
@@ -579,7 +579,7 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        approve_user_profile(update, context)
+        await approve_user_profile(update, context)
 
 
 class RejectUserProfileTest(BaseTelegramTest, TestCase):
@@ -618,7 +618,7 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
         self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_user_with_default_reason(self):
+    async def test_rejects_user_with_default_reason(self):
         """Should reject user with default reason"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -654,13 +654,13 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        reject_user_profile(update, context)
+        await reject_user_profile(update, context)
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.moderation_status, User.MODERATION_STATUS_REJECTED)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_user_with_specific_reason(self):
+    async def test_rejects_user_with_specific_reason(self):
         """Should reject user with specific reason"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -696,13 +696,13 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        reject_user_profile(update, context)
+        await reject_user_profile(update, context)
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.moderation_status, User.MODERATION_STATUS_REJECTED)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
-    def test_rejects_already_rejected_user(self):
+    async def test_rejects_already_rejected_user(self):
         """Should reject if user already rejected"""
         self.user.moderation_status = User.MODERATION_STATUS_REJECTED
         self.user.save()
@@ -741,7 +741,7 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        reject_user_profile(update, context)
+        await reject_user_profile(update, context)
 
         # Should remain rejected
         self.user.refresh_from_db()

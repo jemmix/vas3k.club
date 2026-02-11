@@ -106,7 +106,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         return update
 
     @patch("bot.handlers.llm.ask_assistant")
-    def test_simple_message(self, mock_ask_assistant):
+    async def test_simple_message(self, mock_ask_assistant):
         """Test handling a simple message"""
         mock_ask_assistant.return_value = ["This is a test response"]
 
@@ -144,7 +144,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        llm_response(update, context)
+        await llm_response(update, context)
 
         mock_ask_assistant.assert_called_once()
         call_args = mock_ask_assistant.call_args[0][0]
@@ -152,7 +152,7 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         assert "Hello bot" in call_args
 
     @patch("bot.handlers.llm.ask_assistant")
-    def test_message_with_reply(self, mock_ask_assistant):
+    async def test_message_with_reply(self, mock_ask_assistant):
         """Test message with reply_to_message"""
         mock_ask_assistant.return_value = ["Replied to previous message"]
 
@@ -192,13 +192,13 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        llm_response(update, context)
+        await llm_response(update, context)
 
         call_args = mock_ask_assistant.call_args[0][0]
         assert "Previous message" in call_args
 
     @patch("bot.handlers.llm.ask_assistant")
-    def test_inactive_user(self, mock_ask_assistant):
+    async def test_inactive_user(self, mock_ask_assistant):
         """Test that inactive users get rejected"""
         # Make user inactive by setting membership to expired
         self.test_user.membership_expires_at = datetime.now(timezone.utc) - timedelta(
@@ -228,14 +228,14 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        llm_response(update, context)
+        await llm_response(update, context)
 
         # Should NOT call assistant for inactive user
         mock_ask_assistant.assert_not_called()
 
     @patch("bot.handlers.llm.is_rate_limited")
     @patch("bot.handlers.llm.ask_assistant")
-    def test_rate_limited(self, mock_ask_assistant, mock_rate_limited):
+    async def test_rate_limited(self, mock_ask_assistant, mock_rate_limited):
         """Test rate limiting response"""
         mock_rate_limited.return_value = True
 
@@ -271,12 +271,12 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        llm_response(update, context)
+        await llm_response(update, context)
 
         mock_ask_assistant.assert_not_called()
 
     @patch("bot.handlers.llm.ask_assistant")
-    def test_message_with_caption(self, mock_ask_assistant):
+    async def test_message_with_caption(self, mock_ask_assistant):
         """Test handling a message with caption instead of text"""
         mock_ask_assistant.return_value = ["Response to caption"]
 
@@ -327,14 +327,14 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        llm_response(update, context)
+        await llm_response(update, context)
 
         mock_ask_assistant.assert_called_once()
         call_args = mock_ask_assistant.call_args[0][0]
         assert "Image caption text" in call_args
 
     @patch("bot.handlers.llm.ask_assistant")
-    def test_empty_message(self, mock_ask_assistant):
+    async def test_empty_message(self, mock_ask_assistant):
         """Test that empty messages are ignored"""
         telegram_id = int(self.test_user.telegram_id or "")
         tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
@@ -352,12 +352,12 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
         context = MagicMock(spec=CallbackContext)
         context.bot = self.bot
 
-        llm_response(update, context)
+        await llm_response(update, context)
 
         mock_ask_assistant.assert_not_called()
 
     @patch("bot.handlers.llm.ask_assistant")
-    def test_multiple_responses(self, mock_ask_assistant):
+    async def test_multiple_responses(self, mock_ask_assistant):
         """Test handling multiple response lines from assistant"""
         mock_ask_assistant.return_value = [
             "First paragraph",
@@ -398,6 +398,6 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        llm_response(update, context)
+        await llm_response(update, context)
 
         mock_ask_assistant.assert_called_once()

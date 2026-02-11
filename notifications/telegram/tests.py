@@ -292,7 +292,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
     test_chat = Chat(id=12345)
 
-    def test_send_telegram_message_text(self):
+    async def test_send_telegram_message_text(self):
         """Test sending a simple text message"""
         text = "Hello, Telegram!"
 
@@ -314,7 +314,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_message(self.test_chat, text)
 
-    def test_send_telegram_message_truncation(self):
+    async def test_send_telegram_message_truncation(self):
         """Test that messages longer than NORMAL_TEXT_LIMIT are truncated"""
         long_text = "A" * 5000
         truncated_text = "A" * 4096
@@ -337,7 +337,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_message(self.test_chat, long_text)
 
-    def test_send_telegram_message_with_image(self):
+    async def test_send_telegram_message_with_image(self):
         """Test sending a message with an embedded image"""
         text = "Check this: https://example.com/image.jpg"
 
@@ -360,7 +360,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_message(self.test_chat, text)
 
-    def test_send_telegram_message_parse_mode(self):
+    async def test_send_telegram_message_parse_mode(self):
         """Test that parse_mode is sent in the request"""
         text = "Hello"
 
@@ -385,7 +385,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             self.test_chat, text, parse_mode=telegram.ParseMode.MARKDOWN
         )
 
-    def test_send_telegram_message_enable_preview(self):
+    async def test_send_telegram_message_enable_preview(self):
         """Test that disable_preview flag is sent correctly"""
         text = "Hello"
 
@@ -407,7 +407,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_message(self.test_chat, text, disable_preview=False)
 
-    def test_send_telegram_message_reply_to_message_id(self):
+    async def test_send_telegram_message_reply_to_message_id(self):
         """Test that additional kwargs are sent in the request"""
         text = "Hello"
 
@@ -430,7 +430,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_message(self.test_chat, text, reply_to_message_id=999)
 
-    def test_send_telegram_message_reply_markup(self):
+    async def test_send_telegram_message_reply_markup(self):
         """Test that reply_markup is sent in the request"""
         text = "Hello with buttons"
         # Create a simple inline keyboard
@@ -457,7 +457,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_message(self.test_chat, text, reply_markup=keyboard)
 
-    def test_send_telegram_image(self):
+    async def test_send_telegram_image(self):
         """Test sending an image directly"""
         image_url = "https://example.com/test_image.jpg"
         caption = "Test image caption"
@@ -481,7 +481,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_image(self.test_chat, image_url, caption)
 
-    def test_send_telegram_image_truncation(self):
+    async def test_send_telegram_image_truncation(self):
         """Test that image captions are truncated to PHOTO_TEXT_LIMIT"""
         image_url = "https://example.com/test_image.jpg"
         long_caption = "A" * 2000
@@ -506,7 +506,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
 
         send_telegram_image(self.test_chat, image_url, long_caption)
 
-    def test_send_telegram_image_parse_mode(self):
+    async def test_send_telegram_image_parse_mode(self):
         """Test that parse_mode is sent with image"""
         image_url = "https://example.com/test_image.jpg"
         caption = "Image with markdown"

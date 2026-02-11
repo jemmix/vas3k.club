@@ -86,7 +86,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_notifies_all_comment_subscribers(self, mock_render, mock_send):
+    async def test_notifies_all_comment_subscribers(self, mock_render, mock_send):
         comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -105,7 +105,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_notifies_top_level_only_subscribers_for_top_level_comment(self, mock_render, mock_send):
+    async def test_notifies_top_level_only_subscribers_for_top_level_comment(self, mock_render, mock_send):
         comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -124,7 +124,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_top_level_only_subscribers_for_reply(self, mock_render, mock_send):
+    async def test_skips_top_level_only_subscribers_for_reply(self, mock_render, mock_send):
         parent_comment = Comment.objects.create(
             author=self.thread_author,
             post=self.post,
@@ -149,7 +149,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_comment_author_in_subscribers(self, mock_render, mock_send):
+    async def test_skips_comment_author_in_subscribers(self, mock_render, mock_send):
         comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -168,7 +168,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_notifies_thread_author_on_reply(self, mock_render, mock_send):
+    async def test_notifies_thread_author_on_reply(self, mock_render, mock_send):
         parent_comment = Comment.objects.create(
             author=self.thread_author,
             post=self.post,
@@ -188,7 +188,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_thread_author_when_same_as_comment_author(self, mock_render, mock_send):
+    async def test_skips_thread_author_when_same_as_comment_author(self, mock_render, mock_send):
         parent_comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -208,7 +208,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_thread_author_already_notified_as_subscriber(self, mock_render, mock_send):
+    async def test_skips_thread_author_already_notified_as_subscriber(self, mock_render, mock_send):
         parent_comment = Comment.objects.create(
             author=self.thread_author,
             post=self.post,
@@ -235,7 +235,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_posts_top_level_to_online_channel(self, mock_render, mock_send):
+    async def test_posts_top_level_to_online_channel(self, mock_render, mock_send):
         comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -249,7 +249,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_online_channel_for_reply(self, mock_render, mock_send):
+    async def test_skips_online_channel_for_reply(self, mock_render, mock_send):
         parent_comment = Comment.objects.create(
             author=self.thread_author,
             post=self.post,
@@ -269,7 +269,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_online_channel_for_draft_post(self, mock_render, mock_send):
+    async def test_skips_online_channel_for_draft_post(self, mock_render, mock_send):
         draft_post = Post.objects.create(
             author=self.author,
             title="Draft Post",
@@ -289,7 +289,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_posts_to_room_chat(self, mock_render, mock_send):
+    async def test_posts_to_room_chat(self, mock_render, mock_send):
         room = Room.objects.create(
             slug="testroom",
             title="Test Room",
@@ -317,7 +317,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_room_chat_when_send_disabled(self, mock_render, mock_send):
+    async def test_skips_room_chat_when_send_disabled(self, mock_render, mock_send):
         room = Room.objects.create(
             slug="quietroom",
             title="Quiet Room",
@@ -345,7 +345,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_notifies_mentioned_users(self, mock_render, mock_send):
+    async def test_notifies_mentioned_users(self, mock_render, mock_send):
         comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -359,7 +359,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_skips_mentioned_already_notified(self, mock_render, mock_send):
+    async def test_skips_mentioned_already_notified(self, mock_render, mock_send):
         comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -381,7 +381,7 @@ class NotifyOnCommentCreatedTest(TestCase):
     @patch("notifications.telegram.comments.notify_moderators_on_mention")
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_calls_notify_moderators_on_moderator_mention(self, mock_render, mock_send, mock_notify_mods):
+    async def test_calls_notify_moderators_on_moderator_mention(self, mock_render, mock_send, mock_notify_mods):
         comment = Comment.objects.create(
             author=self.author,
             post=self.post,
@@ -394,7 +394,7 @@ class NotifyOnCommentCreatedTest(TestCase):
 
     @patch("notifications.telegram.comments.send_telegram_message")
     @patch("notifications.telegram.comments.render_html_message", return_value="<b>html</b>")
-    def test_respects_muted_author(self, mock_render, mock_send):
+    async def test_respects_muted_author(self, mock_render, mock_send):
         # muter_user mutes the comment author
         UserMuted.objects.create(
             user_from=self.muter_user,

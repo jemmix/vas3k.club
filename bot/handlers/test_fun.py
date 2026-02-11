@@ -33,7 +33,7 @@ class CommandHoroTest(BaseTelegramTest, TestCase):
         self.user.delete()
 
     @patch("bot.handlers.fun.parse_horoscope")
-    def test_sends_horoscope(self, mock_parse):
+    async def test_sends_horoscope(self, mock_parse):
         """Should send horoscope message"""
         mock_parse.return_value = {
             "club_day": 42,
@@ -66,7 +66,7 @@ class CommandHoroTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_horo(update, context)
+        await command_horo(update, context)
 
         # Verify parse_horoscope was called
         mock_parse.assert_called_once()
@@ -103,7 +103,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
 
     @patch("bot.handlers.fun.render_html_message")
     @patch("bot.handlers.fun.Post.visible_objects")
-    def test_sends_random_post(self, mock_visible, mock_render):
+    async def test_sends_random_post(self, mock_visible, mock_render):
         """Should send a random post"""
         # Mock the queryset to return our test post
         mock_qs = MagicMock()
@@ -141,14 +141,14 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_random(update, context)
+        await command_random(update, context)
 
         # Verify template was called with our test post
         mock_render.assert_called_once_with("channel_post_announce.html", post=self.post)
 
     @patch("bot.handlers.fun.render_html_message")
     @patch("bot.handlers.fun.Post.visible_objects")
-    def test_handles_no_posts_found(self, mock_visible, mock_render):
+    async def test_handles_no_posts_found(self, mock_visible, mock_render):
         """Should send message even when no post found"""
         # Mock the queryset to return None (no post found after 5 attempts)
         mock_qs = MagicMock()
@@ -186,7 +186,7 @@ class CommandRandomTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        command_random(update, context)
+        await command_random(update, context)
 
         # Verify template was called with None post
         mock_render.assert_called_once_with("channel_post_announce.html", post=None)

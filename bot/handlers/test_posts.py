@@ -41,7 +41,7 @@ class SubscribeTest(BaseTelegramTest, TestCase):
         self.user.delete()
         self.close_db_patch.stop()
 
-    def test_subscribes_user_to_post(self):
+    async def test_subscribes_user_to_post(self):
         """Should subscribe user to post"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -65,7 +65,7 @@ class SubscribeTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        subscribe(update, context)
+        await subscribe(update, context)
 
         # Verify subscription was created
         subscription = PostSubscription.objects.filter(user=self.user, post=self.post).first()
@@ -98,7 +98,7 @@ class UnsubscribeTest(BaseTelegramTest, TestCase):
         self.user.delete()
         self.close_db_patch.stop()
 
-    def test_unsubscribes_user_from_post(self):
+    async def test_unsubscribes_user_from_post(self):
         """Should unsubscribe user from post"""
         # Create subscription first
         PostSubscription.subscribe(
@@ -129,13 +129,13 @@ class UnsubscribeTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        unsubscribe(update, context)
+        await unsubscribe(update, context)
 
         # Verify subscription was deleted
         subscription = PostSubscription.objects.filter(user=self.user, post=self.post).first()
         self.assertIsNone(subscription)
 
-    def test_handles_already_unsubscribed(self):
+    async def test_handles_already_unsubscribed(self):
         """Should handle when user wasn't subscribed"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -159,4 +159,4 @@ class UnsubscribeTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        unsubscribe(update, context)
+        await unsubscribe(update, context)

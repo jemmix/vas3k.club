@@ -57,7 +57,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
         self.user.delete()
         self.close_old_connections_patch.stop()
 
-    def test_upvote_comment_success(self):
+    async def test_upvote_comment_success(self):
         """Should create new upvote and show success message"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -81,7 +81,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote_comment(update, context)
+        await upvote_comment(update, context)
 
         # Verify vote was created
         vote_exists = CommentVote.objects.filter(
@@ -90,7 +90,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
         ).exists()
         self.assertTrue(vote_exists)
 
-    def test_upvote_comment_already_upvoted(self):
+    async def test_upvote_comment_already_upvoted(self):
         """Should show already upvoted message when voting twice"""
         # Create existing vote
         CommentVote.objects.create(
@@ -121,9 +121,9 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote_comment(update, context)
+        await upvote_comment(update, context)
 
-    def test_upvote_comment_not_found(self):
+    async def test_upvote_comment_not_found(self):
         """Should return None when comment doesn't exist"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -136,7 +136,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
         result = upvote_comment(update, context)
         self.assertIsNone(result)
 
-    def test_upvote_comment_no_user(self):
+    async def test_upvote_comment_no_user(self):
         """Should return None when user is not found"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -194,7 +194,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
         self.user.delete()
         self.close_old_connections_patch.stop()
 
-    def test_upvote_post_success(self):
+    async def test_upvote_post_success(self):
         """Should create new upvote and show success message"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -218,7 +218,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote_post(update, context)
+        await upvote_post(update, context)
 
         # Verify vote was created
         vote_exists = PostVote.objects.filter(
@@ -227,7 +227,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
         ).exists()
         self.assertTrue(vote_exists)
 
-    def test_upvote_post_already_upvoted(self):
+    async def test_upvote_post_already_upvoted(self):
         """Should show already upvoted message when voting twice"""
         # Create existing vote
         PostVote.objects.create(
@@ -257,9 +257,9 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote_post(update, context)
+        await upvote_post(update, context)
 
-    def test_upvote_post_not_found(self):
+    async def test_upvote_post_not_found(self):
         """Should return None when post doesn't exist"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -272,7 +272,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
         result = upvote_post(update, context)
         self.assertIsNone(result)
 
-    def test_upvote_post_no_user(self):
+    async def test_upvote_post_no_user(self):
         """Should return None when user is not found"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -352,7 +352,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         self.get_club_comment_patch.stop()
         self.get_club_post_patch.stop()
 
-    def test_upvote_comment_via_reply(self):
+    async def test_upvote_comment_via_reply(self):
         """Should upvote comment when replying to comment message"""
         self.mock_get_club_comment.return_value = self.comment
 
@@ -380,7 +380,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote(update, context)
+        await upvote(update, context)
 
         # Verify vote was created
         vote_exists = CommentVote.objects.filter(
@@ -389,7 +389,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         ).exists()
         self.assertTrue(vote_exists)
 
-    def test_upvote_comment_already_upvoted(self):
+    async def test_upvote_comment_already_upvoted(self):
         """Should show already upvoted message for duplicate comment upvote"""
         self.mock_get_club_comment.return_value = self.comment
 
@@ -424,9 +424,9 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote(update, context)
+        await upvote(update, context)
 
-    def test_upvote_post_via_reply(self):
+    async def test_upvote_post_via_reply(self):
         """Should upvote post when replying to post message"""
         self.mock_get_club_post.return_value = self.post
 
@@ -454,7 +454,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote(update, context)
+        await upvote(update, context)
 
         # Verify vote was created
         vote_exists = PostVote.objects.filter(
@@ -463,7 +463,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         ).exists()
         self.assertTrue(vote_exists)
 
-    def test_upvote_post_already_upvoted(self):
+    async def test_upvote_post_already_upvoted(self):
         """Should show already upvoted message for duplicate post upvote"""
         self.mock_get_club_post.return_value = self.post
 
@@ -497,9 +497,9 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        upvote(update, context)
+        await upvote(update, context)
 
-    def test_upvote_not_a_reply(self):
+    async def test_upvote_not_a_reply(self):
         """Should return None when message is not a reply"""
         update = create_callback_query_update(
             bot=self.bot,
@@ -512,7 +512,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         result = upvote(update, context)
         self.assertIsNone(result)
 
-    def test_upvote_no_user(self):
+    async def test_upvote_no_user(self):
         """Should return None when user is not found"""
         # Mock cached users to allow past the decorator
         self.mock_cached_users.return_value = {"999999": None}

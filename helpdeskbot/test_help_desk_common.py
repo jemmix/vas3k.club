@@ -27,7 +27,7 @@ class SendMessageTest(HelpDeskCommonTestBase):
     """Test send_message wrapper function"""
 
     @patch("helpdeskbot.help_desk_common.bot")
-    def test_sends_message_with_default_params(self, mock_bot):
+    async def test_sends_message_with_default_params(self, mock_bot):
         """Should call bot.send_message with defaults"""
         send_message(chat_id=12345, text="Test message")
 
@@ -40,7 +40,7 @@ class SendMessageTest(HelpDeskCommonTestBase):
         )
 
     @patch("helpdeskbot.help_desk_common.bot")
-    def test_sends_message_with_custom_params(self, mock_bot):
+    async def test_sends_message_with_custom_params(self, mock_bot):
         """Should call bot.send_message with custom parameters"""
         send_message(
             chat_id=12345,
@@ -63,7 +63,7 @@ class EditMessageTest(HelpDeskCommonTestBase):
     """Test edit_message wrapper function"""
 
     @patch("helpdeskbot.help_desk_common.bot")
-    def test_edits_message_with_defaults(self, mock_bot):
+    async def test_edits_message_with_defaults(self, mock_bot):
         """Should call bot.edit_message_text with defaults"""
         edit_message(chat_id=12345, message_id=999, new_text="Updated text")
 
@@ -75,7 +75,7 @@ class EditMessageTest(HelpDeskCommonTestBase):
         )
 
     @patch("helpdeskbot.help_desk_common.bot")
-    def test_edits_message_with_custom_parse_mode(self, mock_bot):
+    async def test_edits_message_with_custom_parse_mode(self, mock_bot):
         """Should call bot.edit_message_text with custom parse mode"""
         edit_message(
             chat_id=12345,
@@ -95,7 +95,7 @@ class EditMessageTest(HelpDeskCommonTestBase):
 class SendReplyTest(HelpDeskCommonTestBase):
     """Test send_reply wrapper function"""
 
-    def test_sends_reply_with_defaults(self):
+    async def test_sends_reply_with_defaults(self):
         """Should call update.message.reply_text with defaults"""
         mock_update = MagicMock()
         mock_update.message.reply_text = MagicMock()
@@ -109,7 +109,7 @@ class SendReplyTest(HelpDeskCommonTestBase):
             disable_web_page_preview=True,
         )
 
-    def test_sends_reply_with_custom_params(self):
+    async def test_sends_reply_with_custom_params(self):
         """Should call update.message.reply_text with custom parameters"""
         mock_update = MagicMock()
         mock_update.message.reply_text = MagicMock()
@@ -135,7 +135,7 @@ class GetChannelMessageLinkTest(HelpDeskCommonTestBase):
     """Test get_channel_message_link pure function"""
 
     @patch("helpdeskbot.help_desk_common.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID", "-1001234567890")
-    def test_constructs_channel_link(self):
+    async def test_constructs_channel_link(self):
         """Should construct correct channel message link"""
         link = get_channel_message_link("12345")
 
@@ -143,7 +143,7 @@ class GetChannelMessageLinkTest(HelpDeskCommonTestBase):
         self.assertEqual(link, "https://t.me/c/1234567890/12345")
 
     @patch("helpdeskbot.help_desk_common.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID", "-100999888777")
-    def test_constructs_channel_link_different_id(self):
+    async def test_constructs_channel_link_different_id(self):
         """Should handle different channel IDs correctly"""
         link = get_channel_message_link("67890")
 
@@ -153,13 +153,13 @@ class GetChannelMessageLinkTest(HelpDeskCommonTestBase):
 class GetChatMessageLinkTest(HelpDeskCommonTestBase):
     """Test get_chat_message_link pure function"""
 
-    def test_constructs_chat_link(self):
+    async def test_constructs_chat_link(self):
         """Should construct correct chat message link"""
         link = get_chat_message_link("1234567890", "12345")
 
         self.assertEqual(link, "https://t.me/c/1234567890/12345")
 
-    def test_constructs_chat_link_with_different_ids(self):
+    async def test_constructs_chat_link_with_different_ids(self):
         """Should handle various chat and message IDs"""
         link = get_chat_message_link("999888777", "67890")
 
