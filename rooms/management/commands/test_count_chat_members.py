@@ -6,7 +6,8 @@ from unittest.mock import patch
 
 from django.core.management import call_command
 from django.test import TestCase
-from telegram import TelegramError, Chat as TgChat
+from telegram import Chat as TgChat
+from telegram.error import TelegramError
 
 from notifications.telegram.tests import BaseTelegramTest
 from rooms.models import Room

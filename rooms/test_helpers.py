@@ -4,7 +4,8 @@ import logging
 from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
-from telegram import TelegramError, ChatMember, User as TgUser
+from telegram import ChatMember, User as TgUser
+from telegram.error import TelegramError
 
 from bot.test_helpers import create_test_user
 from notifications.telegram.tests import BaseTelegramTest
