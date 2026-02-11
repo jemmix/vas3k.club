@@ -57,18 +57,13 @@ class Server:
 
     async def start_webhook(self, host: str, port: int, url_path: str):
         """Start the application and webhook server for testing"""
-        log.info(f"Server.start_webhook called with host={host}, port={port}, url_path={url_path}")
-        log.info("Initializing application...")
         await self.application.initialize()
-        log.info("Starting application...")
         await self.application.start()
-        log.info("Starting webhook updater...")
         await self.application.updater.start_webhook(
             listen=host,
             port=port,
             url_path=url_path,
         )
-        log.info("Webhook started, waiting for event...")
         # Keep the event loop alive while webhook server runs
         await asyncio.Event().wait()
 
@@ -88,6 +83,17 @@ def start_server() -> Server:
     base_url = getattr(settings, 'TELEGRAM_BASE_URL', None)
     if base_url:
         builder = builder.base_url(base_url)
+        # For testing: disable connection pooling to avoid conflicts with mock server
+        from telegram.request import HTTPXRequest
+        from httpx import Limits
+        request = HTTPXRequest(
+            connection_pool_size=1,  # Minimal pool to force new connections
+            read_timeout=5.0,
+            connect_timeout=5.0,
+            pool_timeout=5.0,
+            http_version="1.1",  # Force HTTP/1.1
+        )
+        builder = builder.request(request)
 
     application = builder.build()
 

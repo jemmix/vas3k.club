@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import json
 import http.server
 import logging
+import socket
 import socketserver
 import threading
 import time
@@ -45,6 +46,8 @@ class MockTelegramHandler(http.server.BaseHTTPRequestHandler):
     remaining_expected_requests: list[ExpectedRequest] = []
     test_case: TestCase
 
+    # Inherit default handle() and handle_one_request() from BaseHTTPRequestHandler
+
     def _do_handle(self, request):
         server = self._get_server()
 
@@ -85,6 +88,7 @@ class MockTelegramHandler(http.server.BaseHTTPRequestHandler):
 
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
+            self.send_header("Connection", "close")  # Force connection close
             self.end_headers()
             self.wfile.write(expected_request.response.encode())
         else:
@@ -100,34 +104,38 @@ class MockTelegramHandler(http.server.BaseHTTPRequestHandler):
 
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
+            self.send_header("Connection", "close")  # Force connection close
             self.end_headers()
             self.wfile.write(route_response.encode())
 
     def do_POST(self):
-        content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length)
-        body_str = body.decode("utf-8") if body else ""
+        try:
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length)
+            body_str = body.decode("utf-8") if body else ""
 
-        # Parse body based on Content-Type header
-        content_type = self.headers.get("Content-Type", "")
-        if not body_str:
-            parsed_body = {}
-        elif "application/json" in content_type:
-            parsed_body = json.loads(body_str)
-        elif "application/x-www-form-urlencoded" in content_type:
-            # Parse form data
-            parsed_body = dict(urllib.parse.parse_qsl(body_str))
-        else:
-            # Default to empty dict if unknown content type
-            parsed_body = {}
+            # Parse body based on Content-Type header
+            content_type = self.headers.get("Content-Type", "")
+            if not body_str:
+                parsed_body = {}
+            elif "application/json" in content_type:
+                parsed_body = json.loads(body_str)
+            elif "application/x-www-form-urlencoded" in content_type:
+                # Parse form data
+                parsed_body = dict(urllib.parse.parse_qsl(body_str))
+            else:
+                # Default to empty dict if unknown content type
+                parsed_body = {}
 
-        request = Request(
-            path=self.path,
-            method=self.command,
-            body=parsed_body,
-        )
+            request = Request(
+                path=self.path,
+                method=self.command,
+                body=parsed_body,
+            )
 
-        self._do_handle(request)
+            self._do_handle(request)
+        except Exception as e:
+            log.error(f"Error in do_POST: {e}", exc_info=True)
 
     def do_GET(self):
         request = Request(
@@ -167,11 +175,19 @@ class MockTelegramServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     # Enable daemon threads so they don't prevent test exit
     daemon_threads = True
 
+    # Allow socket reuse and increase connection backlog
+    allow_reuse_address = True
+    allow_reuse_port = True if hasattr(socket, 'SO_REUSEPORT') else False
+    request_queue_size = 50
+    timeout = 30
+
     def __init__(self, test_case: TelegramTestCaseProtocol, *args, **kwargs) -> None:
         self.test_case = test_case
         self.routes = {}
         self.requests_received = []
         super().__init__(*args, **kwargs)
+
+    # Inherit default server_activate(), get_request(), and handle_error() from TCPServer
 
     def add_route(self, path: str, response: str | Callable[[Request], str]):
         """Register a route that responds to requests for the given path.
