@@ -21,7 +21,7 @@ from search.models import SearchIndex
 log = logging.getLogger(__name__)
 
 
-def comment(update: Update, context: CallbackContext) -> None:
+async def comment(update: Update, context: CallbackContext) -> None:
     log.info("Comment handler triggered")
 
     if not update.message or not update.message.reply_to_message:
@@ -41,10 +41,10 @@ def comment(update: Update, context: CallbackContext) -> None:
     log.info("Original message start: %s", reply_text_start)
 
     if COMMENT_EMOJI_RE.match(reply_text_start):
-        return reply_to_comment(update, context)
+        return await reply_to_comment(update, context)
 
     if POST_EMOJI_RE.match(reply_text_start):
-        return comment_to_post(update, context)
+        return await comment_to_post(update, context)
 
     # skip normal replies
     log.info("Skipping...")
@@ -52,7 +52,7 @@ def comment(update: Update, context: CallbackContext) -> None:
 
 
 @is_club_member
-def reply_to_comment(update: Update, context: CallbackContext) -> None:
+async def reply_to_comment(update: Update, context: CallbackContext) -> None:
     log.info("Reply_to_comment handler triggered")
 
     user = get_club_user(update)
@@ -66,14 +66,14 @@ def reply_to_comment(update: Update, context: CallbackContext) -> None:
         return None
 
     if is_comment_rate_limit_exceeded(comment.post, user):
-        update.message.reply_text(
+        await update.message.reply_text(
             f"🙅‍♂️ Извините, вы комментировали слишком часто и достигли дневного лимита"
         )
         return None
 
     text = update.message.text or update.message.caption
     if not text:
-        update.message.reply_text(
+        await update.message.reply_text(
             f"😣 Сорян, я пока умею только в текстовые реплаи"
         )
         return None
@@ -115,7 +115,7 @@ def reply_to_comment(update: Update, context: CallbackContext) -> None:
         "comment_id": reply.id
     })
 
-    update.message.reply_text(
+    await update.message.reply_text(
         f"➜ <a href=\"{new_comment_url}\">Отвечено</a> 👍",
         parse_mode=ParseMode.HTML,
         disable_web_page_preview=True
@@ -125,7 +125,7 @@ def reply_to_comment(update: Update, context: CallbackContext) -> None:
 
 
 @is_club_member
-def comment_to_post(update: Update, context: CallbackContext) -> None:
+async def comment_to_post(update: Update, context: CallbackContext) -> None:
     log.info("Reply_to_post handler triggered")
 
     user = get_club_user(update)
@@ -138,14 +138,14 @@ def comment_to_post(update: Update, context: CallbackContext) -> None:
         return None
 
     if is_comment_rate_limit_exceeded(post, user):
-        update.message.reply_text(
+        await update.message.reply_text(
             f"🙅‍♂️ Извините, вы комментировали слишком часто и достигли дневного лимита"
         )
         return None
 
     text = update.message.text or update.message.caption
     if not text:
-        update.message.reply_text(
+        await update.message.reply_text(
             f"😣 Сорян, я пока умею только в текстовые реплаи"
         )
         return None
@@ -155,7 +155,7 @@ def comment_to_post(update: Update, context: CallbackContext) -> None:
             return None
 
     if len(text) < MIN_COMMENT_LEN:
-        update.message.reply_text(
+        await update.message.reply_text(
             f"😋 Твой коммент слишком короткий. Не буду постить его в Клуб, пускай остается в чате"
         )
         return None
@@ -187,7 +187,7 @@ def comment_to_post(update: Update, context: CallbackContext) -> None:
         "comment_id": reply.id
     })
 
-    update.message.reply_text(
+    await update.message.reply_text(
         f"➜ <a href=\"{new_comment_url}\">Отвечено</a> 👍",
         parse_mode=ParseMode.HTML,
         disable_web_page_preview=True
