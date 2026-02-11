@@ -1,3 +1,4 @@
+import asyncio
 from collections import namedtuple
 
 import telegram
@@ -20,7 +21,7 @@ NORMAL_TEXT_LIMIT = 4096
 PHOTO_TEXT_LIMIT = 1024
 
 
-def send_telegram_message(
+async def _send_telegram_message_async(
     chat: Chat,
     text: str,
     parse_mode: str = telegram.ParseMode.HTML,
@@ -28,6 +29,7 @@ def send_telegram_message(
     reply_to_message_id: int | None = None,
     disable_preview: bool = True,
 ):
+    """Actual async implementation for telegram message sending"""
     if not bot:
         log.warning("No telegram token. Skipping")
         return
@@ -42,7 +44,7 @@ def send_telegram_message(
 
     try:
         if len(images_in_message) == 1 and len(text) < PHOTO_TEXT_LIMIT:
-            return bot.send_photo(
+            return await bot.send_photo(
                 chat_id=chat.id,
                 photo=images_in_message[0],
                 caption=text[:PHOTO_TEXT_LIMIT],
@@ -51,7 +53,7 @@ def send_telegram_message(
                 reply_to_message_id=reply_to_message_id,
             )
         else:
-            return bot.send_message(
+            return await bot.send_message(
                 chat_id=chat.id,
                 text=text[:NORMAL_TEXT_LIMIT],
                 parse_mode=parse_mode,
@@ -63,12 +65,32 @@ def send_telegram_message(
         log.warning(f"Telegram error: {ex}")
 
 
-def send_telegram_image(
+def send_telegram_message(
+    chat: Chat,
+    text: str,
+    parse_mode: str = telegram.ParseMode.HTML,
+    reply_markup: telegram.InlineKeyboardMarkup | None = None,
+    reply_to_message_id: int | None = None,
+    disable_preview: bool = True,
+):
+    """Sync wrapper for async telegram calls (called from django_q background tasks)"""
+    return asyncio.run(_send_telegram_message_async(
+        chat=chat,
+        text=text,
+        parse_mode=parse_mode,
+        reply_markup=reply_markup,
+        reply_to_message_id=reply_to_message_id,
+        disable_preview=disable_preview,
+    ))
+
+
+async def _send_telegram_image_async(
     chat: Chat,
     image_url: str,
     text: str,
     parse_mode: str = telegram.ParseMode.HTML,
 ):
+    """Actual async implementation for telegram image sending"""
     if not bot:
         log.warning("No telegram token. Skipping")
         return
@@ -76,7 +98,7 @@ def send_telegram_image(
     log.info(f"Telegram: sending the image: {image_url} {text[:20]}")
 
     try:
-        return bot.send_photo(
+        return await bot.send_photo(
             chat_id=chat.id,
             photo=image_url,
             caption=text[:PHOTO_TEXT_LIMIT],
@@ -84,6 +106,21 @@ def send_telegram_image(
         )
     except telegram.error.TelegramError as ex:
         log.warning(f"Telegram error: {ex}")
+
+
+def send_telegram_image(
+    chat: Chat,
+    image_url: str,
+    text: str,
+    parse_mode: str = telegram.ParseMode.HTML,
+):
+    """Sync wrapper for async telegram calls (called from django_q background tasks)"""
+    return asyncio.run(_send_telegram_image_async(
+        chat=chat,
+        image_url=image_url,
+        text=text,
+        parse_mode=parse_mode,
+    ))
 
 
 def render_html_message(template, **data):
