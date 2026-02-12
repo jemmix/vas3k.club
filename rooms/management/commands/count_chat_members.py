@@ -1,6 +1,6 @@
-import asyncio
 import logging
 
+from asgiref.sync import async_to_sync
 from django.core.management import BaseCommand
 from telegram.error import TelegramError
 
@@ -14,13 +14,16 @@ class Command(BaseCommand):
     help = "Count members in every telegram chat and save to database"
 
     def handle(self, *args, **options):
-        for room in Room.objects.filter(chat_id__isnull=False):
+        async_to_sync(self._handle_async)(*args, **options)
+
+    async def _handle_async(self, *args, **options):
+        async for room in Room.objects.filter(chat_id__isnull=False):
             try:
-                member_count = asyncio.run(bot.get_chat_member_count(room.chat_id))
+                member_count = await bot.get_chat_member_count(room.chat_id)
 
                 # Store the count in the database
                 room.chat_member_count = member_count
-                room.save()
+                await room.asave()
 
                 log.info(f"Updated member count for chat {room.slug}: {member_count} members")
 
