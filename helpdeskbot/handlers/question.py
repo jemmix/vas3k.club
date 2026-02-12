@@ -375,9 +375,15 @@ class QuestionHandler(ConversationHandler):
 
 
 async def update_discussion_message_id(update: Update) -> None:
-    channel_msg_id = update.message.forward_from_message_id
+    # In v20+, forward info is in forward_origin
+    from telegram import MessageOriginChannel
+    if not update.message.forward_origin or not isinstance(update.message.forward_origin, MessageOriginChannel):
+        return None
+
+    channel_msg_id = update.message.forward_origin.message_id
     discussion_msg_id = update.message.message_id
 
     question = await Question.objects.filter(channel_msg_id=channel_msg_id).afirst()
-    question.discussion_msg_id = discussion_msg_id
-    await question.asave()
+    if question:
+        question.discussion_msg_id = discussion_msg_id
+        await question.asave()

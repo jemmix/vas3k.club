@@ -377,22 +377,33 @@ def create_forwarded_message_update(
     )
     forward_from_chat.set_bot(bot)
 
-    # Create the forwarded message (the one being replied to)
-    # The original author of the forwarded message
-    forward_from_user = TgUser(id=999, is_bot=False, first_name="OriginalAuthor")
-
-    forwarded_message = Message(
-        message_id=forward_from_message_id,
-        date=int(time.time()) - 200,
-        chat=tg_chat,
-        from_user=forward_from_user,
-        text="[Forwarded question]",
-    )
-    forwarded_message.set_bot(bot)
-    # Set forward metadata
-    forwarded_message.forward_from_chat = forward_from_chat
-    forwarded_message.forward_from_message_id = forward_from_message_id
-    forwarded_message.forward_date = int(time.time()) - 200
+    # Create the forwarded message (the one being replied to) using de_json
+    # with v20+ forward_origin structure
+    forward_date = int(time.time()) - 200
+    forwarded_message_dict = {
+        "message_id": forward_from_message_id,
+        "date": forward_date,
+        "chat": {
+            "id": chat_id,
+            "type": "supergroup" if str(chat_id).startswith("-100") else "private"
+        },
+        "from": {
+            "id": 999,
+            "is_bot": False,
+            "first_name": "OriginalAuthor"
+        },
+        "text": "[Forwarded question]",
+        "forward_origin": {
+            "type": "channel",
+            "date": forward_date,
+            "chat": {
+                "id": forward_from_chat_id,
+                "type": "channel" if str(forward_from_chat_id).startswith("-100") else "private"
+            },
+            "message_id": forward_from_message_id,
+        }
+    }
+    forwarded_message = Message.de_json(forwarded_message_dict, bot)
 
     # Create the reply message
     reply_message = Message(
