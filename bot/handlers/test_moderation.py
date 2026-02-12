@@ -93,6 +93,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"👍 Пост «{self.post.title}» одобрен (Test): https://vas3k.club/post/{self.post.slug}/",
+                        "link_preview_options": "{\"is_disabled\": true}",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -147,6 +148,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"😎 Пост «{self.post.title}» хорош для комнаты «{room.title}», но не будет отображаться на главной (Test): https://vas3k.club/post/{self.post.slug}/",
+                        "link_preview_options": "{\"is_disabled\": true}",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -169,7 +171,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         await self.post.arefresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_APPROVED)
 
-        room.delete()
+        await room.adelete()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_already_moderated_post(self):
@@ -275,6 +277,7 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"😕 Пост «{self.post.title}» не одобрен, но оставлен на сайте (Test): https://vas3k.club/post/{self.post.slug}/",
+                        "link_preview_options": "{\"is_disabled\": true}",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
