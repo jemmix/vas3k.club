@@ -62,7 +62,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
             text="Test",
         )
 
-        user = get_club_user(update)
+        user = await get_club_user(update)
 
         self.assertIsNotNone(user)
         self.assertEqual(user.id, self.active_user.id)
@@ -85,14 +85,13 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "😐 Привяжи <a href=\"https://vas3k.club/user/me/edit/bot/\">бота</a> к профилю, братишка",
                         "parse_mode": "HTML",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
             )
         ])
 
-        user = get_club_user(update)
+        user = await get_club_user(update)
 
         self.assertIsNone(user)
 
@@ -119,7 +118,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
             )
         ])
 
-        user = get_club_user(update)
+        user = await get_club_user(update)
 
         self.assertIsNone(user)
 
@@ -140,14 +139,13 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "🙈 Ты в бане, мы больше не дружим",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
             )
         ])
 
-        user = get_club_user(update)
+        user = await get_club_user(update)
 
         self.assertIsNone(user)
 
@@ -174,7 +172,7 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
             )
         ])
 
-        user = get_club_user(update)
+        user = await get_club_user(update)
 
         self.assertIsNone(user)
 
@@ -195,14 +193,13 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "😣 Твой профиль в Клубе неактивен. Плоти долор!",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
             )
         ])
 
-        user = get_club_user(update)
+        user = await get_club_user(update)
 
         self.assertIsNone(user)
 
@@ -256,7 +253,7 @@ class GetClubCommentTest(BaseTelegramTest, TestCase):
             reply_to_entities=[entity],
         )
 
-        comment = get_club_comment(update)
+        comment = await get_club_comment(update)
 
         self.assertIsNotNone(comment)
         self.assertEqual(comment.id, self.comment.id)
@@ -271,7 +268,7 @@ class GetClubCommentTest(BaseTelegramTest, TestCase):
             reply_to_text="Original comment",
         )
 
-        comment = get_club_comment(update)
+        comment = await get_club_comment(update)
 
         self.assertIsNone(comment)
 
@@ -305,14 +302,13 @@ class GetClubCommentTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"🤨 Коммент '{fake_uuid}' был удален или куда-то делся",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
             )
         ])
 
-        comment = get_club_comment(update)
+        comment = await get_club_comment(update)
 
         self.assertIsNone(comment)
 
@@ -361,7 +357,7 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
             reply_to_entities=[entity],
         )
 
-        post = get_club_post(update)
+        post = await get_club_post(update)
 
         self.assertIsNotNone(post)
         self.assertEqual(post.id, self.post.id)
@@ -376,7 +372,7 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
             reply_to_text="Original post",
         )
 
-        post = get_club_post(update)
+        post = await get_club_post(update)
 
         self.assertIsNone(post)
 
@@ -408,14 +404,13 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "🤨 Пост был удален, скрыт или украден, сорян",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
             )
         ])
 
-        post = get_club_post(update)
+        post = await get_club_post(update)
 
         self.assertIsNone(post)
 
@@ -423,7 +418,7 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
         """Should send message when post is not commentable"""
         # Make post non-commentable
         self.post.is_commentable = False
-        self.post.save()
+        await self.post.asave()
 
         post_url = f"https://vas3k.club/post/{self.post.slug}/"
 
@@ -451,13 +446,12 @@ class GetClubPostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "🤨 Пост был удален, скрыт или украден, сорян",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
             )
         ])
 
-        post = get_club_post(update)
+        post = await get_club_post(update)
 
         self.assertIsNone(post)
