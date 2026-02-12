@@ -72,7 +72,6 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "Эту команду нужно вызывать реплаем на сообщение человека, о котором вы хотите узнать",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -112,8 +111,6 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "Это бот, глупышка",
-                        "reply_to_message_id": "1",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -144,8 +141,6 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "🤨 Пользователь не найден в Клубе. Гоните его, насмехайтесь над ним!",
-                        "reply_to_message_id": "1",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -180,8 +175,6 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": expected_text,
                         "parse_mode": "HTML",
-                        "reply_to_message_id": "1",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -222,7 +215,6 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "🤨 Кажется, Скрытый Юзер скрыл свой профиль для пересылаемых сообщений. Попробуй дать команду в ответ на исходное сообщение",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),

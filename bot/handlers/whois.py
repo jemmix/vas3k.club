@@ -65,7 +65,6 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(
         f"""Кажется, это <a href="{profile_url}">{user.full_name}</a>""",
         parse_mode=ParseMode.HTML,
-        quote=True
     )
 
     return None
