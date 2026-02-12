@@ -1,7 +1,9 @@
 """Tests for bot/handlers/whois.py handlers."""
 
+import time
 from unittest.mock import patch, MagicMock
 
+from telegram import Message
 from telegram.ext import CallbackContext
 
 from django.test import TestCase
@@ -11,6 +13,8 @@ from bot.handlers.whois import command_whois
 from bot.test_helpers import (
     create_test_user,
     create_command_update,
+    create_reply_update,
+    create_message_update,
     SEND_MESSAGE_RESPONSE,
 )
 from notifications.telegram.tests import BaseTelegramTest, ExpectedRequest, Request
@@ -79,19 +83,24 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
 
     async def test_reply_to_bot(self):
         """Should reject whois on bot"""
-        update = create_command_update(
+        # Create a reply update where user replies to a bot message
+        # We need to manually create this since the bot user needs is_bot=True
+        reply_to_dict = {
+            "message_id": 100,
+            "date": int(time.time()) - 100,
+            "chat": {"id": 12345, "type": "private"},
+            "from": {"id": 999, "is_bot": True, "first_name": "Bot"},
+            "text": "Bot message",
+        }
+        reply_to_message = Message.de_json(reply_to_dict, self.bot)
+
+        update = create_message_update(
             bot=self.bot,
             telegram_id=111,
             chat_id=12345,
-            command="/whois",
+            text="/whois",
+            reply_to_message=reply_to_message,
         )
-        # Add reply to bot message (without sender_chat attribute)
-        bot_user = TgUser(id=999, is_bot=True, first_name="Bot")
-        # Use spec to limit attributes so sender_chat doesn't exist
-        reply_message = MagicMock(spec=['from_user', 'forward_date'])
-        reply_message.from_user = bot_user
-        reply_message.forward_date = None
-        update.message.reply_to_message = reply_message
 
         context = MagicMock(spec=CallbackContext)
 
@@ -115,17 +124,15 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
 
     async def test_user_not_in_club(self):
         """Should report when user not found in club"""
-        update = create_command_update(
+        # Create a reply update where user replies to unknown user (telegram_id=999, not in club)
+        update = create_reply_update(
             bot=self.bot,
             telegram_id=111,
             chat_id=12345,
-            command="/whois",
+            text="/whois",
+            reply_to_text="Message from unknown user",
+            reply_to_user_id=999,  # This user is not in the club
         )
-        # Add reply from unknown user
-        unknown_user = TgUser(id=999, is_bot=False, first_name="Unknown")
-        update.message.reply_to_message = MagicMock()
-        update.message.reply_to_message.from_user = unknown_user
-        update.message.reply_to_message.forward_date = None
 
         context = MagicMock(spec=CallbackContext)
 
@@ -149,17 +156,15 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
 
     async def test_successful_whois(self):
         """Should return user profile for club member"""
-        update = create_command_update(
+        # Create a reply update where user runs /whois command replying to target user's message
+        update = create_reply_update(
             bot=self.bot,
             telegram_id=111,
             chat_id=12345,
-            command="/whois",
+            text="/whois",
+            reply_to_text="Some message from target",
+            reply_to_user_id=222,
         )
-        # Add reply from target user
-        target_tg_user = TgUser(id=222, is_bot=False, first_name="Target")
-        update.message.reply_to_message = MagicMock()
-        update.message.reply_to_message.from_user = target_tg_user
-        update.message.reply_to_message.forward_date = None
 
         context = MagicMock(spec=CallbackContext)
 
@@ -187,17 +192,25 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
 
     async def test_forwarded_message_hidden_profile(self):
         """Should handle forwarded message with hidden profile"""
-        update = create_command_update(
-            bot=self.bot,
-            telegram_id=111,
-            chat_id=12345,
-            command="/whois",
-        )
-        update.message.chat = TgChat(id=12345, type=TgChat.PRIVATE, bot=self.bot)
-        # Forwarded message without forward_from (hidden profile)
-        update.message.forward_date = 123456
-        update.message.forward_from = None
-        update.message.forward_sender_name = "Скрытый Юзер"
+        # Create a forwarded message with hidden profile using de_json
+        # In v20+, forwarded messages use forward_origin
+        from telegram import Update
+
+        forward_date = int(time.time()) - 100
+        message_dict = {
+            "message_id": 1,
+            "date": int(time.time()),
+            "chat": {"id": 12345, "type": "private"},
+            "from": {"id": 111, "is_bot": False, "first_name": "Test"},
+            "text": "/whois",
+            "forward_origin": {
+                "type": "hidden_user",
+                "date": forward_date,
+                "sender_user_name": "Скрытый Юзер"
+            }
+        }
+        message = Message.de_json(message_dict, self.bot)
+        update = Update(update_id=1, message=message)
 
         context = MagicMock(spec=CallbackContext)
 

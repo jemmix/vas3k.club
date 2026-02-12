@@ -12,14 +12,14 @@ from users.models.user import User
 @is_club_member
 @ensure_fresh_db_connection
 async def command_whois(update: Update, context: CallbackContext) -> None:
+    # In v20+, forward info is in forward_origin
     is_private_forward = update.message is not None \
-        and update.message.forward_date is not None \
+        and update.message.forward_origin is not None \
         and update.message.chat.type == TGChat.PRIVATE
 
     if not update.message or not update.message.reply_to_message and not is_private_forward:
         await update.effective_chat.send_message(
             "Эту команду нужно вызывать реплаем на сообщение человека, о котором вы хотите узнать",
-            quote=True
         )
         return None
 
@@ -28,34 +28,33 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
         original_message = update.message.reply_to_message  # look at the author of replied message
 
     from_user = original_message.from_user
-    if original_message.forward_date:
-        if not original_message.forward_from:
+    if original_message.forward_origin:
+        # Check if it's a user forward (not channel/hidden)
+        from telegram import MessageOriginUser, MessageOriginHiddenUser
+        if isinstance(original_message.forward_origin, MessageOriginHiddenUser):
             await update.effective_chat.send_message(
-                f"🤨 Кажется, {original_message.forward_sender_name} скрыл свой профиль для пересылаемых сообщений. Попробуй дать команду в ответ на исходное сообщение",
-                quote=True
-            )
+                f"🤨 Кажется, {original_message.forward_origin.sender_user_name} скрыл свой профиль для пересылаемых сообщений. Попробуй дать команду в ответ на исходное сообщение",
+                )
             return None
-        from_user = original_message.forward_from
+        elif isinstance(original_message.forward_origin, MessageOriginUser):
+            from_user = original_message.forward_origin.sender_user
 
     if from_user.is_bot:
         if getattr(original_message, 'sender_chat', None):
             await update.message.reply_text(
                 "Сообщение отправлено от имени чата/канала",
-                quote=True
-            )
+                )
             return
         await update.message.reply_text(
             "Это бот, глупышка",
-            quote=True
         )
         return None
 
     telegram_id = from_user.id
-    user = User.objects.filter(telegram_id=telegram_id).first()
+    user = await User.objects.filter(telegram_id=telegram_id).afirst()
     if not user:
         await update.message.reply_text(
             f"🤨 Пользователь не найден в Клубе. Гоните его, насмехайтесь над ним!",
-            quote=True
         )
         return None
 
