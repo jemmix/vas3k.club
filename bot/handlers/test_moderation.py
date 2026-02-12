@@ -93,8 +93,6 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"👍 Пост «{self.post.title}» одобрен (Test): https://vas3k.club/post/{self.post.slug}/",
-                        "disable_web_page_preview": "True",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -114,7 +112,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
 
         await approve_post(update, context)
 
-        self.post.refresh_from_db()
+        await self.post.arefresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_APPROVED)
         self.assertEqual(self.post.visibility, Post.VISIBILITY_EVERYWHERE)
         self.assertIsNotNone(self.post.published_at)
@@ -124,14 +122,14 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         """Should approve room-only post with different message"""
         from rooms.models import Room
 
-        room = Room.objects.create(
+        room = await Room.objects.acreate(
             title="Test Room",
             slug="test-room",
         )
 
         self.post.room = room
         self.post.is_room_only = True
-        self.post.save()
+        await self.post.asave()
 
         update = create_callback_query_update(
             bot=self.bot,
@@ -149,8 +147,6 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"😎 Пост «{self.post.title}» хорош для комнаты «{room.title}», но не будет отображаться на главной (Test): https://vas3k.club/post/{self.post.slug}/",
-                        "disable_web_page_preview": "True",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -170,7 +166,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
 
         await approve_post(update, context)
 
-        self.post.refresh_from_db()
+        await self.post.arefresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_APPROVED)
 
         room.delete()
@@ -179,7 +175,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
     async def test_rejects_already_moderated_post(self):
         """Should reject post that was already moderated"""
         self.post.moderation_status = Post.MODERATION_APPROVED
-        self.post.save()
+        await self.post.asave()
 
         update = create_callback_query_update(
             bot=self.bot,
@@ -197,7 +193,6 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"Пост «{self.post.title}» уже был отмодерирован ранее: {Post.MODERATION_APPROVED}",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -218,7 +213,7 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         await approve_post(update, context)
 
         # Should not change status
-        self.post.refresh_from_db()
+        await self.post.arefresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_APPROVED)
 
 
@@ -280,8 +275,6 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"😕 Пост «{self.post.title}» не одобрен, но оставлен на сайте (Test): https://vas3k.club/post/{self.post.slug}/",
-                        "disable_web_page_preview": "True",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -301,7 +294,7 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
 
         await forgive_post(update, context)
 
-        self.post.refresh_from_db()
+        await self.post.arefresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_FORGIVEN)
         self.assertEqual(self.post.visibility, Post.VISIBILITY_EVERYWHERE)
         self.assertIsNone(self.post.collectible_tag_code)
@@ -367,7 +360,6 @@ class RejectPostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"👎 Пост «{self.post.title}» перенесен в черновики по причине «{PostRejectReason.draft.value}» (Test)",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -387,7 +379,7 @@ class RejectPostTest(BaseTelegramTest, TestCase):
 
         await reject_post(update, context)
 
-        self.post.refresh_from_db()
+        await self.post.arefresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_REJECTED)
         self.assertEqual(self.post.visibility, Post.VISIBILITY_DRAFT)
 
@@ -410,7 +402,6 @@ class RejectPostTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"👎 Пост «{self.post.title}» перенесен в черновики по причине «{PostRejectReason.title.value}» (Test)",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -430,7 +421,7 @@ class RejectPostTest(BaseTelegramTest, TestCase):
 
         await reject_post(update, context)
 
-        self.post.refresh_from_db()
+        await self.post.arefresh_from_db()
         self.assertEqual(self.post.moderation_status, Post.MODERATION_REJECTED)
 
 
@@ -504,7 +495,6 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"✅ Пользователь «{self.user.full_name}» одобрен (Test)",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -524,26 +514,26 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
 
         await approve_user_profile(update, context)
 
-        self.user.refresh_from_db()
-        self.intro.refresh_from_db()
+        await self.user.arefresh_from_db()
+        await self.intro.arefresh_from_db()
 
         self.assertEqual(self.user.moderation_status, User.MODERATION_STATUS_APPROVED)
         self.assertEqual(self.intro.moderation_status, Post.MODERATION_APPROVED)
         self.assertEqual(self.intro.visibility, Post.VISIBILITY_EVERYWHERE)
 
         # Check subscription was created
-        subscription = PostSubscription.objects.filter(
+        subscription = await PostSubscription.objects.filter(
             user=self.user,
             post=self.intro,
             type=PostSubscription.TYPE_ALL_COMMENTS,
-        ).first()
+        ).afirst()
         self.assertIsNotNone(subscription)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_already_approved_user(self):
         """Should reject if user already approved"""
         self.user.moderation_status = User.MODERATION_STATUS_APPROVED
-        self.user.save()
+        await self.user.asave()
 
         update = create_callback_query_update(
             bot=self.bot,
@@ -561,7 +551,6 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"Пользователь «{self.user.full_name}» уже одобрен",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -636,7 +625,6 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"❌ Пользователь «{self.user.full_name}» отклонен по причине «{UserRejectReason.intro.value}» (Test)",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -656,7 +644,7 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
 
         await reject_user_profile(update, context)
 
-        self.user.refresh_from_db()
+        await self.user.arefresh_from_db()
         self.assertEqual(self.user.moderation_status, User.MODERATION_STATUS_REJECTED)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
@@ -678,7 +666,6 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"❌ Пользователь «{self.user.full_name}» отклонен по причине «{UserRejectReason.ai.value}» (Test)",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -698,14 +685,14 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
 
         await reject_user_profile(update, context)
 
-        self.user.refresh_from_db()
+        await self.user.arefresh_from_db()
         self.assertEqual(self.user.moderation_status, User.MODERATION_STATUS_REJECTED)
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_already_rejected_user(self):
         """Should reject if user already rejected"""
         self.user.moderation_status = User.MODERATION_STATUS_REJECTED
-        self.user.save()
+        await self.user.asave()
 
         update = create_callback_query_update(
             bot=self.bot,
@@ -723,7 +710,6 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": f"Пользователь «{self.user.full_name}» уже был отклонен и пошел все переделывать",
-                        "disable_notification": "False",
                     },
                 ),
                 '{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}',
@@ -744,5 +730,5 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
         await reject_user_profile(update, context)
 
         # Should remain rejected
-        self.user.refresh_from_db()
+        await self.user.arefresh_from_db()
         self.assertEqual(self.user.moderation_status, User.MODERATION_STATUS_REJECTED)

@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 
+from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.urls import reverse
 from django_q.tasks import async_task
@@ -25,7 +26,7 @@ log = logging.getLogger(__name__)
 async def approve_post(update: Update, context: CallbackContext) -> None:
     _, post_id = update.callback_query.data.split(":", 1)
 
-    post = Post.objects.get(id=post_id)
+    post = await Post.objects.select_related("room").aget(id=post_id)
     if post.moderation_status in [Post.MODERATION_APPROVED, Post.MODERATION_FORGIVEN, Post.MODERATION_REJECTED]:
         await update.effective_chat.send_message(f"Пост «{post.title}» уже был отмодерирован ранее: {post.moderation_status}")
         await update.callback_query.edit_message_reply_markup(reply_markup=None)
@@ -35,7 +36,7 @@ async def approve_post(update: Update, context: CallbackContext) -> None:
     post.visibility = Post.VISIBILITY_EVERYWHERE
     post.last_activity_at = datetime.utcnow()
     post.published_at = datetime.utcnow()
-    post.save()
+    await post.asave()
 
     post_url = settings.APP_HOST + reverse("show_post", kwargs={
         "post_type": post.type,
@@ -77,7 +78,7 @@ async def approve_post(update: Update, context: CallbackContext) -> None:
 async def forgive_post(update: Update, context: CallbackContext) -> None:
     _, post_id = update.callback_query.data.split(":", 1)
 
-    post = Post.objects.get(id=post_id)
+    post = await Post.objects.aget(id=post_id)
     if post.moderation_status in [Post.MODERATION_APPROVED, Post.MODERATION_FORGIVEN, Post.MODERATION_REJECTED]:
         await update.effective_chat.send_message(f"Пост «{post.title}» уже был отмодерирован ранее: {post.moderation_status}")
         await update.callback_query.edit_message_reply_markup(reply_markup=None)
@@ -88,7 +89,7 @@ async def forgive_post(update: Update, context: CallbackContext) -> None:
     post.last_activity_at = datetime.utcnow()
     post.published_at = datetime.utcnow()
     post.collectible_tag_code = None
-    post.save()
+    await post.asave()
 
     post_url = settings.APP_HOST + reverse("show_post", kwargs={
         "post_type": post.type,
@@ -130,14 +131,14 @@ async def reject_post(update: Update, context: CallbackContext) -> None:
         "reject_post_false_dilemma": PostRejectReason.false_dilemma,
     }.get(code) or PostRejectReason.draft
 
-    post = Post.objects.get(id=post_id)
+    post = await Post.objects.aget(id=post_id)
     if post.moderation_status in [Post.MODERATION_APPROVED, Post.MODERATION_FORGIVEN, Post.MODERATION_REJECTED]:
         await update.effective_chat.send_message(f"Пост «{post.title}» уже был отмодерирован ранее: {post.moderation_status}")
         await update.callback_query.edit_message_reply_markup(reply_markup=None)
         return None
 
     post.moderation_status = Post.MODERATION_REJECTED
-    post.unpublish()
+    await sync_to_async(post.unpublish)()
 
     SearchIndex.update_post_index(post)
 
@@ -157,7 +158,7 @@ async def reject_post(update: Update, context: CallbackContext) -> None:
 async def approve_user_profile(update: Update, context: CallbackContext) -> None:
     _, user_id = update.callback_query.data.split(":", 1)
 
-    user = User.objects.get(id=user_id)
+    user = await User.objects.aget(id=user_id)
     if user.moderation_status == User.MODERATION_STATUS_APPROVED:
         await update.effective_chat.send_message(f"Пользователь «{user.full_name}» уже одобрен")
         await update.callback_query.edit_message_reply_markup(reply_markup=None)
@@ -172,18 +173,18 @@ async def approve_user_profile(update: Update, context: CallbackContext) -> None
     if user.created_at > datetime.utcnow() - timedelta(days=30):
         # to avoid zeroing out the profiles of the old users
         user.created_at = datetime.utcnow()
-    user.save()
+    await user.asave()
 
     # make intro visible
-    intro = Post.objects.filter(author=user, type=Post.TYPE_INTRO).first()
+    intro = await Post.objects.filter(author=user, type=Post.TYPE_INTRO).afirst()
     intro.moderation_status = Post.MODERATION_APPROVED
     intro.visibility = Post.VISIBILITY_EVERYWHERE
     intro.last_activity_at = datetime.utcnow()
     if not intro.published_at:
         intro.published_at = datetime.utcnow()
-    intro.save()
+    await intro.asave()
 
-    PostSubscription.subscribe(user, intro, type=PostSubscription.TYPE_ALL_COMMENTS)
+    await sync_to_async(PostSubscription.subscribe)(user, intro, type=PostSubscription.TYPE_ALL_COMMENTS)
 
     SearchIndex.update_user_index(user)
 
@@ -214,7 +215,7 @@ async def reject_user_profile(update: Update, context: CallbackContext):
         "reject_user_name": UserRejectReason.name,
     }.get(code) or UserRejectReason.intro
 
-    user = User.objects.get(id=user_id)
+    user = await User.objects.aget(id=user_id)
     if user.moderation_status == User.MODERATION_STATUS_REJECTED:
         await update.effective_chat.send_message(
             f"Пользователь «{user.full_name}» уже был отклонен и пошел все переделывать"
@@ -230,7 +231,7 @@ async def reject_user_profile(update: Update, context: CallbackContext):
         return None
 
     user.moderation_status = User.MODERATION_STATUS_REJECTED
-    user.save()
+    await user.asave()
 
     notify_user_profile_rejected(user, reason)
     send_user_rejected_email(user, reason)
