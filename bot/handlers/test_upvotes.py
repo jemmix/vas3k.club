@@ -296,7 +296,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        result = upvote_post(update, context)
+        result = await upvote_post(update, context)
         self.assertIsNone(result)
 
 
@@ -373,7 +373,6 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "➜ Заплюсовано 👍",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -417,7 +416,6 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "➜ Ты уже плюсовал, поц",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -447,7 +445,6 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "➜ Заплюсовано 👍",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -490,7 +487,6 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "➜ Ты уже плюсовал, поц",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -535,12 +531,11 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "😐 Привяжи <a href=\"https://vas3k.club/user/me/edit/bot/\">бота</a> к профилю, братишка",
                         "parse_mode": "HTML",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
             ),
         ])
 
-        result = upvote(update, context)
+        result = await upvote(update, context)
         self.assertIsNone(result)
