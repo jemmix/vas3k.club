@@ -1,5 +1,6 @@
 """Tests for bot/handlers/posts.py handlers."""
 
+from asgiref.sync import sync_to_async
 from unittest.mock import patch
 
 from django.test import TestCase
@@ -68,7 +69,7 @@ class SubscribeTest(BaseTelegramTest, TestCase):
         await subscribe(update, context)
 
         # Verify subscription was created
-        subscription = PostSubscription.objects.filter(user=self.user, post=self.post).first()
+        subscription = await PostSubscription.objects.filter(user=self.user, post=self.post).afirst()
         self.assertIsNotNone(subscription)
 
 
@@ -101,7 +102,7 @@ class UnsubscribeTest(BaseTelegramTest, TestCase):
     async def test_unsubscribes_user_from_post(self):
         """Should unsubscribe user from post"""
         # Create subscription first
-        PostSubscription.subscribe(
+        await sync_to_async(PostSubscription.subscribe)(
             user=self.user,
             post=self.post,
             type=PostSubscription.TYPE_TOP_LEVEL_ONLY,
@@ -132,7 +133,7 @@ class UnsubscribeTest(BaseTelegramTest, TestCase):
         await unsubscribe(update, context)
 
         # Verify subscription was deleted
-        subscription = PostSubscription.objects.filter(user=self.user, post=self.post).first()
+        subscription = await PostSubscription.objects.filter(user=self.user, post=self.post).afirst()
         self.assertIsNone(subscription)
 
     async def test_handles_already_unsubscribed(self):
