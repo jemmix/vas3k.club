@@ -22,7 +22,7 @@ NORMAL_TEXT_LIMIT = 4096
 PHOTO_TEXT_LIMIT = 1024
 
 
-async def _send_telegram_message_async(
+async def send_telegram_message_async(
     chat: Chat,
     text: str,
     parse_mode: str = ParseMode.HTML,
@@ -30,7 +30,7 @@ async def _send_telegram_message_async(
     reply_to_message_id: int | None = None,
     disable_preview: bool = True,
 ):
-    """Actual async implementation for telegram message sending"""
+    """Async version for use in async contexts (tests, async handlers)"""
     if not bot:
         log.warning("No telegram token. Skipping")
         return
@@ -58,7 +58,7 @@ async def _send_telegram_message_async(
                 chat_id=chat.id,
                 text=text[:NORMAL_TEXT_LIMIT],
                 parse_mode=parse_mode,
-                disable_web_page_preview=disable_preview,
+                link_preview_options=telegram.LinkPreviewOptions(is_disabled=disable_preview) if disable_preview else None,
                 reply_markup=reply_markup,
                 reply_to_message_id=reply_to_message_id,
             )
@@ -75,7 +75,7 @@ def send_telegram_message(
     disable_preview: bool = True,
 ):
     """Sync wrapper for async telegram calls (called from django_q background tasks)"""
-    return async_to_sync(_send_telegram_message_async)(
+    return async_to_sync(send_telegram_message_async)(
         chat=chat,
         text=text,
         parse_mode=parse_mode,
@@ -85,13 +85,13 @@ def send_telegram_message(
     )
 
 
-async def _send_telegram_image_async(
+async def send_telegram_image_async(
     chat: Chat,
     image_url: str,
     text: str,
     parse_mode: str = ParseMode.HTML,
 ):
-    """Actual async implementation for telegram image sending"""
+    """Async version for use in async contexts (tests, async handlers)"""
     if not bot:
         log.warning("No telegram token. Skipping")
         return
@@ -116,7 +116,7 @@ def send_telegram_image(
     parse_mode: str = ParseMode.HTML,
 ):
     """Sync wrapper for async telegram calls (called from django_q background tasks)"""
-    return async_to_sync(_send_telegram_image_async)(
+    return async_to_sync(send_telegram_image_async)(
         chat=chat,
         image_url=image_url,
         text=text,

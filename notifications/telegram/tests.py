@@ -17,6 +17,8 @@ import telegram
 from notifications.telegram.common import (
     send_telegram_message,
     send_telegram_image,
+    send_telegram_message_async,
+    send_telegram_image_async,
     Chat,
 )
 import difflib
@@ -315,14 +317,13 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
     MESSAGE_BODY_TEMPLATE = {
         "chat_id": "12345",
         "parse_mode": "HTML",
-        "disable_web_page_preview": "True",
-        "disable_notification": "False",
+        "link_preview_options": '{"is_disabled": true}',
     }
 
     MESSAGE_BODY_TEMPLATE_WITH_PREVIEW = {
         k: v
         for k, v in MESSAGE_BODY_TEMPLATE.items()
-        if k != "disable_web_page_preview"
+        if k != "link_preview_options"
     }
 
     RESPONSE = json.dumps(
@@ -361,7 +362,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_message(self.test_chat, text)
+        await send_telegram_message_async(self.test_chat, text)
 
     async def test_send_telegram_message_truncation(self):
         """Test that messages longer than NORMAL_TEXT_LIMIT are truncated"""
@@ -384,7 +385,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_message(self.test_chat, long_text)
+        await send_telegram_message_async(self.test_chat, long_text)
 
     async def test_send_telegram_message_with_image(self):
         """Test sending a message with an embedded image"""
@@ -407,7 +408,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_message(self.test_chat, text)
+        await send_telegram_message_async(self.test_chat, text)
 
     async def test_send_telegram_message_parse_mode(self):
         """Test that parse_mode is sent in the request"""
@@ -422,7 +423,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
                         {
                             **SendTelegramMessageTest.MESSAGE_BODY_TEMPLATE,
                             "text": text,
-                            "parse_mode": telegram.ParseMode.MARKDOWN,
+                            "parse_mode": telegram.constants.ParseMode.MARKDOWN,
                         },
                     ),
                     SendTelegramMessageTest.RESPONSE,
@@ -430,8 +431,8 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_message(
-            self.test_chat, text, parse_mode=telegram.ParseMode.MARKDOWN
+        await send_telegram_message_async(
+            self.test_chat, text, parse_mode=telegram.constants.ParseMode.MARKDOWN
         )
 
     async def test_send_telegram_message_enable_preview(self):
@@ -454,7 +455,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_message(self.test_chat, text, disable_preview=False)
+        await send_telegram_message_async(self.test_chat, text, disable_preview=False)
 
     async def test_send_telegram_message_reply_to_message_id(self):
         """Test that additional kwargs are sent in the request"""
@@ -469,7 +470,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
                         {
                             **SendTelegramMessageTest.MESSAGE_BODY_TEMPLATE,
                             "text": text,
-                            "reply_to_message_id": "999",
+                            "reply_parameters": '{"message_id": 999}',
                         },
                     ),
                     SendTelegramMessageTest.RESPONSE,
@@ -477,7 +478,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_message(self.test_chat, text, reply_to_message_id=999)
+        await send_telegram_message_async(self.test_chat, text, reply_to_message_id=999)
 
     async def test_send_telegram_message_reply_markup(self):
         """Test that reply_markup is sent in the request"""
@@ -496,7 +497,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
                         {
                             **SendTelegramMessageTest.MESSAGE_BODY_TEMPLATE,
                             "text": text,
-                            "reply_markup": '{"inline_keyboard": [[{"text": "Click me", "callback_data": "test"}]]}',
+                            "reply_markup": '{"inline_keyboard": [[{"callback_data": "test", "text": "Click me"}]]}',
                         },
                     ),
                     SendTelegramMessageTest.RESPONSE,
@@ -504,7 +505,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_message(self.test_chat, text, reply_markup=keyboard)
+        await send_telegram_message_async(self.test_chat, text, reply_markup=keyboard)
 
     async def test_send_telegram_image(self):
         """Test sending an image directly"""
@@ -528,7 +529,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_image(self.test_chat, image_url, caption)
+        await send_telegram_image_async(self.test_chat, image_url, caption)
 
     async def test_send_telegram_image_truncation(self):
         """Test that image captions are truncated to PHOTO_TEXT_LIMIT"""
@@ -553,7 +554,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_image(self.test_chat, image_url, long_caption)
+        await send_telegram_image_async(self.test_chat, image_url, long_caption)
 
     async def test_send_telegram_image_parse_mode(self):
         """Test that parse_mode is sent with image"""
@@ -570,7 +571,7 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
                             **SendTelegramMessageTest.MESSAGE_BODY_TEMPLATE_WITH_PREVIEW,
                             "photo": image_url,
                             "caption": caption,
-                            "parse_mode": telegram.ParseMode.MARKDOWN,
+                            "parse_mode": telegram.constants.ParseMode.MARKDOWN,
                         },
                     ),
                     SendTelegramMessageTest.RESPONSE,
@@ -578,8 +579,8 @@ class SendTelegramMessageTest(BaseTelegramTest, TestCase):
             ]
         )
 
-        send_telegram_image(
-            self.test_chat, image_url, caption, parse_mode=telegram.ParseMode.MARKDOWN
+        await send_telegram_image_async(
+            self.test_chat, image_url, caption, parse_mode=telegram.constants.ParseMode.MARKDOWN
         )
 
 
