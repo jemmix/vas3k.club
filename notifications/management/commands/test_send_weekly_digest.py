@@ -7,6 +7,7 @@ from unittest.mock import patch, MagicMock
 from django.core.management import call_command
 from django.test import TestCase
 import telegram
+from telegram.constants import ParseMode
 
 from bot.test_helpers import create_test_user
 from club.exceptions import NotFound
@@ -213,7 +214,7 @@ class SendWeeklyDigestCommandTest(BaseNotificationTest, TestCase):
         if self.mock_send_msg.call_count > 0:
             # Check if any call has parse_mode
             parse_modes = [call[1].get("parse_mode") for call in self.mock_send_msg.call_args_list]
-            self.assertIn(telegram.ParseMode.HTML, parse_modes)
+            self.assertIn(ParseMode.HTML, parse_modes)
 
     def test_updates_search_index(self):
         """Should update SearchIndex for the created post"""

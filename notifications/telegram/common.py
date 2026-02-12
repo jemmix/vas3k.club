@@ -1,7 +1,7 @@
-import asyncio
 from collections import namedtuple
 
 import telegram
+from asgiref.sync import async_to_sync
 from telegram.constants import ParseMode
 from django.conf import settings
 from django.template import loader
@@ -75,14 +75,14 @@ def send_telegram_message(
     disable_preview: bool = True,
 ):
     """Sync wrapper for async telegram calls (called from django_q background tasks)"""
-    return asyncio.run(_send_telegram_message_async(
+    return async_to_sync(_send_telegram_message_async)(
         chat=chat,
         text=text,
         parse_mode=parse_mode,
         reply_markup=reply_markup,
         reply_to_message_id=reply_to_message_id,
         disable_preview=disable_preview,
-    ))
+    )
 
 
 async def _send_telegram_image_async(
@@ -116,12 +116,12 @@ def send_telegram_image(
     parse_mode: str = ParseMode.HTML,
 ):
     """Sync wrapper for async telegram calls (called from django_q background tasks)"""
-    return asyncio.run(_send_telegram_image_async(
+    return async_to_sync(_send_telegram_image_async)(
         chat=chat,
         image_url=image_url,
         text=text,
         parse_mode=parse_mode,
-    ))
+    )
 
 
 def render_html_message(template, **data):

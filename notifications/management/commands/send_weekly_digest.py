@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import telegram
 from django.conf import settings
 from django.core.management import BaseCommand
+from telegram.constants import ParseMode
 
 from club.exceptions import NotFound
 from godmode.models import ClubSettings
@@ -84,7 +85,7 @@ class Command(BaseCommand):
                         include_unsubscribe=True,
                     ),
                     disable_preview=False,
-                    parse_mode=telegram.ParseMode.HTML,
+                    parse_mode=ParseMode.HTML,
                 )
 
         # sending emails
@@ -134,7 +135,7 @@ class Command(BaseCommand):
                     digest_intro=digest_intro
                 ),
                 disable_preview=False,
-                parse_mode=telegram.ParseMode.HTML,
+                parse_mode=ParseMode.HTML,
             )
 
             # flush digest intro and title for next time
