@@ -3,7 +3,7 @@
 import json
 import time
 from datetime import datetime, timedelta, timezone
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, AsyncMock, patch
 
 from django.conf import settings
 from django.test import TestCase, override_settings
@@ -53,7 +53,7 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_allows_moderator_in_admin_chat(self):
         """Moderator in admin chat should be allowed"""
-        mock_handler = MagicMock(return_value="success")
+        mock_handler = AsyncMock(return_value="success")
         decorated_handler = is_moderator(mock_handler)
 
         update = create_message_update(
@@ -74,7 +74,7 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_non_admin_chat(self):
         """Should reject when not in admin chat"""
-        mock_handler = MagicMock()
+        mock_handler = AsyncMock()
         decorated_handler = is_moderator(mock_handler)
 
         update = create_message_update(
@@ -94,7 +94,7 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "99999",
                         "text": "❌ Для этого действия нужно быть в чате модераторов",
-                        "disable_notification": "False",
+                        # v20+ doesn't send disable_notification when it's the default
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(chat_id=99999),
@@ -109,7 +109,7 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_non_moderator(self):
         """Should reject regular user even in admin chat"""
-        mock_handler = MagicMock()
+        mock_handler = AsyncMock()
         decorated_handler = is_moderator(mock_handler)
 
         update = create_message_update(
@@ -129,7 +129,6 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "⚠️ 'Test' не модератор или не привязал бота к аккаунту",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -144,7 +143,7 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_unknown_telegram_user(self):
         """Should reject user not in database"""
-        mock_handler = MagicMock()
+        mock_handler = AsyncMock()
         decorated_handler = is_moderator(mock_handler)
 
         update = create_message_update(
@@ -164,7 +163,6 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "⚠️ 'Test' не модератор или не привязал бота к аккаунту",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -200,7 +198,7 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
     async def test_allows_club_member(self, mock_cached_users):
         """Club member should be allowed"""
         mock_cached_users.return_value = {"333": self.member_user}
-        mock_handler = MagicMock(return_value="success")
+        mock_handler = AsyncMock(return_value="success")
         decorated_handler = is_club_member(mock_handler)
 
         update = create_message_update(
@@ -221,7 +219,7 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
     async def test_rejects_non_member_via_message(self, mock_cached_users):
         """Non-member via message should get reply_text"""
         mock_cached_users.return_value = {}  # Empty cache
-        mock_handler = MagicMock()
+        mock_handler = AsyncMock()
         decorated_handler = is_club_member(mock_handler)
 
         update = create_message_update(
@@ -242,7 +240,6 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": "☝️ Привяжи <a href=\"https://vas3k.club/user/me/edit/bot/\">бота</a> к профилю, братишка",
                         "parse_mode": "HTML",
-                        "disable_notification": "False",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -258,7 +255,7 @@ class IsClubMemberDecoratorTest(BaseTelegramTest, TestCase):
     async def test_rejects_non_member_via_callback_query(self, mock_cached_users):
         """Non-member via callback_query should get answer"""
         mock_cached_users.return_value = {}  # Empty cache
-        mock_handler = MagicMock()
+        mock_handler = AsyncMock()
         decorated_handler = is_club_member(mock_handler)
 
         update = create_callback_query_update(
