@@ -1,7 +1,7 @@
 """Tests for bot/handlers/upvotes.py handlers."""
 
 from datetime import datetime, timezone
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 from telegram.ext import CallbackContext
 
@@ -84,16 +84,16 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
         await upvote_comment(update, context)
 
         # Verify vote was created
-        vote_exists = CommentVote.objects.filter(
+        vote_exists = await CommentVote.objects.filter(
             user=self.user,
             comment=self.comment
-        ).exists()
+        ).aexists()
         self.assertTrue(vote_exists)
 
     async def test_upvote_comment_already_upvoted(self):
         """Should show already upvoted message when voting twice"""
         # Create existing vote
-        CommentVote.objects.create(
+        await CommentVote.objects.acreate(
             user=self.user,
             comment=self.comment,
             post=self.post,
@@ -133,7 +133,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
         )
         context = MagicMock(spec=CallbackContext)
 
-        result = upvote_comment(update, context)
+        result = await upvote_comment(update, context)
         self.assertIsNone(result)
 
     async def test_upvote_comment_no_user(self):
@@ -160,7 +160,7 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
             ),
         ])
 
-        result = upvote_comment(update, context)
+        result = await upvote_comment(update, context)
         self.assertIsNone(result)
 
 
@@ -221,16 +221,16 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
         await upvote_post(update, context)
 
         # Verify vote was created
-        vote_exists = PostVote.objects.filter(
+        vote_exists = await PostVote.objects.filter(
             user=self.user,
             post=self.post
-        ).exists()
+        ).aexists()
         self.assertTrue(vote_exists)
 
     async def test_upvote_post_already_upvoted(self):
         """Should show already upvoted message when voting twice"""
         # Create existing vote
-        PostVote.objects.create(
+        await PostVote.objects.acreate(
             user=self.user,
             post=self.post,
         )
@@ -269,7 +269,7 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
         )
         context = MagicMock(spec=CallbackContext)
 
-        result = upvote_post(update, context)
+        result = await upvote_post(update, context)
         self.assertIsNone(result)
 
     async def test_upvote_post_no_user(self):
@@ -332,9 +332,9 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         self.mock_cached_users = self.cached_users_patch.start()
         self.mock_cached_users.return_value = {"111": self.user}
 
-        # Mock get_club_comment and get_club_post
-        self.get_club_comment_patch = patch("bot.handlers.upvotes.get_club_comment")
-        self.get_club_post_patch = patch("bot.handlers.upvotes.get_club_post")
+        # Mock get_club_comment and get_club_post (async functions)
+        self.get_club_comment_patch = patch("bot.handlers.upvotes.get_club_comment", new_callable=AsyncMock)
+        self.get_club_post_patch = patch("bot.handlers.upvotes.get_club_post", new_callable=AsyncMock)
 
         self.mock_get_club_comment = self.get_club_comment_patch.start()
         self.mock_get_club_post = self.get_club_post_patch.start()
@@ -383,10 +383,10 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         await upvote(update, context)
 
         # Verify vote was created
-        vote_exists = CommentVote.objects.filter(
+        vote_exists = await CommentVote.objects.filter(
             user=self.user,
             comment=self.comment
-        ).exists()
+        ).aexists()
         self.assertTrue(vote_exists)
 
     async def test_upvote_comment_already_upvoted(self):
@@ -394,7 +394,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         self.mock_get_club_comment.return_value = self.comment
 
         # Create existing vote
-        CommentVote.objects.create(
+        await CommentVote.objects.acreate(
             user=self.user,
             comment=self.comment,
             post=self.post,
@@ -457,10 +457,10 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         await upvote(update, context)
 
         # Verify vote was created
-        vote_exists = PostVote.objects.filter(
+        vote_exists = await PostVote.objects.filter(
             user=self.user,
             post=self.post
-        ).exists()
+        ).aexists()
         self.assertTrue(vote_exists)
 
     async def test_upvote_post_already_upvoted(self):
@@ -468,7 +468,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         self.mock_get_club_post.return_value = self.post
 
         # Create existing vote
-        PostVote.objects.create(
+        await PostVote.objects.acreate(
             user=self.user,
             post=self.post,
         )
@@ -509,7 +509,7 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         )
         context = MagicMock(spec=CallbackContext)
 
-        result = upvote(update, context)
+        result = await upvote(update, context)
         self.assertIsNone(result)
 
     async def test_upvote_no_user(self):

@@ -1,5 +1,6 @@
 import logging
 
+from asgiref.sync import sync_to_async
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -20,7 +21,7 @@ async def upvote(update: Update, context: CallbackContext) -> None:
     if not update.message or not update.message.reply_to_message:
         return None
 
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user:
         return None
 
@@ -31,18 +32,18 @@ async def upvote(update: Update, context: CallbackContext) -> None:
     )[:10]
 
     if COMMENT_EMOJI_RE.match(reply_text_start):
-        comment = get_club_comment(update)
+        comment = await get_club_comment(update)
         if comment:
-            _, is_created = CommentVote.upvote(
+            _, is_created = await sync_to_async(CommentVote.upvote)(
                 user=user,
                 comment=comment,
             )
             await update.message.reply_text(f"➜ Заплюсовано 👍" if is_created else "➜ Ты уже плюсовал, поц")
 
     if POST_EMOJI_RE.match(reply_text_start):
-        post = get_club_post(update)
+        post = await get_club_post(update)
         if post:
-            _, is_created = PostVote.upvote(
+            _, is_created = await sync_to_async(PostVote.upvote)(
                 user=user,
                 post=post,
             )
@@ -54,17 +55,17 @@ async def upvote(update: Update, context: CallbackContext) -> None:
 async def upvote_comment(update: Update, context: CallbackContext) -> None:
     log.info("Upvote_comment handler triggered")
 
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user:
         return None
 
     _, comment_id = update.callback_query.data.split(":", 1)
-    comment = Comment.objects.filter(id=comment_id).select_related("post").first()
+    comment = await Comment.objects.filter(id=comment_id).select_related("post").afirst()
     if not comment:
         log.info("Original comment not found. Skipping.")
         return None
 
-    _, is_created = CommentVote.upvote(
+    _, is_created = await sync_to_async(CommentVote.upvote)(
         user=user,
         comment=comment,
     )
@@ -80,17 +81,17 @@ async def upvote_comment(update: Update, context: CallbackContext) -> None:
 async def upvote_post(update: Update, context: CallbackContext) -> None:
     log.info("Upvote_post handler triggered")
 
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user:
         return None
 
     _, post_id = update.callback_query.data.split(":", 1)
-    post = Post.objects.filter(id=post_id).first()
+    post = await Post.objects.filter(id=post_id).afirst()
     if not post:
         log.info("Original post not found. Skipping.")
         return None
 
-    _, is_created = PostVote.upvote(
+    _, is_created = await sync_to_async(PostVote.upvote)(
         user=user,
         post=post,
     )
