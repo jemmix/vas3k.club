@@ -34,14 +34,17 @@ class Answer(models.Model):
         db_table = "help_desk_answers"
 
     @classmethod
-    def create_from_update(cls, question, update):
-        return cls(
-            user=User.objects.filter(telegram_id=update.message.from_user.id).first(),
+    async def create_from_update(cls, question, update):
+        user = await User.objects.filter(telegram_id=update.message.from_user.id).afirst()
+        answer = cls(
+            user=user,
             user_name=update.message.from_user.first_name,
             question=question,
             text=update.message.text,
             telegram_data=update.to_dict()
-        ).save()
+        )
+        await answer.asave()
+        return answer
 
 
 class HelpDeskUser(models.Model):

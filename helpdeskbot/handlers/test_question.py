@@ -1,7 +1,8 @@
 """Tests for helpdeskbot/handlers/question.py ConversationHandler"""
 
+import time
 from datetime import datetime, timedelta
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 from django.test import TestCase
 from telegram import Update
@@ -56,9 +57,9 @@ class StartTest(QuestionTestBase):
         self.user.delete()
         super().tearDown()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.render_html_message")
-    @patch("helpdeskbot.handlers.question.get_club_user")
+    @patch("helpdeskbot.handlers.question.get_club_user", new_callable=AsyncMock)
     async def test_starts_conversation_for_valid_user(self, mock_get_user, mock_render, mock_send):
         """Should start conversation and return REQUEST_FOR_INPUT"""
         mock_get_user.return_value = self.user
@@ -74,14 +75,14 @@ class StartTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = start(update, context)
+        result = await start(update, context)
 
         self.assertEqual(result, State.REQUEST_FOR_INPUT)
         mock_send.assert_called_once()
         # Verify user_data was cleared (should be empty dict)
         self.assertEqual(context.user_data, {})
 
-    @patch("helpdeskbot.handlers.question.get_club_user")
+    @patch("helpdeskbot.handlers.question.get_club_user", new_callable=AsyncMock)
     async def test_returns_end_if_no_user(self, mock_get_user):
         """Should return END if user not found"""
         mock_get_user.return_value = None
@@ -96,12 +97,12 @@ class StartTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = start(update, context)
+        result = await start(update, context)
 
         self.assertEqual(result, ConversationHandler.END)
 
-    @patch("helpdeskbot.handlers.question.send_reply")
-    @patch("helpdeskbot.handlers.question.get_club_user")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
+    @patch("helpdeskbot.handlers.question.get_club_user", new_callable=AsyncMock)
     async def test_returns_end_if_user_banned(self, mock_get_user, mock_send):
         """Should return END if user is banned in HelpDeskUser"""
         mock_get_user.return_value = self.user
@@ -122,7 +123,7 @@ class StartTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = start(update, context)
+        result = await start(update, context)
 
         self.assertEqual(result, ConversationHandler.END)
         mock_send.assert_called_once()
@@ -130,9 +131,9 @@ class StartTest(QuestionTestBase):
 
         HelpDeskUser.objects.filter(user=self.user).delete()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.config.DAILY_QUESTION_LIMIT", 3)
-    @patch("helpdeskbot.handlers.question.get_club_user")
+    @patch("helpdeskbot.handlers.question.get_club_user", new_callable=AsyncMock)
     async def test_returns_end_if_daily_limit_exceeded(self, mock_get_user, mock_send):
         """Should return END if non-moderator exceeds daily question limit"""
         mock_get_user.return_value = self.user
@@ -157,7 +158,7 @@ class StartTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = start(update, context)
+        result = await start(update, context)
 
         self.assertEqual(result, ConversationHandler.END)
         mock_send.assert_called_once()
@@ -170,7 +171,7 @@ class StartTest(QuestionTestBase):
 class RequestFieldValueTest(QuestionTestBase):
     """Test field request handlers"""
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_request_title_value(self, mock_send):
         """Should set CUR_FIELD_KEY to TITLE and prompt for input"""
         update = create_message_update(
@@ -183,14 +184,14 @@ class RequestFieldValueTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = request_title_value(update, context)
+        result = await request_title_value(update, context)
 
         self.assertEqual(result, State.INPUT_RESPONSE)
         self.assertEqual(context.user_data[CUR_FIELD_KEY], QuestionKeyboard.TITLE.value)
         mock_send.assert_called_once()
         self.assertIn("Введите заголовок", mock_send.call_args[0][1])
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_request_body_value(self, mock_send):
         """Should set CUR_FIELD_KEY to BODY and prompt for input"""
         update = create_message_update(
@@ -203,14 +204,14 @@ class RequestFieldValueTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = request_body_value(update, context)
+        result = await request_body_value(update, context)
 
         self.assertEqual(result, State.INPUT_RESPONSE)
         self.assertEqual(context.user_data[CUR_FIELD_KEY], QuestionKeyboard.BODY.value)
         mock_send.assert_called_once()
         self.assertIn("Введите текст вопроса", mock_send.call_args[0][1])
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_request_room_choose(self, mock_send):
         """Should set CUR_FIELD_KEY to ROOM and show room keyboard"""
         update = create_message_update(
@@ -223,7 +224,7 @@ class RequestFieldValueTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = request_room_choose(update, context)
+        result = await request_room_choose(update, context)
 
         self.assertEqual(result, State.INPUT_RESPONSE)
         self.assertEqual(context.user_data[CUR_FIELD_KEY], QuestionKeyboard.ROOM.value)
@@ -234,7 +235,7 @@ class RequestFieldValueTest(QuestionTestBase):
 class InputResponseTest(QuestionTestBase):
     """Test input_response handler"""
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_stores_user_input_and_returns_to_menu(self, mock_send):
         """Should store user input for current field and return to menu"""
         update = create_message_update(
@@ -247,7 +248,7 @@ class InputResponseTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {CUR_FIELD_KEY: QuestionKeyboard.TITLE.value}
 
-        result = input_response(update, context)
+        result = await input_response(update, context)
 
         self.assertEqual(result, State.REQUEST_FOR_INPUT)
         self.assertEqual(context.user_data[QuestionKeyboard.TITLE.value], "My question title")
@@ -258,7 +259,7 @@ class InputResponseTest(QuestionTestBase):
 class CancelQuestionTest(QuestionTestBase):
     """Test cancel_question handler"""
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_cancels_conversation(self, mock_send):
         """Should send cancellation message and end conversation"""
         update = create_message_update(
@@ -271,7 +272,7 @@ class CancelQuestionTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = cancel_question(update, context)
+        result = await cancel_question(update, context)
 
         self.assertEqual(result, ConversationHandler.END)
         mock_send.assert_called_once()
@@ -289,9 +290,9 @@ class ReviewQuestionTest(QuestionTestBase):
         self.user.delete()
         super().tearDown()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.render_html_message")
-    @patch("helpdeskbot.handlers.question.get_club_user")
+    @patch("helpdeskbot.handlers.question.get_club_user", new_callable=AsyncMock)
     async def test_shows_review_when_valid(self, mock_get_user, mock_render, mock_send):
         """Should show review when title and body are valid"""
         mock_get_user.return_value = self.user
@@ -310,13 +311,13 @@ class ReviewQuestionTest(QuestionTestBase):
             QuestionKeyboard.BODY.value: "Test body",
         }
 
-        result = review_question(update, context)
+        result = await review_question(update, context)
 
         self.assertEqual(result, State.FINISH_REVIEW)
         mock_send.assert_called_once()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
-    @patch("helpdeskbot.handlers.question.edit_question")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
+    @patch("helpdeskbot.handlers.question.edit_question", new_callable=AsyncMock)
     async def test_rejects_empty_title(self, mock_edit, mock_send):
         """Should reject if title is empty"""
         update = create_message_update(
@@ -331,14 +332,14 @@ class ReviewQuestionTest(QuestionTestBase):
             QuestionKeyboard.BODY.value: "Test body",
         }
 
-        result = review_question(update, context)
+        result = await review_question(update, context)
 
         mock_send.assert_called_once()
         self.assertIn("обязательны", mock_send.call_args[0][1])
         mock_edit.assert_called_once()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
-    @patch("helpdeskbot.handlers.question.edit_question")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
+    @patch("helpdeskbot.handlers.question.edit_question", new_callable=AsyncMock)
     async def test_rejects_empty_body(self, mock_edit, mock_send):
         """Should reject if body is empty"""
         update = create_message_update(
@@ -353,14 +354,14 @@ class ReviewQuestionTest(QuestionTestBase):
             QuestionKeyboard.TITLE.value: "Test title",
         }
 
-        result = review_question(update, context)
+        result = await review_question(update, context)
 
         mock_send.assert_called_once()
         self.assertIn("обязательны", mock_send.call_args[0][1])
         mock_edit.assert_called_once()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
-    @patch("helpdeskbot.handlers.question.edit_question")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
+    @patch("helpdeskbot.handlers.question.edit_question", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.config.QUESTION_TITLE_MAX_LEN", 10)
     @patch("helpdeskbot.handlers.question.config.QUESTION_BODY_MAX_LEN", 5000)
     async def test_rejects_title_too_long(self, mock_edit, mock_send):
@@ -378,14 +379,14 @@ class ReviewQuestionTest(QuestionTestBase):
             QuestionKeyboard.BODY.value: "Test body",
         }
 
-        result = review_question(update, context)
+        result = await review_question(update, context)
 
         mock_send.assert_called_once()
         self.assertIn("не должен быть длиннее", mock_send.call_args[0][1])
         mock_edit.assert_called_once()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
-    @patch("helpdeskbot.handlers.question.edit_question")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
+    @patch("helpdeskbot.handlers.question.edit_question", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.config.QUESTION_BODY_MAX_LEN", 50)
     @patch("helpdeskbot.handlers.question.config.QUESTION_TITLE_MAX_LEN", 200)
     async def test_rejects_body_too_long(self, mock_edit, mock_send):
@@ -403,7 +404,7 @@ class ReviewQuestionTest(QuestionTestBase):
             QuestionKeyboard.BODY.value: "A" * 100,  # Too long
         }
 
-        result = review_question(update, context)
+        result = await review_question(update, context)
 
         mock_send.assert_called_once()
         self.assertIn("не может быть длиннее", mock_send.call_args[0][1])
@@ -413,7 +414,7 @@ class ReviewQuestionTest(QuestionTestBase):
 class EditQuestionTest(QuestionTestBase):
     """Test edit_question handler"""
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_returns_to_menu(self, mock_send):
         """Should return to REQUEST_FOR_INPUT state"""
         update = create_message_update(
@@ -426,7 +427,7 @@ class EditQuestionTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = edit_question(update, context)
+        result = await edit_question(update, context)
 
         self.assertEqual(result, State.REQUEST_FOR_INPUT)
         mock_send.assert_called_once()
@@ -455,9 +456,9 @@ class PublishQuestionTest(QuestionTestBase):
         self.room.delete()
         super().tearDown()
 
-    @patch("helpdeskbot.handlers.question.send_message")
+    @patch("helpdeskbot.handlers.question.send_message", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.render_html_message")
-    @patch("helpdeskbot.handlers.question.get_club_user")
+    @patch("helpdeskbot.handlers.question.get_club_user", new_callable=AsyncMock)
     async def test_publishes_question_without_room(self, mock_get_user, mock_render, mock_send):
         """Should create question and send to channel only"""
         mock_get_user.return_value = self.user
@@ -478,7 +479,7 @@ class PublishQuestionTest(QuestionTestBase):
             QuestionKeyboard.BODY.value: "Test body",
         }
 
-        link = publish_question(update, user_data)
+        link = await publish_question(update, user_data)
 
         # Verify question created
         question = Question.objects.filter(user=self.user).first()
@@ -491,9 +492,9 @@ class PublishQuestionTest(QuestionTestBase):
         # Verify link returned
         self.assertIn("12345", link)
 
-    @patch("helpdeskbot.handlers.question.send_message")
+    @patch("helpdeskbot.handlers.question.send_message", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.render_html_message")
-    @patch("helpdeskbot.handlers.question.get_club_user")
+    @patch("helpdeskbot.handlers.question.get_club_user", new_callable=AsyncMock)
     async def test_publishes_question_with_room(self, mock_get_user, mock_render, mock_send):
         """Should create question and send to both channel and room"""
         mock_get_user.return_value = self.user
@@ -521,7 +522,7 @@ class PublishQuestionTest(QuestionTestBase):
                 QuestionKeyboard.ROOM.value: "Test Room",
             }
 
-            link = publish_question(update, user_data)
+            link = await publish_question(update, user_data)
 
         # Verify question created with room info
         question = Question.objects.filter(user=self.user).first()
@@ -546,8 +547,8 @@ class FinishReviewTest(QuestionTestBase):
         self.user.delete()
         super().tearDown()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
-    @patch("helpdeskbot.handlers.question.publish_question")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
+    @patch("helpdeskbot.handlers.question.publish_question", new_callable=AsyncMock)
     async def test_publishes_on_create_button(self, mock_publish, mock_send):
         """Should publish question when CREATE button clicked"""
         mock_publish.return_value = "https://t.me/c/123/456"
@@ -565,14 +566,14 @@ class FinishReviewTest(QuestionTestBase):
             QuestionKeyboard.BODY.value: "Body",
         }
 
-        result = finish_review(update, context)
+        result = await finish_review(update, context)
 
         self.assertEqual(result, ConversationHandler.END)
         mock_publish.assert_called_once()
         mock_send.assert_called_once()
         self.assertIn("опубликован", mock_send.call_args[0][1])
 
-    @patch("helpdeskbot.handlers.question.edit_question")
+    @patch("helpdeskbot.handlers.question.edit_question", new_callable=AsyncMock)
     async def test_edits_on_edit_button(self, mock_edit):
         """Should return to edit when EDIT button clicked"""
         update = create_message_update(
@@ -585,11 +586,11 @@ class FinishReviewTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = finish_review(update, context)
+        result = await finish_review(update, context)
 
         mock_edit.assert_called_once()
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_handles_unexpected_command(self, mock_send):
         """Should handle unexpected text in review state"""
         update = create_message_update(
@@ -602,7 +603,7 @@ class FinishReviewTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = finish_review(update, context)
+        result = await finish_review(update, context)
 
         mock_send.assert_called_once()
         self.assertIn("Неожиданная команда", mock_send.call_args[0][1])
@@ -611,7 +612,7 @@ class FinishReviewTest(QuestionTestBase):
 class FallbackHandlersTest(QuestionTestBase):
     """Test fallback handlers"""
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_fallback_prompts_menu_selection(self, mock_send):
         """Should prompt user to select menu option"""
         update = create_message_update(
@@ -624,13 +625,13 @@ class FallbackHandlersTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = fallback(update, context)
+        result = await fallback(update, context)
 
         self.assertEqual(result, State.REQUEST_FOR_INPUT)
         mock_send.assert_called_once()
         self.assertIn("не выбрали действие", mock_send.call_args[0][1])
 
-    @patch("helpdeskbot.handlers.question.send_reply")
+    @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     async def test_error_fallback_ends_conversation(self, mock_send):
         """Should end conversation on error"""
         update = create_message_update(
@@ -643,7 +644,7 @@ class FallbackHandlersTest(QuestionTestBase):
         context.bot = self.bot
         context.user_data = {}
 
-        result = error_fallback(update, context)
+        result = await error_fallback(update, context)
 
         self.assertEqual(result, ConversationHandler.END)
         mock_send.assert_called_once()
@@ -669,18 +670,30 @@ class UpdateDiscussionMessageIdTest(QuestionTestBase):
 
     async def test_updates_discussion_message_id(self):
         """Should update question with discussion_msg_id from forward"""
-        # Create a forwarded message update where the message itself is forwarded
-        update = create_message_update(
-            bot=self.bot,
-            telegram_id=123,
-            chat_id=12345,
-            text="Forwarded discussion",
-            message_id=67890
-        )
-        # Set forward metadata directly on the message
-        update.message.forward_from_message_id = 12345
+        # Create a message that represents a forward from a channel
+        from telegram import Chat as TgChat, User as TgUser, Message
 
-        update_discussion_message_id(update)
+        tg_user = TgUser(id=123, is_bot=False, first_name="Test")
+        tg_chat = TgChat(id=12345, type="group")
+        tg_chat.set_bot(self.bot)
+
+        forward_from_chat = TgChat(id=-1001234567890, type="channel")
+        forward_from_chat.set_bot(self.bot)
+
+        message = Message(
+            message_id=67890,
+            date=int(time.time()),
+            chat=tg_chat,
+            from_user=tg_user,
+            text="Forwarded discussion",
+            forward_from_chat=forward_from_chat,
+            forward_from_message_id=12345,  # This is the channel message ID
+        )
+        message.set_bot(self.bot)
+
+        update = Update(update_id=1, message=message)
+
+        await update_discussion_message_id(update)
 
         # Refresh from DB
         self.question.refresh_from_db()

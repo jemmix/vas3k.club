@@ -1,6 +1,6 @@
 """Tests for helpdeskbot/help_desk_common.py wrapper functions."""
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 from django.test import TestCase
 from telegram.constants import ParseMode
@@ -29,7 +29,8 @@ class SendMessageTest(HelpDeskCommonTestBase):
     @patch("helpdeskbot.help_desk_common.bot")
     async def test_sends_message_with_default_params(self, mock_bot):
         """Should call bot.send_message with defaults"""
-        send_message(chat_id=12345, text="Test message")
+        mock_bot.send_message = AsyncMock()
+        await send_message(chat_id=12345, text="Test message")
 
         mock_bot.send_message.assert_called_once_with(
             chat_id=12345,
@@ -42,7 +43,8 @@ class SendMessageTest(HelpDeskCommonTestBase):
     @patch("helpdeskbot.help_desk_common.bot")
     async def test_sends_message_with_custom_params(self, mock_bot):
         """Should call bot.send_message with custom parameters"""
-        send_message(
+        mock_bot.send_message = AsyncMock()
+        await send_message(
             chat_id=12345,
             text="Test message",
             reply_to_message_id=999,
@@ -65,7 +67,8 @@ class EditMessageTest(HelpDeskCommonTestBase):
     @patch("helpdeskbot.help_desk_common.bot")
     async def test_edits_message_with_defaults(self, mock_bot):
         """Should call bot.edit_message_text with defaults"""
-        edit_message(chat_id=12345, message_id=999, new_text="Updated text")
+        mock_bot.edit_message_text = AsyncMock()
+        await edit_message(chat_id=12345, message_id=999, new_text="Updated text")
 
         mock_bot.edit_message_text.assert_called_once_with(
             text="Updated text",
@@ -77,7 +80,8 @@ class EditMessageTest(HelpDeskCommonTestBase):
     @patch("helpdeskbot.help_desk_common.bot")
     async def test_edits_message_with_custom_parse_mode(self, mock_bot):
         """Should call bot.edit_message_text with custom parse mode"""
-        edit_message(
+        mock_bot.edit_message_text = AsyncMock()
+        await edit_message(
             chat_id=12345,
             message_id=999,
             new_text="Updated text",
@@ -98,9 +102,9 @@ class SendReplyTest(HelpDeskCommonTestBase):
     async def test_sends_reply_with_defaults(self):
         """Should call update.message.reply_text with defaults"""
         mock_update = MagicMock()
-        mock_update.message.reply_text = MagicMock()
+        mock_update.message.reply_text = AsyncMock()
 
-        send_reply(mock_update, "Reply text")
+        await send_reply(mock_update, "Reply text")
 
         mock_update.message.reply_text.assert_called_once_with(
             text="Reply text",
@@ -112,10 +116,10 @@ class SendReplyTest(HelpDeskCommonTestBase):
     async def test_sends_reply_with_custom_params(self):
         """Should call update.message.reply_text with custom parameters"""
         mock_update = MagicMock()
-        mock_update.message.reply_text = MagicMock()
+        mock_update.message.reply_text = AsyncMock()
         mock_reply_markup = MagicMock()
 
-        send_reply(
+        await send_reply(
             mock_update,
             "Reply text",
             parse_mode=ParseMode.MARKDOWN,

@@ -1,0 +1,631 @@
+Loading .env environment variables...
+Including test tag(s): telegram.
+Found 9 test(s).
+Creating test database for alias 'default' ('test_vas3k_club')...
+Operations to perform:
+  Synchronize unmigrated apps: ai, club, debug_toolbar, humanize, simple_history, sitemaps, staticfiles, webpack_loader
+  Apply all migrations: authn, badges, bookmarks, clickers, comments, contenttypes, django_q, gdpr, godmode, helpdeskbot, invites, landing, misc, notifications, payments, posts, rooms, search, tags, tickets, users
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying users.0001_initial... OK
+  Applying users.0002_auto_20200408_1516... OK
+  Applying users.0003_auto_20200409_0846... OK
+  Applying users.0004_auto_20200409_0849... OK
+  Applying users.0005_auto_20200416_0937... OK
+  Applying users.0006_user_is_email_unsubscribed... OK
+  Applying users.0007_auto_20200519_1956... OK
+  Applying users.0008_auto_20200521_1957... OK
+  Applying users.0009_user_contact... OK
+  Applying users.0010_auto_20200523_1912... OK
+  Applying users.0011_auto_20200526_1126... OK
+  Applying users.0012_auto_20200602_1121... OK
+  Applying users.0013_auto_20200602_1139... OK
+  Applying users.0014_auto_20200710_1401... OK
+  Applying users.0015_auto_20200712_1404... OK
+  Applying users.0016_auto_20200712_1557... OK
+  Applying users.0017_auto_20200712_1559... OK
+  Applying users.0018_user_stripe_id... OK
+  Applying users.0019_auto_20200809_1616... OK
+  Applying users.0020_auto_20200822_0818... OK
+  Applying users.0021_auto_20210512_1053... OK
+  Applying users.0022_alter_user_secret_hash... OK
+  Applying users.0023_muted... OK
+  Applying users.0024_muted_comment... OK
+  Applying users.0025_alter_user_membership_platform_type... OK
+  Applying authn.0001_initial... OK
+  Applying authn.0002_code... OK
+  Applying authn.0003_auto_20201024_1527... OK
+  Applying authn.0004_auto_20210613_1316... OK
+  Applying authn.0005_alter_apps_jwt_secret... OK
+  Applying authn.0006_auto_20220525_1000... OK
+  Applying authn.0007_auto_20230305_1518... OK
+  Applying authn.0008_auto_20230306_1623... OK
+  Applying authn.0009_auto_20230925_1035... OK
+  Applying posts.0001_initial... OK
+  Applying posts.0002_auto_20200418_1427... OK
+  Applying posts.0003_auto_20200421_0749... OK
+  Applying posts.0004_auto_20200421_0816... OK
+  Applying posts.0005_auto_20200421_0830... OK
+  Applying posts.0006_auto_20200423_2022... OK
+  Applying posts.0007_auto_20200425_2028... OK
+  Applying posts.0008_auto_20200426_0823... OK
+  Applying posts.0009_auto_20200429_0817... OK
+  Applying posts.0010_postsubscription... OK
+  Applying posts.0011_auto_20200523_0952... OK
+  Applying posts.0012_postbookmark... OK
+  Applying posts.0012_auto_20200809_1616... OK
+  Applying posts.0013_merge_20200822_0818... OK
+  Applying posts.0014_auto_20200822_2000... OK
+  Applying posts.0015_auto_20201019_2128... OK
+  Applying posts.0016_auto_20201115_0912... OK
+  Applying posts.0017_linkedpost... OK
+  Applying posts.0018_auto_20210527_1006... OK
+  Applying posts.0019_auto_20210528_1122... OK
+  Applying posts.0020_auto_20210817_2300... OK
+  Applying posts.0021_auto_20210910_1556... OK
+  Applying posts.0022_auto_20210911_0827... OK
+  Applying posts.0023_auto_20210929_2118... OK
+  Applying posts.0024_postsubscription_type... OK
+  Applying comments.0001_initial... OK
+  Applying comments.0002_auto_20200416_0937... OK
+  Applying comments.0003_auto_20200420_1910... OK
+  Applying comments.0004_auto_20200421_0749... OK
+  Applying comments.0005_auto_20200424_1144... OK
+  Applying comments.0006_auto_20200809_1616... OK
+  Applying comments.0007_auto_20200822_2000... OK
+  Applying comments.0008_auto_20210911_0827... OK
+  Applying badges.0001_initial... OK
+  Applying badges.0002_auto_20211022_0858... OK
+  Applying badges.0003_alter_badge_options... OK
+  Applying badges.0004_auto_20250216_1224... OK
+  Applying badges.0005_alter_userbadge_options... OK
+  Applying bookmarks.0001_initial... OK
+  Applying bookmarks.0002_alter_postbookmark_options... OK
+  Applying users.0026_auto_20230228_1526... OK
+  Applying users.0027_auto_20230808_1201... OK
+  Applying users.0028_auto_20240516_0554... OK
+  Applying users.0029_auto_20240613_1242... OK
+  Applying users.0030_auto_20240729_1343... OK
+  Applying users.0031_auto_20250111_1508... OK
+  Applying users.0032_add_achievement_custom_message... OK
+  Applying users.0033_rename_muted_usermuted... OK
+  Applying users.0034_alter_friend_options_alter_user_options_and_more... OK
+  Applying clickers.0001_initial... OK
+  Applying comments.0009_auto_20230201_1417... OK
+  Applying comments.0010_alter_comment_options... OK
+  Applying comments.0011_alter_comment_created_at... OK
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying django_q.0001_initial... OK
+  Applying django_q.0002_auto_20150630_1624... OK
+  Applying django_q.0003_auto_20150708_1326... OK
+  Applying django_q.0004_auto_20150710_1043... OK
+  Applying django_q.0005_auto_20150718_1506... OK
+  Applying django_q.0006_auto_20150805_1817... OK
+  Applying django_q.0007_ormq... OK
+  Applying django_q.0008_auto_20160224_1026... OK
+  Applying django_q.0009_auto_20171009_0915... OK
+  Applying django_q.0010_auto_20200610_0856... OK
+  Applying django_q.0011_auto_20200628_1055... OK
+  Applying django_q.0012_auto_20200702_1608... OK
+  Applying django_q.0013_task_attempt_count... OK
+  Applying django_q.0014_schedule_cluster... OK
+  Applying django_q.0015_alter_schedule_schedule_type... OK
+  Applying django_q.0016_schedule_intended_date_kwarg... OK
+  Applying django_q.0017_task_cluster_alter... OK
+  Applying django_q.0018_task_success_index... OK
+  Applying gdpr.0001_initial... OK
+  Applying gdpr.0002_alter_datarequests_options... OK
+  Applying godmode.0001_initial... OK
+  Applying godmode.0002_remove_clubsettings_digest_intro_and_more... OK
+  Applying misc.0001_initial... OK
+  Applying misc.0002_networkgroup_networkitem... OK
+  Applying misc.0003_alter_networkitem_id... OK
+  Applying rooms.0001_initial... OK
+  Applying rooms.0002_auto_20230731_1419... OK
+  Applying rooms.0003_auto_20230925_1239... OK
+  Applying helpdeskbot.0001_initial... OK
+  Applying helpdeskbot.0002_auto_20240615_2029... OK
+  Applying payments.0001_initial... OK
+  Applying payments.0002_payment_data... OK
+  Applying payments.0003_auto_20200712_1341... OK
+  Applying payments.0004_payment_amount... OK
+  Applying payments.0005_auto_20200721_1043... OK
+  Applying invites.0001_initial... OK
+  Applying invites.0002_auto_20241227_0834... OK
+  Applying invites.0003_alter_invite_invited_user... OK
+  Applying invites.0004_alter_invite_options... OK
+  Applying landing.0001_initial... OK
+  Applying landing.0002_godsettings_network_page... OK
+  Applying landing.0003_auto_20210829_0802... OK
+  Applying landing.0004_alter_godsettings_id... OK
+  Applying landing.0005_delete_godsettings... OK
+  Applying misc.0004_delete_networkitem... OK
+  Applying misc.0005_networkgroup_custom_template... OK
+  Applying notifications.0001_initial... OK
+  Applying posts.0025_auto_20211015_0837... OK
+  Applying posts.0026_auto_20220615_1047... OK
+  Applying posts.0027_auto_20230731_1014... OK
+  Applying posts.0028_postview_post_views_post_id_49dd7e_idx... OK
+  Applying posts.0029_alter_historicalpost_type_alter_post_type... OK
+  Applying posts.0030_migrate_event_participants... OK
+  Applying posts.0031_alter_linkedpost_options... OK
+  Applying posts.0032_remove_historicalpost_is_visible_and_more... OK
+  Applying posts.0033_auto_20250725_0735... OK
+  Applying posts.0034_remove_post_is_visible_and_more... OK
+  Applying posts.0035_remove_post_is_approved_by_moderator_and_more... OK
+  Applying posts.0036_alter_post_moderation_status... OK
+  Applying rooms.0004_roommuted_roomsubscription... OK
+  Applying rooms.0005_room_chat_member_count... OK
+  Applying rooms.0006_alter_room_icon... OK
+  Applying search.0001_initial... OK
+  Applying search.0002_searchindex_tags... OK
+  Applying search.0003_auto_20200902_2049... OK
+  Applying search.0004_alter_searchindex_created_at... OK
+  Applying tags.0001_initial... OK
+  Applying tags.0002_alter_usertag_options... OK
+  Applying tickets.0001_initial... OK
+  Applying tickets.0002_ticket_tickets_sold_ticketsale_session... OK
+  Applying tickets.0003_rename_email_template_ticket_send_email_title_and_more... OK
+Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+System check identified no issues (0 silenced).
+test_bans_user_non_permanently (rooms.test_helpers.BanUserInAllChatsTest.test_bans_user_non_permanently)
+Should ban then immediately unban user (kick from chat) ... Set Bot API URL: http://127.0.0.1:58584/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58584 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d190dd0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58584/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `getChatMember` finished with return value `{'user': {'id': 111, 'is_bot': False, 'first_name': 'Test'}, 'status': 'member'}`
+Using selector: KqueueSelector
+Calling Bot API endpoint `banChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58584 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d1d2f00>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58584/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `banChatMember` finished with return value `True`
+User testuser-eb2545102cc5 banned in chat test-room-1
+Using selector: KqueueSelector
+Calling Bot API endpoint `unbanChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58584 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d1d3d70>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58584/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `unbanChatMember` finished with return value `True`
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMember` with parameters `{'chat_id': '-100789012', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58584 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d1f4c20>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58584/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `getChatMember` finished with return value `{'user': {'id': 111, 'is_bot': False, 'first_name': 'Test'}, 'status': 'member'}`
+Using selector: KqueueSelector
+Calling Bot API endpoint `banChatMember` with parameters `{'chat_id': '-100789012', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58584 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d1f4110>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58584/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `banChatMember` finished with return value `True`
+User testuser-eb2545102cc5 banned in chat test-room-2
+Using selector: KqueueSelector
+Calling Bot API endpoint `unbanChatMember` with parameters `{'chat_id': '-100789012', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58584 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d1f4e90>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58584/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `unbanChatMember` finished with return value `True`
+ok
+test_bans_user_permanently (rooms.test_helpers.BanUserInAllChatsTest.test_bans_user_permanently)
+Should ban user in all chats with chat_id ... Set Bot API URL: http://127.0.0.1:58591/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58591 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d1f70e0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58591/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `getChatMember` finished with return value `{'user': {'id': 111, 'is_bot': False, 'first_name': 'Test'}, 'status': 'member'}`
+Using selector: KqueueSelector
+Calling Bot API endpoint `banChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58591 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d1f4260>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58591/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `banChatMember` finished with return value `True`
+User testuser-e6633aa5005f banned in chat test-room-1
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMember` with parameters `{'chat_id': '-100789012', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58591 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d21e510>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58591/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `getChatMember` finished with return value `{'user': {'id': 111, 'is_bot': False, 'first_name': 'Test'}, 'status': 'member'}`
+Using selector: KqueueSelector
+Calling Bot API endpoint `banChatMember` with parameters `{'chat_id': '-100789012', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58591 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d21caa0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:20 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58591/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/banChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `banChatMember` finished with return value `True`
+User testuser-e6633aa5005f banned in chat test-room-2
+ok
+test_handles_telegram_error (rooms.test_helpers.BanUserInAllChatsTest.test_handles_telegram_error)
+Should handle TelegramError and continue to next room ... Set Bot API URL: http://127.0.0.1:58596/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58596 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d21d820>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:21] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:21 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58596/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+ERROR
+test_handles_user_without_telegram_id (rooms.test_helpers.BanUserInAllChatsTest.test_handles_user_without_telegram_id)
+Should skip user without telegram_id and log warning ... Set Bot API URL: http://127.0.0.1:58602/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+ok
+test_handles_telegram_error (rooms.test_helpers.UnbanUserInAllChatsTest.test_handles_telegram_error)
+Should handle TelegramError and continue to next room ... Set Bot API URL: http://127.0.0.1:58605/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `unbanChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58605 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d37d2b0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:22] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:22 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58605/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+ERROR
+test_handles_user_without_telegram_id (rooms.test_helpers.UnbanUserInAllChatsTest.test_handles_user_without_telegram_id)
+Should skip user without telegram_id and log warning ... Set Bot API URL: http://127.0.0.1:58607/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+ok
+test_unbans_user_in_all_chats (rooms.test_helpers.UnbanUserInAllChatsTest.test_unbans_user_in_all_chats)
+Should unban user in all chats with chat_id ... Set Bot API URL: http://127.0.0.1:58608/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `unbanChatMember` with parameters `{'chat_id': '-100123456', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58608 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d384470>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:23] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:23 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58608/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `unbanChatMember` finished with return value `True`
+User testuser-61403d46e3f0 unbanned in chat test-room-1
+Using selector: KqueueSelector
+Calling Bot API endpoint `unbanChatMember` with parameters `{'chat_id': '-100789012', 'user_id': '111'}`
+connect_tcp.started host='127.0.0.1' port=58608 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d36fe90>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember
+127.0.0.1 - - [12/Feb/2026 16:11:23] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:23 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58608/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/unbanChatMember "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `unbanChatMember` finished with return value `True`
+User testuser-61403d46e3f0 unbanned in chat test-room-2
+ok
+test_handles_telegram_error (rooms.management.commands.test_count_chat_members.CountChatMembersCommandTest.test_handles_telegram_error)
+Should handle TelegramError and continue to next room ... Set Bot API URL: http://127.0.0.1:58613/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMemberCount` with parameters `{'chat_id': '-100123456'}`
+connect_tcp.started host='127.0.0.1' port=58613 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d39c110>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount
+127.0.0.1 - - [12/Feb/2026 16:11:24] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:24 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58613/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+ERROR
+test_updates_member_counts (rooms.management.commands.test_count_chat_members.CountChatMembersCommandTest.test_updates_member_counts)
+Should update chat_member_count for all rooms with chat_id ... Set Bot API URL: http://127.0.0.1:58615/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMemberCount` with parameters `{'chat_id': '-100123456'}`
+connect_tcp.started host='127.0.0.1' port=58615 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d390350>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount
+127.0.0.1 - - [12/Feb/2026 16:11:24] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:24 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58615/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `getChatMemberCount` finished with return value `42`
+Updated member count for chat test-room-1: 42 members
+Using selector: KqueueSelector
+Calling Bot API endpoint `getChatMemberCount` with parameters `{'chat_id': '-100789012'}`
+connect_tcp.started host='127.0.0.1' port=58615 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10d39dd60>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount
+127.0.0.1 - - [12/Feb/2026 16:11:24] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Thu, 12 Feb 2026 16:11:24 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:58615/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getChatMemberCount "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `getChatMemberCount` finished with return value `99`
+Updated member count for chat test-room-2: 99 members
+ok
+
+======================================================================
+ERROR: test_handles_telegram_error (rooms.test_helpers.BanUserInAllChatsTest.test_handles_telegram_error)
+Should handle TelegramError and continue to next room
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/rooms/test_helpers.py", line 160, in test_handles_telegram_error
+    ban_user_in_all_chats(self.user)
+  File "/Users/andy/projects/vas3k.club/rooms/helpers.py", line 20, in ban_user_in_all_chats
+    chat_member = asyncio.run(bot.get_chat_member(room.chat_id, user.telegram_id))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/base_events.py", line 686, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 5219, in get_chat_member
+    result = await self._post(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 703, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 732, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 210, in post
+    return json_data["result"]
+           ~~~~~~~~~^^^^^^^^^^
+KeyError: 'result'
+
+======================================================================
+ERROR: test_handles_telegram_error (rooms.test_helpers.UnbanUserInAllChatsTest.test_handles_telegram_error)
+Should handle TelegramError and continue to next room
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/rooms/test_helpers.py", line 260, in test_handles_telegram_error
+    unban_user_in_all_chats(self.user)
+  File "/Users/andy/projects/vas3k.club/rooms/helpers.py", line 39, in unban_user_in_all_chats
+    is_ok = asyncio.run(bot.unban_chat_member(room.chat_id, user.telegram_id))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/base_events.py", line 686, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 4331, in unban_chat_member
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 703, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 732, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 210, in post
+    return json_data["result"]
+           ~~~~~~~~~^^^^^^^^^^
+KeyError: 'result'
+
+======================================================================
+ERROR: test_handles_telegram_error (rooms.management.commands.test_count_chat_members.CountChatMembersCommandTest.test_handles_telegram_error)
+Should handle TelegramError and continue to next room
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/rooms/management/commands/test_count_chat_members.py", line 111, in test_handles_telegram_error
+    call_command("count_chat_members", stdout=out)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/__init__.py", line 194, in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/base.py", line 459, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/rooms/management/commands/count_chat_members.py", line 19, in handle
+    member_count = asyncio.run(bot.get_chat_member_count(room.chat_id))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/asyncio/base_events.py", line 686, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 5183, in get_chat_member_count
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 703, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/_bot.py", line 732, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 210, in post
+    return json_data["result"]
+           ~~~~~~~~~^^^^^^^^^^
+KeyError: 'result'
+
+----------------------------------------------------------------------
+Ran 9 tests in 4.909s
+
+FAILED (errors=3)
+Destroying test database for alias 'default' ('test_vas3k_club')...

@@ -36,16 +36,16 @@ async def handle_answer_from_channel(update: Update) -> None:
         log.error(f"forward_from_message_id is null")
         return None
 
-    question = Question.objects \
+    question = await Question.objects \
         .filter(channel_msg_id=channel_msg_id) \
         .select_related("user", "room") \
-        .first()
+        .afirst()
 
     if not question:
         log.warning(f"Question with channel_msg_id: {channel_msg_id} is not found")
         return None
 
-    Answer.create_from_update(question, update)
+    await Answer.create_from_update(question, update)
 
     await notify_user_about_answer(update, question)
 
@@ -59,16 +59,16 @@ async def handle_answer_from_room_chat(update: Update) -> None:
     room_chat_id = str(update.message.chat.id)
     room = rooms[room_chat_id]
 
-    question = Question.objects \
+    question = await Question.objects \
         .filter(room=room, room_chat_msg_id=room_chat_msg_id) \
         .select_related("user", "room") \
-        .first()
+        .afirst()
 
     if not question:
         log.warning(f"Question with room_chat_msg_id: {room_chat_msg_id} is not found")
         return None
 
-    Answer.create_from_update(question, update)
+    await Answer.create_from_update(question, update)
 
     await notify_user_about_answer(update, question)
 

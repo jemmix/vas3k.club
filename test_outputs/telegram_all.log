@@ -1,0 +1,612 @@
+Loading .env environment variables...
+/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py:62: SyntaxWarning: invalid escape sequence '\ '
+  """
+/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py:47: UserWarning: python-telegram-bot is using upstream urllib3. This is allowed but not supported by python-telegram-bot maintainers.
+  warnings.warn('python-telegram-bot is using upstream urllib3. This is allowed but not '
+Including test tag(s): telegram.
+Found 143 test(s).
+Creating test database for alias 'default' ('test_vas3k_club')...
+Operations to perform:
+  Synchronize unmigrated apps: ai, club, debug_toolbar, humanize, simple_history, sitemaps, staticfiles, webpack_loader
+  Apply all migrations: authn, badges, bookmarks, clickers, comments, contenttypes, django_q, gdpr, godmode, helpdeskbot, invites, landing, misc, notifications, payments, posts, rooms, search, tags, tickets, users
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying users.0001_initial... OK
+  Applying users.0002_auto_20200408_1516... OK
+  Applying users.0003_auto_20200409_0846... OK
+  Applying users.0004_auto_20200409_0849... OK
+  Applying users.0005_auto_20200416_0937... OK
+  Applying users.0006_user_is_email_unsubscribed... OK
+  Applying users.0007_auto_20200519_1956... OK
+  Applying users.0008_auto_20200521_1957... OK
+  Applying users.0009_user_contact... OK
+  Applying users.0010_auto_20200523_1912... OK
+  Applying users.0011_auto_20200526_1126... OK
+  Applying users.0012_auto_20200602_1121... OK
+  Applying users.0013_auto_20200602_1139... OK
+  Applying users.0014_auto_20200710_1401... OK
+  Applying users.0015_auto_20200712_1404... OK
+  Applying users.0016_auto_20200712_1557... OK
+  Applying users.0017_auto_20200712_1559... OK
+  Applying users.0018_user_stripe_id... OK
+  Applying users.0019_auto_20200809_1616... OK
+  Applying users.0020_auto_20200822_0818... OK
+  Applying users.0021_auto_20210512_1053... OK
+  Applying users.0022_alter_user_secret_hash... OK
+  Applying users.0023_muted... OK
+  Applying users.0024_muted_comment... OK
+  Applying users.0025_alter_user_membership_platform_type... OK
+  Applying authn.0001_initial... OK
+  Applying authn.0002_code... OK
+  Applying authn.0003_auto_20201024_1527... OK
+  Applying authn.0004_auto_20210613_1316... OK
+  Applying authn.0005_alter_apps_jwt_secret... OK
+  Applying authn.0006_auto_20220525_1000... OK
+  Applying authn.0007_auto_20230305_1518... OK
+  Applying authn.0008_auto_20230306_1623... OK
+  Applying authn.0009_auto_20230925_1035... OK
+  Applying posts.0001_initial... OK
+  Applying posts.0002_auto_20200418_1427... OK
+  Applying posts.0003_auto_20200421_0749... OK
+  Applying posts.0004_auto_20200421_0816... OK
+  Applying posts.0005_auto_20200421_0830... OK
+  Applying posts.0006_auto_20200423_2022... OK
+  Applying posts.0007_auto_20200425_2028... OK
+  Applying posts.0008_auto_20200426_0823... OK
+  Applying posts.0009_auto_20200429_0817... OK
+  Applying posts.0010_postsubscription... OK
+  Applying posts.0011_auto_20200523_0952... OK
+  Applying posts.0012_postbookmark... OK
+  Applying posts.0012_auto_20200809_1616... OK
+  Applying posts.0013_merge_20200822_0818... OK
+  Applying posts.0014_auto_20200822_2000... OK
+  Applying posts.0015_auto_20201019_2128... OK
+  Applying posts.0016_auto_20201115_0912... OK
+  Applying posts.0017_linkedpost... OK
+  Applying posts.0018_auto_20210527_1006... OK
+  Applying posts.0019_auto_20210528_1122... OK
+  Applying posts.0020_auto_20210817_2300... OK
+  Applying posts.0021_auto_20210910_1556... OK
+  Applying posts.0022_auto_20210911_0827... OK
+  Applying posts.0023_auto_20210929_2118... OK
+  Applying posts.0024_postsubscription_type... OK
+  Applying comments.0001_initial... OK
+  Applying comments.0002_auto_20200416_0937... OK
+  Applying comments.0003_auto_20200420_1910... OK
+  Applying comments.0004_auto_20200421_0749... OK
+  Applying comments.0005_auto_20200424_1144... OK
+  Applying comments.0006_auto_20200809_1616... OK
+  Applying comments.0007_auto_20200822_2000... OK
+  Applying comments.0008_auto_20210911_0827... OK
+  Applying badges.0001_initial... OK
+  Applying badges.0002_auto_20211022_0858... OK
+  Applying badges.0003_alter_badge_options... OK
+  Applying badges.0004_auto_20250216_1224... OK
+  Applying badges.0005_alter_userbadge_options... OK
+  Applying bookmarks.0001_initial... OK
+  Applying bookmarks.0002_alter_postbookmark_options... OK
+  Applying users.0026_auto_20230228_1526... OK
+  Applying users.0027_auto_20230808_1201... OK
+  Applying users.0028_auto_20240516_0554... OK
+  Applying users.0029_auto_20240613_1242... OK
+  Applying users.0030_auto_20240729_1343... OK
+  Applying users.0031_auto_20250111_1508... OK
+  Applying users.0032_add_achievement_custom_message... OK
+  Applying users.0033_rename_muted_usermuted... OK
+  Applying users.0034_alter_friend_options_alter_user_options_and_more... OK
+  Applying clickers.0001_initial... OK
+  Applying comments.0009_auto_20230201_1417... OK
+  Applying comments.0010_alter_comment_options... OK
+  Applying comments.0011_alter_comment_created_at... OK
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying django_q.0001_initial... OK
+  Applying django_q.0002_auto_20150630_1624... OK
+  Applying django_q.0003_auto_20150708_1326... OK
+  Applying django_q.0004_auto_20150710_1043... OK
+  Applying django_q.0005_auto_20150718_1506... OK
+  Applying django_q.0006_auto_20150805_1817... OK
+  Applying django_q.0007_ormq... OK
+  Applying django_q.0008_auto_20160224_1026... OK
+  Applying django_q.0009_auto_20171009_0915... OK
+  Applying django_q.0010_auto_20200610_0856... OK
+  Applying django_q.0011_auto_20200628_1055... OK
+  Applying django_q.0012_auto_20200702_1608... OK
+  Applying django_q.0013_task_attempt_count... OK
+  Applying django_q.0014_schedule_cluster... OK
+  Applying django_q.0015_alter_schedule_schedule_type... OK
+  Applying django_q.0016_schedule_intended_date_kwarg... OK
+  Applying django_q.0017_task_cluster_alter... OK
+  Applying django_q.0018_task_success_index... OK
+  Applying gdpr.0001_initial... OK
+  Applying gdpr.0002_alter_datarequests_options... OK
+  Applying godmode.0001_initial... OK
+  Applying godmode.0002_remove_clubsettings_digest_intro_and_more... OK
+  Applying misc.0001_initial... OK
+  Applying misc.0002_networkgroup_networkitem... OK
+  Applying misc.0003_alter_networkitem_id... OK
+  Applying rooms.0001_initial... OK
+  Applying rooms.0002_auto_20230731_1419... OK
+  Applying rooms.0003_auto_20230925_1239... OK
+  Applying helpdeskbot.0001_initial... OK
+  Applying helpdeskbot.0002_auto_20240615_2029... OK
+  Applying payments.0001_initial... OK
+  Applying payments.0002_payment_data... OK
+  Applying payments.0003_auto_20200712_1341... OK
+  Applying payments.0004_payment_amount... OK
+  Applying payments.0005_auto_20200721_1043... OK
+  Applying invites.0001_initial... OK
+  Applying invites.0002_auto_20241227_0834... OK
+  Applying invites.0003_alter_invite_invited_user... OK
+  Applying invites.0004_alter_invite_options... OK
+  Applying landing.0001_initial... OK
+  Applying landing.0002_godsettings_network_page... OK
+  Applying landing.0003_auto_20210829_0802... OK
+  Applying landing.0004_alter_godsettings_id... OK
+  Applying landing.0005_delete_godsettings... OK
+  Applying misc.0004_delete_networkitem... OK
+  Applying misc.0005_networkgroup_custom_template... OK
+  Applying notifications.0001_initial... OK
+  Applying posts.0025_auto_20211015_0837... OK
+  Applying posts.0026_auto_20220615_1047... OK
+  Applying posts.0027_auto_20230731_1014... OK
+  Applying posts.0028_postview_post_views_post_id_49dd7e_idx... OK
+  Applying posts.0029_alter_historicalpost_type_alter_post_type... OK
+  Applying posts.0030_migrate_event_participants... OK
+  Applying posts.0031_alter_linkedpost_options... OK
+  Applying posts.0032_remove_historicalpost_is_visible_and_more... OK
+  Applying posts.0033_auto_20250725_0735... OK
+  Applying posts.0034_remove_post_is_visible_and_more... OK
+  Applying posts.0035_remove_post_is_approved_by_moderator_and_more... OK
+  Applying posts.0036_alter_post_moderation_status... OK
+  Applying rooms.0004_roommuted_roomsubscription... OK
+  Applying rooms.0005_room_chat_member_count... OK
+  Applying rooms.0006_alter_room_icon... OK
+  Applying search.0001_initial... OK
+  Applying search.0002_searchindex_tags... OK
+  Applying search.0003_auto_20200902_2049... OK
+  Applying search.0004_alter_searchindex_created_at... OK
+  Applying tags.0001_initial... OK
+  Applying tags.0002_alter_usertag_options... OK
+  Applying tickets.0001_initial... OK
+  Applying tickets.0002_ticket_tickets_sold_ticketsale_session... OK
+  Applying tickets.0003_rename_email_template_ticket_send_email_title_and_more... OK
+Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+System check identified no issues (0 silenced).
+test_finds_comment_from_url_entity (bot.handlers.test_common.GetClubCommentTest.test_finds_comment_from_url_entity)
+Should find comment from text_link entity ... ok
+test_returns_none_when_no_url_entity (bot.handlers.test_common.GetClubCommentTest.test_returns_none_when_no_url_entity)
+Should return None when no URL entity found ... Comment URL not found in message: {'message_id': 100, 'date': 3541356968, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Original comment', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False, 'from': {'id': 6789, 'first_name': 'ReplyUser', 'is_bot': False}}
+ok
+test_sends_message_when_comment_deleted (bot.handlers.test_common.GetClubCommentTest.test_sends_message_when_comment_deleted)
+Should send message when comment ID not found ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:08:55] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678535, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_finds_post_from_url_entity (bot.handlers.test_common.GetClubPostTest.test_finds_post_from_url_entity)
+Should find post from text_link entity ... ok
+test_returns_none_when_no_url_entity (bot.handlers.test_common.GetClubPostTest.test_returns_none_when_no_url_entity)
+Should return None when no URL entity found ... Post URL not found in message: {'message_id': 100, 'date': 3541356972, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Original post', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False, 'from': {'id': 6789, 'first_name': 'ReplyUser', 'is_bot': False}}
+ok
+test_sends_message_when_post_not_commentable (bot.handlers.test_common.GetClubPostTest.test_sends_message_when_post_not_commentable)
+Should send message when post is not commentable ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:08:56] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678536, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_sends_message_when_post_not_found (bot.handlers.test_common.GetClubPostTest.test_sends_message_when_post_not_found)
+Should send message when post not found ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:08:57] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678537, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_rejects_banned_user_via_callback_query (bot.handlers.test_common.GetClubUserTest.test_rejects_banned_user_via_callback_query)
+Should reject banned user via callback_query ... Entering: answer_callback_query
+127.0.0.1 - - [09/Feb/2026 23:08:58] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/answerCallbackQuery HTTP/1.1" 200 -
+True
+Exiting: answer_callback_query
+ok
+test_rejects_banned_user_via_message (bot.handlers.test_common.GetClubUserTest.test_rejects_banned_user_via_message)
+Should reject banned user via message ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:08:58] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678538, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_rejects_inactive_user_via_message (bot.handlers.test_common.GetClubUserTest.test_rejects_inactive_user_via_message)
+Should reject inactive user via message ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:08:59] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678539, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_rejects_unknown_user_via_callback_query (bot.handlers.test_common.GetClubUserTest.test_rejects_unknown_user_via_callback_query)
+Should send callback_query.answer for unknown user via callback ... Entering: answer_callback_query
+127.0.0.1 - - [09/Feb/2026 23:08:59] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/answerCallbackQuery HTTP/1.1" 200 -
+True
+Exiting: answer_callback_query
+ok
+test_rejects_unknown_user_via_message (bot.handlers.test_common.GetClubUserTest.test_rejects_unknown_user_via_message)
+Should send reply_text for unknown user via message ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:00] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678540, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_returns_active_user (bot.handlers.test_common.GetClubUserTest.test_returns_active_user)
+Should return user for active member ... ok
+test_empty_message (bot.handlers.test_llm.LLMResponseTest.test_empty_message)
+Test that empty messages are ignored ... ok
+test_inactive_user (bot.handlers.test_llm.LLMResponseTest.test_inactive_user)
+Test that inactive users get rejected ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:02] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678530, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_message_with_caption (bot.handlers.test_llm.LLMResponseTest.test_message_with_caption)
+Test handling a message with caption instead of text ... Entering: send_chat_action
+127.0.0.1 - - [09/Feb/2026 23:09:02] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendChatAction HTTP/1.1" 200 -
+True
+Exiting: send_chat_action
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:02] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678530, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_message_with_reply (bot.handlers.test_llm.LLMResponseTest.test_message_with_reply)
+Test message with reply_to_message ... Entering: send_chat_action
+127.0.0.1 - - [09/Feb/2026 23:09:03] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendChatAction HTTP/1.1" 200 -
+True
+Exiting: send_chat_action
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:03] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678530, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_multiple_responses (bot.handlers.test_llm.LLMResponseTest.test_multiple_responses)
+Test handling multiple response lines from assistant ... Entering: send_chat_action
+127.0.0.1 - - [09/Feb/2026 23:09:03] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendChatAction HTTP/1.1" 200 -
+True
+Exiting: send_chat_action
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:03] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678530, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_rate_limited (bot.handlers.test_llm.LLMResponseTest.test_rate_limited)
+Test rate limiting response ... Entering: send_chat_action
+127.0.0.1 - - [09/Feb/2026 23:09:04] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendChatAction HTTP/1.1" 200 -
+True
+Exiting: send_chat_action
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:04] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678530, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_simple_message (bot.handlers.test_llm.LLMResponseTest.test_simple_message)
+Test handling a simple message ... Entering: send_chat_action
+127.0.0.1 - - [09/Feb/2026 23:09:04] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendChatAction HTTP/1.1" 200 -
+True
+Exiting: send_chat_action
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:04] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678530, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_approves_post (bot.handlers.test_moderation.ApprovePostTest.test_approves_post)
+Should approve post and send confirmation ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:05] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:05] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678545, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_approves_room_only_post (bot.handlers.test_moderation.ApprovePostTest.test_approves_room_only_post)
+Should approve room-only post with different message ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:05] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:05] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678545, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_rejects_already_moderated_post (bot.handlers.test_moderation.ApprovePostTest.test_rejects_already_moderated_post)
+Should reject post that was already moderated ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:06] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:06] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678546, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_approves_user_profile (bot.handlers.test_moderation.ApproveUserProfileTest.test_approves_user_profile)
+Should approve user and intro ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:06] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:06] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678546, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_rejects_already_approved_user (bot.handlers.test_moderation.ApproveUserProfileTest.test_rejects_already_approved_user)
+Should reject if user already approved ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:07] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:07] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678547, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_forgives_post (bot.handlers.test_moderation.ForgivePostTest.test_forgives_post)
+Should forgive post and remove collectible tag ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:08] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:08] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678548, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_rejects_post_with_default_reason (bot.handlers.test_moderation.RejectPostTest.test_rejects_post_with_default_reason)
+Should reject post with default reason ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:08] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:08] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678548, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_rejects_post_with_specific_reason (bot.handlers.test_moderation.RejectPostTest.test_rejects_post_with_specific_reason)
+Should reject post with specific reason ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:09] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:09] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678549, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_rejects_already_rejected_user (bot.handlers.test_moderation.RejectUserProfileTest.test_rejects_already_rejected_user)
+Should reject if user already rejected ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:09] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:09] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678549, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_rejects_user_with_default_reason (bot.handlers.test_moderation.RejectUserProfileTest.test_rejects_user_with_default_reason)
+Should reject user with default reason ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:10] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:10] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678550, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_rejects_user_with_specific_reason (bot.handlers.test_moderation.RejectUserProfileTest.test_rejects_user_with_specific_reason)
+Should reject user with specific reason ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:10] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+Entering: edit_message_reply_markup
+127.0.0.1 - - [09/Feb/2026 23:09:10] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/editMessageReplyMarkup HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678550, 'chat': {'id': 12345, 'type': 'private'}, 'text': 'Message text', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: edit_message_reply_markup
+ok
+test_allows_club_member (bot.test_decorators.IsClubMemberDecoratorTest.test_allows_club_member)
+Club member should be allowed ... ok
+test_rejects_non_member_via_callback_query (bot.test_decorators.IsClubMemberDecoratorTest.test_rejects_non_member_via_callback_query)
+Non-member via callback_query should get answer ... Entering: answer_callback_query
+127.0.0.1 - - [09/Feb/2026 23:09:11] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/answerCallbackQuery HTTP/1.1" 200 -
+True
+Exiting: answer_callback_query
+ok
+test_rejects_non_member_via_message (bot.test_decorators.IsClubMemberDecoratorTest.test_rejects_non_member_via_message)
+Non-member via message should get reply_text ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:12] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678552, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_allows_moderator_in_admin_chat (bot.test_decorators.IsModeratorDecoratorTest.test_allows_moderator_in_admin_chat)
+Moderator in admin chat should be allowed ... ok
+test_rejects_non_admin_chat (bot.test_decorators.IsModeratorDecoratorTest.test_rejects_non_admin_chat)
+Should reject when not in admin chat ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:13] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678553, 'chat': {'id': 99999, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_rejects_non_moderator (bot.test_decorators.IsModeratorDecoratorTest.test_rejects_non_moderator)
+Should reject regular user even in admin chat ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:14] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678554, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_rejects_unknown_telegram_user (bot.test_decorators.IsModeratorDecoratorTest.test_rejects_unknown_telegram_user)
+Should reject user not in database ... Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:14] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678554, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_polling_help_command (bot.test_integration.BotIntegrationTest.test_polling_help_command)
+Test: Send /help command via polling and verify bot sends help message ... skipped 'Flaky timing-based test - skipping temporarily'
+test_webhook_help_command (bot.test_integration.BotIntegrationTest.test_webhook_help_command)
+Test: Send /help command via webhook and verify bot sends help message ... skipped 'Flaky timing-based test - skipping temporarily'
+test_handles_no_from_user (notifications.telegram.test_achievements.NotifyAdminsOnAchievementTest.test_handles_no_from_user) ... ok
+test_includes_from_user_when_provided (notifications.telegram.test_achievements.NotifyAdminsOnAchievementTest.test_includes_from_user_when_provided) ... ok
+test_sends_to_vibes_chat (notifications.telegram.test_achievements.NotifyAdminsOnAchievementTest.test_sends_to_vibes_chat) ... ok
+test_sends_both_image_and_custom_message (notifications.telegram.test_achievements.NotifyUserNewAchievementTest.test_sends_both_image_and_custom_message) ... ok
+test_sends_custom_message_when_present (notifications.telegram.test_achievements.NotifyUserNewAchievementTest.test_sends_custom_message_when_present) ... ok
+test_sends_image_when_achievement_has_image (notifications.telegram.test_achievements.NotifyUserNewAchievementTest.test_sends_image_when_achievement_has_image) ... ok
+test_skips_non_member (notifications.telegram.test_achievements.NotifyUserNewAchievementTest.test_skips_non_member) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_achievements.NotifyUserNewAchievementTest.test_skips_user_without_telegram_id) ... ok
+test_sends_image_to_user_with_telegram_id (notifications.telegram.test_badges.SendNewBadgeMessageTest.test_sends_image_to_user_with_telegram_id) ... ok
+test_skips_non_member_user (notifications.telegram.test_badges.SendNewBadgeMessageTest.test_skips_non_member_user) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_badges.SendNewBadgeMessageTest.test_skips_user_without_telegram_id) ... ok
+test_sends_to_admin_and_vibes_chats (notifications.telegram.test_ban.NotifyAdminsOnBanTest.test_sends_to_admin_and_vibes_chats) ... ok
+test_sends_message_to_user_with_telegram_id (notifications.telegram.test_ban.NotifyUserBanTest.test_sends_message_to_user_with_telegram_id) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_ban.NotifyUserBanTest.test_skips_user_without_telegram_id) ... ok
+test_calls_notify_moderators_on_moderator_mention (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_calls_notify_moderators_on_moderator_mention) ... ok
+test_notifies_all_comment_subscribers (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_notifies_all_comment_subscribers) ... ok
+test_notifies_mentioned_users (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_notifies_mentioned_users) ... ok
+test_notifies_thread_author_on_reply (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_notifies_thread_author_on_reply) ... ok
+test_notifies_top_level_only_subscribers_for_top_level_comment (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_notifies_top_level_only_subscribers_for_top_level_comment) ... ok
+test_posts_to_room_chat (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_posts_to_room_chat) ... ok
+test_posts_top_level_to_online_channel (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_posts_top_level_to_online_channel) ... ok
+test_respects_muted_author (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_respects_muted_author) ... ok
+test_skips_comment_author_in_subscribers (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_comment_author_in_subscribers) ... ok
+test_skips_mentioned_already_notified (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_mentioned_already_notified) ... ok
+test_skips_online_channel_for_draft_post (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_online_channel_for_draft_post) ... ok
+test_skips_online_channel_for_reply (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_online_channel_for_reply) ... ok
+test_skips_room_chat_when_send_disabled (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_room_chat_when_send_disabled) ... ok
+test_skips_thread_author_already_notified_as_subscriber (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_thread_author_already_notified_as_subscriber) ... ok
+test_skips_thread_author_when_same_as_comment_author (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_thread_author_when_same_as_comment_author) ... ok
+test_skips_top_level_only_subscribers_for_reply (notifications.telegram.test_comments.NotifyOnCommentCreatedTest.test_skips_top_level_only_subscribers_for_reply) ... ok
+test_renders_template_with_comment (notifications.telegram.test_moderation.NotifyModeratorsOnMentionTest.test_renders_template_with_comment) ... ok
+test_sends_to_admin_and_vibes_chats (notifications.telegram.test_moderation.NotifyModeratorsOnMentionTest.test_sends_to_admin_and_vibes_chats) ... ok
+test_sends_to_admin_and_vibes_chats (notifications.telegram.test_muted.NotifyAdminsOnMuteTest.test_sends_to_admin_and_vibes_chats) ... ok
+test_text_contains_user_names (notifications.telegram.test_muted.NotifyAdminsOnMuteTest.test_text_contains_user_names) ... ok
+test_sends_image_when_provided (notifications.telegram.test_posts.AnnounceInClubChannelTest.test_sends_image_when_provided) ... ok
+test_sends_text_without_image (notifications.telegram.test_posts.AnnounceInClubChannelTest.test_sends_text_without_image) ... ok
+test_uses_custom_announce_text_when_provided (notifications.telegram.test_posts.AnnounceInClubChannelTest.test_uses_custom_announce_text_when_provided) ... ok
+test_does_not_send_to_room_chat_when_send_new_posts_disabled (notifications.telegram.test_posts.AnnounceInClubChatsTest.test_does_not_send_to_room_chat_when_send_new_posts_disabled) ... ok
+test_sends_to_club_chat_for_everywhere_visibility (notifications.telegram.test_posts.AnnounceInClubChatsTest.test_sends_to_club_chat_for_everywhere_visibility) ... ok
+test_sends_to_club_chat_when_no_room (notifications.telegram.test_posts.AnnounceInClubChatsTest.test_sends_to_club_chat_when_no_room) ... ok
+test_sends_to_room_chat_when_room_has_chat_id (notifications.telegram.test_posts.AnnounceInClubChatsTest.test_sends_to_room_chat_when_room_has_chat_id) ... ok
+test_renders_channel_post_announce_template (notifications.telegram.test_posts.AnnounceInOnlineChannelTest.test_renders_channel_post_announce_template) ... ok
+test_sends_to_club_online (notifications.telegram.test_posts.AnnounceInOnlineChannelTest.test_sends_to_club_online) ... ok
+test_message_contains_post_title_and_label (notifications.telegram.test_posts.NotifyAdminsOnPostLabelChangedTest.test_message_contains_post_title_and_label) ... ok
+test_sends_to_admin_and_vibes_chat (notifications.telegram.test_posts.NotifyAdminsOnPostLabelChangedTest.test_sends_to_admin_and_vibes_chat) ... ok
+test_deduplicates_mentioned_user_who_is_also_friend (notifications.telegram.test_posts.NotifyAuthorFriendsTest.test_deduplicates_mentioned_user_who_is_also_friend) ... ok
+test_notifies_friends (notifications.telegram.test_posts.NotifyAuthorFriendsTest.test_notifies_friends) ... ok
+test_notifies_mentioned_users (notifications.telegram.test_posts.NotifyAuthorFriendsTest.test_notifies_mentioned_users) ... ok
+test_skips_friend_not_subscribed_to_posts (notifications.telegram.test_posts.NotifyAuthorFriendsTest.test_skips_friend_not_subscribed_to_posts) ... ok
+test_sends_to_author_with_telegram_id (notifications.telegram.test_posts.NotifyPostApprovedTest.test_sends_to_author_with_telegram_id) ... ok
+test_skips_without_telegram_id (notifications.telegram.test_posts.NotifyPostApprovedTest.test_skips_without_telegram_id) ... ok
+test_uses_room_template_for_room_only_post (notifications.telegram.test_posts.NotifyPostApprovedTest.test_uses_room_template_for_room_only_post) ... ok
+test_notifies_added_and_removed_coauthors (notifications.telegram.test_posts.NotifyPostCoauthorsChangedTest.test_notifies_added_and_removed_coauthors) ... ok
+test_treats_no_history_as_empty_old_coauthors (notifications.telegram.test_posts.NotifyPostCoauthorsChangedTest.test_treats_no_history_as_empty_old_coauthors) ... ok
+test_notifies_tag_owners (notifications.telegram.test_posts.NotifyPostCollectibleTagOwnersTest.test_notifies_tag_owners) ... ok
+test_skips_tag_owner_without_telegram_id (notifications.telegram.test_posts.NotifyPostCollectibleTagOwnersTest.test_skips_tag_owner_without_telegram_id) ... ok
+test_skips_without_collectible_tag_code (notifications.telegram.test_posts.NotifyPostCollectibleTagOwnersTest.test_skips_without_collectible_tag_code) ... ok
+test_does_not_send_to_author_when_label_notify_false (notifications.telegram.test_posts.NotifyPostLabelChangedTest.test_does_not_send_to_author_when_label_notify_false) ... ok
+test_does_not_send_to_author_without_telegram_id (notifications.telegram.test_posts.NotifyPostLabelChangedTest.test_does_not_send_to_author_without_telegram_id) ... ok
+test_sends_label_removed_to_admin_chat (notifications.telegram.test_posts.NotifyPostLabelChangedTest.test_sends_label_removed_to_admin_chat) ... ok
+test_sends_label_set_to_admin_chat (notifications.telegram.test_posts.NotifyPostLabelChangedTest.test_sends_label_set_to_admin_chat) ... ok
+test_sends_to_author_when_label_has_notify_true (notifications.telegram.test_posts.NotifyPostLabelChangedTest.test_sends_to_author_when_label_has_notify_true) ... ok
+test_falls_back_to_draft_template_on_missing_template (notifications.telegram.test_posts.NotifyPostRejectedTest.test_falls_back_to_draft_template_on_missing_template) ... ok
+test_sends_with_reason (notifications.telegram.test_posts.NotifyPostRejectedTest.test_sends_with_reason) ... ok
+test_skips_without_telegram_id (notifications.telegram.test_posts.NotifyPostRejectedTest.test_skips_without_telegram_id) ... ok
+test_notifies_subscribers (notifications.telegram.test_posts.NotifyPostRoomSubscribersTest.test_notifies_subscribers) ... ok
+test_skips_subscriber_without_telegram_id (notifications.telegram.test_posts.NotifyPostRoomSubscribersTest.test_skips_subscriber_without_telegram_id) ... ok
+test_skips_without_room (notifications.telegram.test_posts.NotifyPostRoomSubscribersTest.test_skips_without_room) ... ok
+test_sends_to_multiple_users (notifications.telegram.test_posts.NotifyUsersByUsernameTest.test_sends_to_multiple_users) ... ok
+test_sends_to_users_by_slug (notifications.telegram.test_posts.NotifyUsersByUsernameTest.test_sends_to_users_by_slug) ... ok
+test_skips_nonexistent_user (notifications.telegram.test_posts.NotifyUsersByUsernameTest.test_skips_nonexistent_user) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_posts.NotifyUsersByUsernameTest.test_skips_user_without_telegram_id) ... ok
+test_contains_upvote_link_subscribe_buttons (notifications.telegram.test_posts.PostReplyMarkupTest.test_contains_upvote_link_subscribe_buttons) ... ok
+test_returns_inline_keyboard_markup (notifications.telegram.test_posts.PostReplyMarkupTest.test_returns_inline_keyboard_markup) ... ok
+test_sends_for_intro_type (notifications.telegram.test_posts.SendIntroChangesToModeratorsTest.test_sends_for_intro_type) ... ok
+test_skips_non_intro_type (notifications.telegram.test_posts.SendIntroChangesToModeratorsTest.test_skips_non_intro_type) ... ok
+test_renders_moderator_new_post_review_template (notifications.telegram.test_posts.SendPublishedPostToModeratorsTest.test_renders_moderator_new_post_review_template) ... ok
+test_reply_markup_contains_approve_reject_forgive_buttons (notifications.telegram.test_posts.SendPublishedPostToModeratorsTest.test_reply_markup_contains_approve_reject_forgive_buttons) ... ok
+test_reply_markup_contains_reason_buttons_for_post_type (notifications.telegram.test_posts.SendPublishedPostToModeratorsTest.test_reply_markup_contains_reason_buttons_for_post_type) ... ok
+test_sends_to_admin_chat_with_reply_markup (notifications.telegram.test_posts.SendPublishedPostToModeratorsTest.test_sends_to_admin_chat_with_reply_markup) ... ok
+test_sends_to_admin_chat (notifications.telegram.test_users.NotifyAdminUserPingTest.test_sends_to_admin_chat) ... ok
+test_sends_to_admin_chat (notifications.telegram.test_users.NotifyAdminUserUnmoderateTest.test_sends_to_admin_chat) ... ok
+test_reply_markup_contains_approve_and_reject_buttons (notifications.telegram.test_users.NotifyProfileNeedsReviewTest.test_reply_markup_contains_approve_and_reject_buttons) ... ok
+test_sends_to_admin_chat_with_reply_markup (notifications.telegram.test_users.NotifyProfileNeedsReviewTest.test_sends_to_admin_chat_with_reply_markup) ... ok
+test_sends_code_to_user_with_telegram_id (notifications.telegram.test_users.NotifyUserAuthTest.test_sends_code_to_user_with_telegram_id) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_users.NotifyUserAuthTest.test_skips_user_without_telegram_id) ... ok
+test_sends_to_user_with_telegram_id (notifications.telegram.test_users.NotifyUserPingTest.test_sends_to_user_with_telegram_id) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_users.NotifyUserPingTest.test_skips_user_without_telegram_id) ... ok
+test_sends_to_user_with_telegram_id (notifications.telegram.test_users.NotifyUserProfileApprovedTest.test_sends_to_user_with_telegram_id) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_users.NotifyUserProfileApprovedTest.test_skips_user_without_telegram_id) ... ok
+test_falls_back_to_intro_template_on_missing_template (notifications.telegram.test_users.NotifyUserProfileRejectedTest.test_falls_back_to_intro_template_on_missing_template) ... ok
+test_sends_with_reason_template (notifications.telegram.test_users.NotifyUserProfileRejectedTest.test_sends_with_reason_template) ... ok
+test_skips_user_without_telegram_id (notifications.telegram.test_users.NotifyUserProfileRejectedTest.test_skips_user_without_telegram_id) ... ok
+test_send_telegram_image (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_image)
+Test sending an image directly ... Telegram: sending the image: https://example.com/test_image.jpg Test image caption
+Entering: send_photo
+127.0.0.1 - - [09/Feb/2026 23:09:19] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendPhoto HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_photo
+ok
+test_send_telegram_image_parse_mode (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_image_parse_mode)
+Test that parse_mode is sent with image ... Telegram: sending the image: https://example.com/test_image.jpg Image with markdown
+Entering: send_photo
+127.0.0.1 - - [09/Feb/2026 23:09:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendPhoto HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_photo
+ok
+test_send_telegram_image_truncation (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_image_truncation)
+Test that image captions are truncated to PHOTO_TEXT_LIMIT ... Telegram: sending the image: https://example.com/test_image.jpg AAAAAAAAAAAAAAAAAAAA
+Entering: send_photo
+127.0.0.1 - - [09/Feb/2026 23:09:20] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendPhoto HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_photo
+ok
+test_send_telegram_message_enable_preview (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_message_enable_preview)
+Test that disable_preview flag is sent correctly ... Telegram: sending message to chat_id 12345, starting with Hello...
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:21] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_send_telegram_message_parse_mode (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_message_parse_mode)
+Test that parse_mode is sent in the request ... Telegram: sending message to chat_id 12345, starting with Hello...
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:21] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_send_telegram_message_reply_markup (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_message_reply_markup)
+Test that reply_markup is sent in the request ... Telegram: sending message to chat_id 12345, starting with Hello with...
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:22] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_send_telegram_message_reply_to_message_id (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_message_reply_to_message_id)
+Test that additional kwargs are sent in the request ... Telegram: sending message to chat_id 12345, starting with Hello...
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:22] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_send_telegram_message_text (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_message_text)
+Test sending a simple text message ... Telegram: sending message to chat_id 12345, starting with Hello, Tel...
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:23] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_send_telegram_message_truncation (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_message_truncation)
+Test that messages longer than NORMAL_TEXT_LIMIT are truncated ... Telegram: sending message to chat_id 12345, starting with AAAAAAAAAA...
+Entering: send_message
+127.0.0.1 - - [09/Feb/2026 23:09:23] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_message
+ok
+test_send_telegram_message_with_image (notifications.telegram.tests.SendTelegramMessageTest.test_send_telegram_message_with_image)
+Test sending a message with an embedded image ... Telegram: sending message to chat_id 12345, starting with Check this...
+Entering: send_photo
+127.0.0.1 - - [09/Feb/2026 23:09:24] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendPhoto HTTP/1.1" 200 -
+{'message_id': 123456, 'date': 1770678529, 'chat': {'id': 12345, 'type': 'private'}, 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False}
+Exiting: send_photo
+ok
+
+----------------------------------------------------------------------
+Ran 143 tests in 30.358s
+
+OK (skipped=2)
+Destroying test database for alias 'default' ('test_vas3k_club')...

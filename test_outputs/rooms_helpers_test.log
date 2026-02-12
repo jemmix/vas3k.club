@@ -1,0 +1,75 @@
+Loading .env environment variables...
+Including test tag(s): telegram.
+Found 7 test(s).
+Creating test database for alias 'default' ('test_vas3k_club')...
+Got an error creating the test database: database "test_vas3k_club" already exists
+Type 'yes' if you would like to try deleting the test database 'test_vas3k_club', or 'no' to cancel: Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.DuplicateDatabase: database "test_vas3k_club" already exists
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/creation.py", line 204, in _create_test_db
+    self._execute_create_test_db(cursor, test_db_params, keepdb)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/creation.py", line 46, in _execute_create_test_db
+    super()._execute_create_test_db(cursor, parameters, keepdb)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/creation.py", line 190, in _execute_create_test_db
+    cursor.execute("CREATE DATABASE %(dbname)s %(suffix)s" % parameters)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.ProgrammingError: database "test_vas3k_club" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/manage.py", line 21, in <module>
+    main()
+  File "/Users/andy/projects/vas3k.club/manage.py", line 17, in main
+    execute_from_command_line(sys.argv)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+    utility.execute()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/__init__.py", line 436, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/commands/test.py", line 24, in run_from_argv
+    super().run_from_argv(argv)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/base.py", line 413, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/base.py", line 459, in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/core/management/commands/test.py", line 63, in handle
+    failures = test_runner.run_tests(test_labels)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/test/runner.py", line 1066, in run_tests
+    old_config = self.setup_databases(
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/test/runner.py", line 964, in setup_databases
+    return _setup_databases(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/test/utils.py", line 206, in setup_databases
+    connection.creation.create_test_db(
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/creation.py", line 62, in create_test_db
+    self._create_test_db(verbosity, autoclobber, keepdb)
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/creation.py", line 213, in _create_test_db
+    confirm = input(
+              ^^^^^^
+EOFError: EOF when reading a line

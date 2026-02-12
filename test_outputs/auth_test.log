@@ -1,0 +1,161 @@
+Loading .env environment variables...
+Including test tag(s): telegram.
+Found 4 test(s).
+Using existing test database for alias 'default' ('test_vas3k_club')...
+Operations to perform:
+  Synchronize unmigrated apps: ai, club, debug_toolbar, humanize, simple_history, sitemaps, staticfiles, webpack_loader
+  Apply all migrations: authn, badges, bookmarks, clickers, comments, contenttypes, django_q, gdpr, godmode, helpdeskbot, invites, landing, misc, notifications, payments, posts, rooms, search, tags, tickets, users
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  No migrations to apply.
+  Your models in app(s): 'authn', 'clickers', 'posts', 'rooms', 'users' have changes that are not yet reflected in a migration, and so won't be applied.
+  Run 'manage.py makemigrations' to make new migrations, and then re-run 'manage.py migrate' to apply them.
+Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+System check identified no issues (0 silenced).
+test_invalid_code (bot.handlers.test_auth.CommandAuthTest.test_invalid_code)
+Should send error message for invalid code ... Set Bot API URL: http://127.0.0.1:63063/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `sendMessage` with parameters `{'chat_id': 12345, 'text': 'Пользователь с таким кодом не найден'}`
+connect_tcp.started host='127.0.0.1' port=63063 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10f8bfaa0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage
+127.0.0.1 - - [11/Feb/2026 18:26:59] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Wed, 11 Feb 2026 18:26:59 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:63063/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `sendMessage` finished with return value `{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}}`
+ok
+test_no_code_provided (bot.handlers.test_auth.CommandAuthTest.test_no_code_provided)
+Should send error message when no code provided ... Set Bot API URL: http://127.0.0.1:63065/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `sendMessage` with parameters `{'chat_id': 12345, 'text': '☝️ Нужно прислать мне секретный код. Напиши /auth и код из <a href="https://vas3k.club/user/me/edit/bot/">профиля в Клубе</a> через пробел. Только не публикуй его в публичных чатах!', 'parse_mode': <ParseMode.HTML>}`
+connect_tcp.started host='127.0.0.1' port=63065 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10f9662d0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage
+127.0.0.1 - - [11/Feb/2026 18:27:00] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+receive_response_headers.started request=<Request [b'POST']>
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Wed, 11 Feb 2026 18:27:00 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:63065/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `sendMessage` finished with return value `{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}}`
+ok
+test_success_approved_user (bot.handlers.test_auth.CommandAuthTest.test_success_approved_user)
+Should link approved user and delete message ... Set Bot API URL: http://127.0.0.1:63067/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `sendMessage` with parameters `{'chat_id': 12345, 'text': 'Отличный код! Приятно познакомиться, testuser-79b3e2031780'}`
+connect_tcp.started host='127.0.0.1' port=63067 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10f98d4c0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage
+127.0.0.1 - - [11/Feb/2026 18:27:00] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Wed, 11 Feb 2026 18:27:00 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:63067/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `sendMessage` finished with return value `{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}}`
+Calling Bot API endpoint `deleteMessage` with parameters `{'chat_id': 12345, 'message_id': 1}`
+connect_tcp.started host='127.0.0.1' port=63067 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10f98db50>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/deleteMessage
+127.0.0.1 - - [11/Feb/2026 18:27:00] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/deleteMessage HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Wed, 11 Feb 2026 18:27:00 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:63067/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/deleteMessage "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `deleteMessage` finished with return value `True`
+ok
+test_success_unapproved_user (bot.handlers.test_auth.CommandAuthTest.test_success_unapproved_user)
+Should link unapproved user and send moderation message ... Set Bot API URL: http://127.0.0.1:63075/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Set Bot API File URL: https://api.telegram.org/file/bot123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk
+Using selector: KqueueSelector
+Calling Bot API endpoint `sendMessage` with parameters `{'chat_id': 12345, 'text': 'Отличный код! Приятно познакомиться, testuser-be17de04b206'}`
+connect_tcp.started host='127.0.0.1' port=63075 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10f9863f0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage
+127.0.0.1 - - [11/Feb/2026 18:27:01] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Wed, 11 Feb 2026 18:27:01 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:63075/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `sendMessage` finished with return value `{'message_id': 123456, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}}`
+Calling Bot API endpoint `deleteMessage` with parameters `{'chat_id': 12345, 'message_id': 1}`
+connect_tcp.started host='127.0.0.1' port=63075 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10f95fcb0>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/deleteMessage
+127.0.0.1 - - [11/Feb/2026 18:27:01] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/deleteMessage HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Wed, 11 Feb 2026 18:27:01 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:63075/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/deleteMessage "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `deleteMessage` finished with return value `True`
+Calling Bot API endpoint `sendMessage` with parameters `{'chat_id': 12345, 'text': 'Теперь осталось пройти модерацию. Бот заработает сразу после этого'}`
+connect_tcp.started host='127.0.0.1' port=63075 local_address=None timeout=5.0 socket_options=None
+connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x10f95e300>
+send_request_headers.started request=<Request [b'POST']>
+send_request_headers.complete
+send_request_body.started request=<Request [b'POST']>
+send_request_body.complete
+receive_response_headers.started request=<Request [b'POST']>
+Mock server received request: POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage
+127.0.0.1 - - [11/Feb/2026 18:27:01] "POST /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage HTTP/1.1" 200 -
+receive_response_headers.complete return_value=(b'HTTP/1.0', 200, b'OK', [(b'Server', b'BaseHTTP/0.6 Python/3.12.8'), (b'Date', b'Wed, 11 Feb 2026 18:27:01 GMT'), (b'Content-Type', b'application/json'), (b'Connection', b'close')])
+HTTP Request: POST http://127.0.0.1:63075/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage "HTTP/1.0 200 OK"
+receive_response_body.started request=<Request [b'POST']>
+receive_response_body.complete
+response_closed.started
+response_closed.complete
+Call to Bot API endpoint `sendMessage` finished with return value `{'message_id': 123457, 'date': 1770677952, 'chat': {'id': 12345, 'type': 'private'}}`
+ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.413s
+
+OK
+Preserving test database for alias 'default' ('test_vas3k_club')...

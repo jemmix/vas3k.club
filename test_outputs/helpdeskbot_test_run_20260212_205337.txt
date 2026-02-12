@@ -1,0 +1,8 @@
+Loading .env environment variables...
+Set Bot API URL: https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+Set Bot API File URL: https://api.telegram.org/file/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+Including test tag(s): telegram.
+Found 46 test(s).
+Creating test database for alias 'default' ('test_vas3k_club')...
+Got an error creating the test database: database "test_vas3k_club" already exists
+Type 'yes' if you would like to try deleting the test database 'test_vas3k_club', or 'no' to cancel: 

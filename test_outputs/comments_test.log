@@ -1,0 +1,1092 @@
+Loading .env environment variables...
+/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py:62: SyntaxWarning: invalid escape sequence '\ '
+  """
+/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py:47: UserWarning: python-telegram-bot is using upstream urllib3. This is allowed but not supported by python-telegram-bot maintainers.
+  warnings.warn('python-telegram-bot is using upstream urllib3. This is allowed but not '
+Found 8 test(s).
+Creating test database for alias 'default' ('test_vas3k_club')...
+Operations to perform:
+  Synchronize unmigrated apps: ai, club, debug_toolbar, humanize, simple_history, sitemaps, staticfiles, webpack_loader
+  Apply all migrations: authn, badges, bookmarks, clickers, comments, contenttypes, django_q, gdpr, godmode, helpdeskbot, invites, landing, misc, notifications, payments, posts, rooms, search, tags, tickets, users
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying users.0001_initial... OK
+  Applying users.0002_auto_20200408_1516... OK
+  Applying users.0003_auto_20200409_0846... OK
+  Applying users.0004_auto_20200409_0849... OK
+  Applying users.0005_auto_20200416_0937... OK
+  Applying users.0006_user_is_email_unsubscribed... OK
+  Applying users.0007_auto_20200519_1956... OK
+  Applying users.0008_auto_20200521_1957... OK
+  Applying users.0009_user_contact... OK
+  Applying users.0010_auto_20200523_1912... OK
+  Applying users.0011_auto_20200526_1126... OK
+  Applying users.0012_auto_20200602_1121... OK
+  Applying users.0013_auto_20200602_1139... OK
+  Applying users.0014_auto_20200710_1401... OK
+  Applying users.0015_auto_20200712_1404... OK
+  Applying users.0016_auto_20200712_1557... OK
+  Applying users.0017_auto_20200712_1559... OK
+  Applying users.0018_user_stripe_id... OK
+  Applying users.0019_auto_20200809_1616... OK
+  Applying users.0020_auto_20200822_0818... OK
+  Applying users.0021_auto_20210512_1053... OK
+  Applying users.0022_alter_user_secret_hash... OK
+  Applying users.0023_muted... OK
+  Applying users.0024_muted_comment... OK
+  Applying users.0025_alter_user_membership_platform_type... OK
+  Applying authn.0001_initial... OK
+  Applying authn.0002_code... OK
+  Applying authn.0003_auto_20201024_1527... OK
+  Applying authn.0004_auto_20210613_1316... OK
+  Applying authn.0005_alter_apps_jwt_secret... OK
+  Applying authn.0006_auto_20220525_1000... OK
+  Applying authn.0007_auto_20230305_1518... OK
+  Applying authn.0008_auto_20230306_1623... OK
+  Applying authn.0009_auto_20230925_1035... OK
+  Applying posts.0001_initial... OK
+  Applying posts.0002_auto_20200418_1427... OK
+  Applying posts.0003_auto_20200421_0749... OK
+  Applying posts.0004_auto_20200421_0816... OK
+  Applying posts.0005_auto_20200421_0830... OK
+  Applying posts.0006_auto_20200423_2022... OK
+  Applying posts.0007_auto_20200425_2028... OK
+  Applying posts.0008_auto_20200426_0823... OK
+  Applying posts.0009_auto_20200429_0817... OK
+  Applying posts.0010_postsubscription... OK
+  Applying posts.0011_auto_20200523_0952... OK
+  Applying posts.0012_postbookmark... OK
+  Applying posts.0012_auto_20200809_1616... OK
+  Applying posts.0013_merge_20200822_0818... OK
+  Applying posts.0014_auto_20200822_2000... OK
+  Applying posts.0015_auto_20201019_2128... OK
+  Applying posts.0016_auto_20201115_0912... OK
+  Applying posts.0017_linkedpost... OK
+  Applying posts.0018_auto_20210527_1006... OK
+  Applying posts.0019_auto_20210528_1122... OK
+  Applying posts.0020_auto_20210817_2300... OK
+  Applying posts.0021_auto_20210910_1556... OK
+  Applying posts.0022_auto_20210911_0827... OK
+  Applying posts.0023_auto_20210929_2118... OK
+  Applying posts.0024_postsubscription_type... OK
+  Applying comments.0001_initial... OK
+  Applying comments.0002_auto_20200416_0937... OK
+  Applying comments.0003_auto_20200420_1910... OK
+  Applying comments.0004_auto_20200421_0749... OK
+  Applying comments.0005_auto_20200424_1144... OK
+  Applying comments.0006_auto_20200809_1616... OK
+  Applying comments.0007_auto_20200822_2000... OK
+  Applying comments.0008_auto_20210911_0827... OK
+  Applying badges.0001_initial... OK
+  Applying badges.0002_auto_20211022_0858... OK
+  Applying badges.0003_alter_badge_options... OK
+  Applying badges.0004_auto_20250216_1224... OK
+  Applying badges.0005_alter_userbadge_options... OK
+  Applying bookmarks.0001_initial... OK
+  Applying bookmarks.0002_alter_postbookmark_options... OK
+  Applying users.0026_auto_20230228_1526... OK
+  Applying users.0027_auto_20230808_1201... OK
+  Applying users.0028_auto_20240516_0554... OK
+  Applying users.0029_auto_20240613_1242... OK
+  Applying users.0030_auto_20240729_1343... OK
+  Applying users.0031_auto_20250111_1508... OK
+  Applying users.0032_add_achievement_custom_message... OK
+  Applying users.0033_rename_muted_usermuted... OK
+  Applying users.0034_alter_friend_options_alter_user_options_and_more... OK
+  Applying clickers.0001_initial... OK
+  Applying comments.0009_auto_20230201_1417... OK
+  Applying comments.0010_alter_comment_options... OK
+  Applying comments.0011_alter_comment_created_at... OK
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying django_q.0001_initial... OK
+  Applying django_q.0002_auto_20150630_1624... OK
+  Applying django_q.0003_auto_20150708_1326... OK
+  Applying django_q.0004_auto_20150710_1043... OK
+  Applying django_q.0005_auto_20150718_1506... OK
+  Applying django_q.0006_auto_20150805_1817... OK
+  Applying django_q.0007_ormq... OK
+  Applying django_q.0008_auto_20160224_1026... OK
+  Applying django_q.0009_auto_20171009_0915... OK
+  Applying django_q.0010_auto_20200610_0856... OK
+  Applying django_q.0011_auto_20200628_1055... OK
+  Applying django_q.0012_auto_20200702_1608... OK
+  Applying django_q.0013_task_attempt_count... OK
+  Applying django_q.0014_schedule_cluster... OK
+  Applying django_q.0015_alter_schedule_schedule_type... OK
+  Applying django_q.0016_schedule_intended_date_kwarg... OK
+  Applying django_q.0017_task_cluster_alter... OK
+  Applying django_q.0018_task_success_index... OK
+  Applying gdpr.0001_initial... OK
+  Applying gdpr.0002_alter_datarequests_options... OK
+  Applying godmode.0001_initial... OK
+  Applying godmode.0002_remove_clubsettings_digest_intro_and_more... OK
+  Applying misc.0001_initial... OK
+  Applying misc.0002_networkgroup_networkitem... OK
+  Applying misc.0003_alter_networkitem_id... OK
+  Applying rooms.0001_initial... OK
+  Applying rooms.0002_auto_20230731_1419... OK
+  Applying rooms.0003_auto_20230925_1239... OK
+  Applying helpdeskbot.0001_initial... OK
+  Applying helpdeskbot.0002_auto_20240615_2029... OK
+  Applying payments.0001_initial... OK
+  Applying payments.0002_payment_data... OK
+  Applying payments.0003_auto_20200712_1341... OK
+  Applying payments.0004_payment_amount... OK
+  Applying payments.0005_auto_20200721_1043... OK
+  Applying invites.0001_initial... OK
+  Applying invites.0002_auto_20241227_0834... OK
+  Applying invites.0003_alter_invite_invited_user... OK
+  Applying invites.0004_alter_invite_options... OK
+  Applying landing.0001_initial... OK
+  Applying landing.0002_godsettings_network_page... OK
+  Applying landing.0003_auto_20210829_0802... OK
+  Applying landing.0004_alter_godsettings_id... OK
+  Applying landing.0005_delete_godsettings... OK
+  Applying misc.0004_delete_networkitem... OK
+  Applying misc.0005_networkgroup_custom_template... OK
+  Applying notifications.0001_initial... OK
+  Applying posts.0025_auto_20211015_0837... OK
+  Applying posts.0026_auto_20220615_1047... OK
+  Applying posts.0027_auto_20230731_1014... OK
+  Applying posts.0028_postview_post_views_post_id_49dd7e_idx... OK
+  Applying posts.0029_alter_historicalpost_type_alter_post_type... OK
+  Applying posts.0030_migrate_event_participants... OK
+  Applying posts.0031_alter_linkedpost_options... OK
+  Applying posts.0032_remove_historicalpost_is_visible_and_more... OK
+  Applying posts.0033_auto_20250725_0735... OK
+  Applying posts.0034_remove_post_is_visible_and_more... OK
+  Applying posts.0035_remove_post_is_approved_by_moderator_and_more... OK
+  Applying posts.0036_alter_post_moderation_status... OK
+  Applying rooms.0004_roommuted_roomsubscription... OK
+  Applying rooms.0005_room_chat_member_count... OK
+  Applying rooms.0006_alter_room_icon... OK
+  Applying search.0001_initial... OK
+  Applying search.0002_searchindex_tags... OK
+  Applying search.0003_auto_20200902_2049... OK
+  Applying search.0004_alter_searchindex_created_at... OK
+  Applying tags.0001_initial... OK
+  Applying tags.0002_alter_usertag_options... OK
+  Applying tickets.0001_initial... OK
+  Applying tickets.0002_ticket_tickets_sold_ticketsale_session... OK
+  Applying tickets.0003_rename_email_template_ticket_send_email_title_and_more... OK
+Using requests library for http requests (alternative cloudscraper library is recommended for bypassing Cloudflare protection)
+System check identified no issues (0 silenced).
+test_routes_to_comment_to_post (bot.handlers.test_comments.CommentRouterTest.test_routes_to_comment_to_post)
+Should route to comment_to_post when message starts with post emoji ... Entering: get_me
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51502)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51503)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51504)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51505)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+ERROR
+test_routes_to_reply_to_comment (bot.handlers.test_comments.CommentRouterTest.test_routes_to_reply_to_comment)
+Should route to reply_to_comment when message starts with comment emoji ... Entering: get_me
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51507)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51508)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51509)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51510)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+ERROR
+test_skips_non_reply (bot.handlers.test_comments.CommentRouterTest.test_skips_non_reply)
+Should skip messages that are not replies ... Comment handler triggered
+Not a reply. Skipping.
+ok
+test_skips_reply_to_other_user (bot.handlers.test_comments.CommentRouterTest.test_skips_reply_to_other_user)
+Should skip replies to other users (not bot) ... Entering: get_me
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51513)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51514)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51515)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))': /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51516)
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/socketserver.py", line 761, in __init__
+    self.handle()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 436, in handle
+    self.handle_one_request()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/server.py", line 424, in handle_one_request
+    method()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 101, in do_GET
+    self._do_handle(request)
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 48, in _do_handle
+    expected_request = self._get_server().pop_expected_request()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 139, in pop_expected_request
+    raise RuntimeError("expect_requests not called")
+RuntimeError: expect_requests not called
+----------------------------------------
+ERROR
+test_creates_top_level_comment (bot.handlers.test_comments.CommentToPostTest.test_creates_top_level_comment)
+Should create a top-level comment on post ... Reply_to_post handler triggered
+ERROR
+test_creates_top_level_comment (bot.handlers.test_comments.CommentToPostTest.test_creates_top_level_comment)
+Should create a top-level comment on post ... FAIL
+test_rejects_short_comment (bot.handlers.test_comments.CommentToPostTest.test_rejects_short_comment)
+Should reject comments shorter than MIN_COMMENT_LEN ... ERROR
+test_creates_reply_comment (bot.handlers.test_comments.ReplyToCommentTest.test_creates_reply_comment)
+Should create a reply to existing comment ... Reply_to_comment handler triggered
+ERROR
+test_creates_reply_comment (bot.handlers.test_comments.ReplyToCommentTest.test_creates_reply_comment)
+Should create a reply to existing comment ... FAIL
+test_rejects_rate_limited_user (bot.handlers.test_comments.ReplyToCommentTest.test_rejects_rate_limited_user)
+Should reject user who exceeded rate limit ... ERROR
+
+======================================================================
+ERROR: test_routes_to_comment_to_post (bot.handlers.test_comments.CommentRouterTest.test_routes_to_comment_to_post)
+Should route to comment_to_post when message starts with post emoji
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 716, in urlopen
+    httplib_response = self._make_request(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 468, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 463, in _make_request
+    httplib_response = conn.getresponse()
+                       ^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 300, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 225, in _request_wrapper
+    resp = self._con_pool.request(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/request.py", line 77, in request
+    return self.request_encode_url(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/request.py", line 99, in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/poolmanager.py", line 376, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 802, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/util/retry.py", line 594, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=51501): Max retries exceeded with url: /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe (Caused by ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 77, in test_routes_to_comment_to_post
+    update.message.reply_to_message.from_user.id = self.bot.id
+                                                   ^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 54, in decorator
+    self.get_me()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 67, in decorator
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 279, in get_me
+    result = self._request.get(url, timeout=timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 277, in get
+    result = self._request_wrapper('GET', url, **urlopen_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 231, in _request_wrapper
+    raise NetworkError('urllib3 HTTPError {0}'.format(error))
+telegram.error.NetworkError: urllib3 HTTPError HTTPConnectionPool(host='127.0.0.1', port=51501): Max retries exceeded with url: /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe (Caused by ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
+
+======================================================================
+ERROR: test_routes_to_reply_to_comment (bot.handlers.test_comments.CommentRouterTest.test_routes_to_reply_to_comment)
+Should route to reply_to_comment when message starts with comment emoji
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 716, in urlopen
+    httplib_response = self._make_request(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 468, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 463, in _make_request
+    httplib_response = conn.getresponse()
+                       ^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 300, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 225, in _request_wrapper
+    resp = self._con_pool.request(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/request.py", line 77, in request
+    return self.request_encode_url(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/request.py", line 99, in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/poolmanager.py", line 376, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 802, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/util/retry.py", line 594, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=51506): Max retries exceeded with url: /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe (Caused by ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 61, in test_routes_to_reply_to_comment
+    update.message.reply_to_message.from_user.id = self.bot.id
+                                                   ^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 54, in decorator
+    self.get_me()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 67, in decorator
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 279, in get_me
+    result = self._request.get(url, timeout=timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 277, in get
+    result = self._request_wrapper('GET', url, **urlopen_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 231, in _request_wrapper
+    raise NetworkError('urllib3 HTTPError {0}'.format(error))
+telegram.error.NetworkError: urllib3 HTTPError HTTPConnectionPool(host='127.0.0.1', port=51506): Max retries exceeded with url: /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe (Caused by ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
+
+======================================================================
+ERROR: test_skips_reply_to_other_user (bot.handlers.test_comments.CommentRouterTest.test_skips_reply_to_other_user)
+Should skip replies to other users (not bot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 716, in urlopen
+    httplib_response = self._make_request(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 468, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 463, in _make_request
+    httplib_response = conn.getresponse()
+                       ^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.pyenv/versions/3.12.8/lib/python3.12/http/client.py", line 300, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 225, in _request_wrapper
+    resp = self._con_pool.request(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/request.py", line 77, in request
+    return self.request_encode_url(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/request.py", line 99, in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/poolmanager.py", line 376, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 830, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/connectionpool.py", line 802, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/urllib3/util/retry.py", line 594, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=51512): Max retries exceeded with url: /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe (Caused by ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 49, in test_skips_reply_to_other_user
+    context.bot.id = self.bot.id
+                     ^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 54, in decorator
+    self.get_me()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 67, in decorator
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/bot.py", line 279, in get_me
+    result = self._request.get(url, timeout=timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 277, in get
+    result = self._request_wrapper('GET', url, **urlopen_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/telegram/utils/request.py", line 231, in _request_wrapper
+    raise NetworkError('urllib3 HTTPError {0}'.format(error))
+telegram.error.NetworkError: urllib3 HTTPError HTTPConnectionPool(host='127.0.0.1', port=51512): Max retries exceeded with url: /123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/getMe (Caused by ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))
+
+======================================================================
+ERROR: test_creates_top_level_comment (bot.handlers.test_comments.CommentToPostTest.test_creates_top_level_comment)
+Should create a top-level comment on post
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+psycopg.OperationalError: the connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/test/utils.py", line 446, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 342, in test_creates_top_level_comment
+    comment_to_post(update, context)
+  File "/Users/andy/projects/vas3k.club/bot/decorators.py", line 47, in wrapper
+    return callback(update, context, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/comments.py", line 130, in comment_to_post
+    user = get_club_user(update)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/common.py", line 47, in get_club_user
+    user = User.objects.filter(telegram_id=update.effective_user.id).first()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 1097, in first
+    for obj in queryset[:1]:
+               ~~~~~~~~^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 400, in __iter__
+    self._fetch_all()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 319, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+django.db.utils.OperationalError: the connection is closed
+
+======================================================================
+ERROR: test_rejects_short_comment (bot.handlers.test_comments.CommentToPostTest.test_rejects_short_comment)
+Should reject comments shorter than MIN_COMMENT_LEN
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+psycopg.OperationalError: the connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 249, in setUp
+    self.user = create_test_user(telegram_id="111")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/test_helpers.py", line 95, in create_test_user
+    return User.objects.create(**defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/Users/andy/projects/vas3k.club/users/models/user.py", line 147, in save
+    return super().save(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 892, in save
+    self.save_base(
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 998, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 1161, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 1202, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1834, in execute_sql
+    with self.connection.cursor() as cursor:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 319, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+django.db.utils.OperationalError: the connection is closed
+
+======================================================================
+ERROR: test_creates_reply_comment (bot.handlers.test_comments.ReplyToCommentTest.test_creates_reply_comment)
+Should create a reply to existing comment
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+psycopg.OperationalError: the connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/test/utils.py", line 446, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 186, in test_creates_reply_comment
+    reply_to_comment(update, context)
+  File "/Users/andy/projects/vas3k.club/bot/decorators.py", line 47, in wrapper
+    return callback(update, context, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/comments.py", line 57, in reply_to_comment
+    user = get_club_user(update)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/handlers/common.py", line 47, in get_club_user
+    user = User.objects.filter(telegram_id=update.effective_user.id).first()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 1097, in first
+    for obj in queryset[:1]:
+               ~~~~~~~~^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 400, in __iter__
+    self._fetch_all()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1572, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 319, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+django.db.utils.OperationalError: the connection is closed
+
+======================================================================
+ERROR: test_rejects_rate_limited_user (bot.handlers.test_comments.ReplyToCommentTest.test_rejects_rate_limited_user)
+Should reject user who exceeded rate limit
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+psycopg.OperationalError: the connection is closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 97, in setUp
+    self.user = create_test_user(telegram_id="111")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/projects/vas3k.club/bot/test_helpers.py", line 95, in create_test_user
+    return User.objects.create(**defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 679, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/Users/andy/projects/vas3k.club/users/models/user.py", line 147, in save
+    return super().save(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 892, in save
+    self.save_base(
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 998, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 1161, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/base.py", line 1202, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/query.py", line 1847, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1834, in execute_sql
+    with self.connection.cursor() as cursor:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 319, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/base/base.py", line 297, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/django/db/backends/postgresql/base.py", line 429, in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/connection.py", line 231, in cursor
+    self._check_connection_ok()
+  File "/Users/andy/.local/share/virtualenvs/vas3k.club-NqHHoH7j/lib/python3.12/site-packages/psycopg/_connection_base.py", line 528, in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+django.db.utils.OperationalError: the connection is closed
+
+======================================================================
+FAIL: test_creates_top_level_comment (bot.handlers.test_comments.CommentToPostTest.test_creates_top_level_comment)
+Should create a top-level comment on post
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 278, in tearDown
+    super().tearDown()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 193, in tearDown
+    self.server.check_requests()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 150, in check_requests
+    self.test_case.assertTrue(
+AssertionError: False is not true : some requests not executed: [ExpectedRequest(request=Request(method='POST', path='/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage', body={'chat_id': '12345', 'reply_to_message_id': '1', 'text': '➜ <a href="https://vas3k.club/post/test-post/#comment-96356ef5-7555-4b57-b4dd-03f18945dd81">Отвечено</a> 👍', 'parse_mode': 'HTML', 'disable_web_page_preview': 'True', 'disable_notification': 'False'}), response='{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}', wait=0)]
+
+======================================================================
+FAIL: test_creates_reply_comment (bot.handlers.test_comments.ReplyToCommentTest.test_creates_reply_comment)
+Should create a reply to existing comment
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/andy/projects/vas3k.club/bot/handlers/test_comments.py", line 131, in tearDown
+    super().tearDown()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 193, in tearDown
+    self.server.check_requests()
+  File "/Users/andy/projects/vas3k.club/notifications/telegram/tests.py", line 150, in check_requests
+    self.test_case.assertTrue(
+AssertionError: False is not true : some requests not executed: [ExpectedRequest(request=Request(method='POST', path='/123456789:ABCDefGhijklmnOpqrstuvWxyzAbcdefghijk/sendMessage', body={'chat_id': '12345', 'reply_to_message_id': '1', 'text': '➜ <a href="https://vas3k.club/post/test-post/#comment-be215852-9d53-4bbc-b2b5-f6aa93c02d09">Отвечено</a> 👍', 'parse_mode': 'HTML', 'disable_web_page_preview': 'True', 'disable_notification': 'False'}), response='{"ok": true, "result": {"message_id": 123456, "date": 1770677952, "chat": {"id": 12345, "type": "private"}}}', wait=0)]
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.166s
+
+FAILED (failures=2, errors=7)
+Destroying test database for alias 'default' ('test_vas3k_club')...

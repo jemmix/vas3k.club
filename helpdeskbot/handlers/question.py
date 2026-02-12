@@ -99,19 +99,19 @@ class QuestionDto:
 
 
 async def start(update: Update, context: CallbackContext) -> State:
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user:
         return ConversationHandler.END
 
-    help_desk_user_ban = HelpDeskUser.objects.filter(user=user).first()
+    help_desk_user_ban = await HelpDeskUser.objects.filter(user=user).afirst()
     if help_desk_user_ban and help_desk_user_ban.is_banned:
         await send_reply(update, "🙈 Вас забанили от пользования Вастрик Справочной")
         return ConversationHandler.END
 
     if not user.is_moderator:
-        question_count_24h = Question.objects.filter(user=user) \
+        question_count_24h = await Question.objects.filter(user=user) \
             .filter(created_at__gte=datetime.utcnow() - timedelta(hours=24)) \
-            .count()
+            .acount()
 
         if question_count_24h >= config.DAILY_QUESTION_LIMIT:
             await send_reply(update, "🙅‍♂️ Упс, кажется вы превысили свой лимит вопросов в день. Приходите завтра!")
@@ -225,7 +225,7 @@ async def review_question(update: Update, context: CallbackContext) -> State:
 
 
 async def publish_question(update: Update, user_data: Dict[str, str]) -> str:
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user:
         return ConversationHandler.END
 
@@ -249,7 +249,7 @@ async def publish_question(update: Update, user_data: Dict[str, str]) -> str:
     )
 
     question.channel_msg_id = channel_message.message_id
-    question.save()
+    await question.asave()
 
     if room and room.chat_id:
         try:
@@ -267,7 +267,7 @@ async def publish_question(update: Update, user_data: Dict[str, str]) -> str:
 
             question.room = room
             question.room_chat_msg_id = room_message.message_id
-            question.save()
+            await question.asave()
         except Exception as ex:
             log.warning(f"Failed to send message to room: {data.room}. Pls add bot there.", exc_info=ex)
 
@@ -374,10 +374,10 @@ class QuestionHandler(ConversationHandler):
         )
 
 
-def update_discussion_message_id(update: Update) -> None:
+async def update_discussion_message_id(update: Update) -> None:
     channel_msg_id = update.message.forward_from_message_id
     discussion_msg_id = update.message.message_id
 
-    question = Question.objects.filter(channel_msg_id=channel_msg_id).first()
+    question = await Question.objects.filter(channel_msg_id=channel_msg_id).afirst()
     question.discussion_msg_id = discussion_msg_id
-    question.save()
+    await question.asave()

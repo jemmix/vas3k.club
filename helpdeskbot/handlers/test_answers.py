@@ -1,6 +1,6 @@
 """Tests for helpdeskbot/handlers/answers.py"""
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 
 from django.test import TestCase
 from telegram.ext import CallbackContext
@@ -50,7 +50,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
         self.user.delete()
         super().tearDown()
 
-    @patch("helpdeskbot.handlers.answers.notify_user_about_answer")
+    @patch("helpdeskbot.handlers.answers.notify_user_about_answer", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.answers.Answer.create_from_update")
     async def test_creates_answer_and_notifies_user(self, mock_create_answer, mock_notify):
         """Should create answer from update and notify user"""
@@ -64,7 +64,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
             forward_from_message_id=12345
         )
 
-        handle_answer_from_channel(update)
+        await handle_answer_from_channel(update)
 
         # Verify answer was created
         mock_create_answer.assert_called_once()
@@ -88,7 +88,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
         # Explicitly set forward_from_message_id to None
         update.message.reply_to_message.forward_from_message_id = None
 
-        result = handle_answer_from_channel(update)
+        result = await handle_answer_from_channel(update)
 
         self.assertIsNone(result)
         mock_log.error.assert_called_once()
@@ -106,7 +106,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
             forward_from_message_id=99999  # Non-existent
         )
 
-        result = handle_answer_from_channel(update)
+        result = await handle_answer_from_channel(update)
 
         self.assertIsNone(result)
         mock_log.warning.assert_called_once()
@@ -143,7 +143,7 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID", "-1001234567890")
     @patch("helpdeskbot.handlers.answers.config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_DISCUSSION_ID", "-100987654321")
     @patch("helpdeskbot.handlers.answers.send_message")
-    @patch("helpdeskbot.handlers.answers.notify_user_about_answer")
+    @patch("helpdeskbot.handlers.answers.notify_user_about_answer", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.answers.Answer.create_from_update")
     async def test_creates_answer_forwards_to_channel_and_notifies(
         self, mock_create_answer, mock_notify, mock_send
@@ -198,7 +198,7 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
         update.message.reply_to_message = MagicMock()
         update.message.reply_to_message.message_id = None
 
-        result = handle_answer_from_room_chat(update)
+        result = await handle_answer_from_room_chat(update)
 
         self.assertIsNone(result)
         mock_log.error.assert_called_once()
@@ -236,7 +236,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
             message_id=99999
         )
 
-        notify_user_about_answer(update, self.question)
+        await notify_user_about_answer(update, self.question)
 
         # Verify message was sent to user
         mock_send.assert_called_once_with(
@@ -260,7 +260,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
             text="Answer"
         )
 
-        result = notify_user_about_answer(update, question_no_user)
+        result = await notify_user_about_answer(update, question_no_user)
 
         self.assertIsNone(result)
         mock_log.info.assert_called_once()
@@ -277,7 +277,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
             text="Self reply"
         )
 
-        result = notify_user_about_answer(update, self.question)
+        result = await notify_user_about_answer(update, self.question)
 
         self.assertIsNone(result)
         mock_log.debug.assert_called_once()
@@ -300,7 +300,7 @@ class OnReplyMessageTest(AnswersTestBase):
             forward_from_message_id=12345
         )
 
-        on_reply_message(update, None)
+        await on_reply_message(update, None)
 
         mock_handle_channel.assert_called_once_with(update)
 
