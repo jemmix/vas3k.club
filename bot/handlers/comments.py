@@ -28,7 +28,9 @@ async def comment(update: Update, context: CallbackContext) -> None:
         log.info("Not a reply. Skipping.")
         return None
 
-    if update.message.reply_to_message.from_user.id != context.bot.id:
+    # In v20+, need to get bot info via get_me()
+    bot_info = await context.bot.get_me()
+    if update.message.reply_to_message.from_user.id != bot_info.id:
         log.info("Reply to another user. Skipping.")
         return
 
@@ -55,12 +57,12 @@ async def comment(update: Update, context: CallbackContext) -> None:
 async def reply_to_comment(update: Update, context: CallbackContext) -> None:
     log.info("Reply_to_comment handler triggered")
 
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user:
         log.info("User not found")
         return None
 
-    comment = get_club_comment(update)
+    comment = await get_club_comment(update)
     if not comment:
         log.info("Original comment not found. Skipping.")
         return None
@@ -87,7 +89,7 @@ async def reply_to_comment(update: Update, context: CallbackContext) -> None:
     if comment.reply_to_id and comment.reply_to.reply_to_id:
         reply_to_id = comment.reply_to_id
 
-    reply = Comment.objects.create(
+    reply = await Comment.objects.acreate(
         author=user,
         post=comment.post,
         reply_to_id=reply_to_id,
@@ -128,12 +130,12 @@ async def reply_to_comment(update: Update, context: CallbackContext) -> None:
 async def comment_to_post(update: Update, context: CallbackContext) -> None:
     log.info("Reply_to_post handler triggered")
 
-    user = get_club_user(update)
+    user = await get_club_user(update)
     if not user:
         log.info("User not found")
         return None
 
-    post = get_club_post(update)
+    post = await get_club_post(update)
     if not post or post.type in [Post.TYPE_BATTLE, Post.TYPE_WEEKLY_DIGEST]:
         return None
 
@@ -160,7 +162,7 @@ async def comment_to_post(update: Update, context: CallbackContext) -> None:
         )
         return None
 
-    reply = Comment.objects.create(
+    reply = await Comment.objects.acreate(
         author=user,
         post=post,
         text=text,

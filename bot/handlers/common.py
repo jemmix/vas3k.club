@@ -92,7 +92,7 @@ async def get_club_comment(update: Update) -> Optional[Comment]:
         return None
 
     # Use Django's native async ORM
-    comment = await Comment.objects.filter(id=comment_id).afirst()
+    comment = await Comment.objects.filter(id=comment_id).select_related("post", "author", "reply_to").afirst()
     if not comment:
         await update.message.reply_text(f"🤨 Коммент '{comment_id}' был удален или куда-то делся")
         return None
