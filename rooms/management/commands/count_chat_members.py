@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from django.core.management import BaseCommand
@@ -15,9 +16,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for room in Room.objects.filter(chat_id__isnull=False):
             try:
-                chat = bot.get_chat(room.chat_id)
-
-                member_count = chat.member_count
+                member_count = asyncio.run(bot.get_chat_member_count(room.chat_id))
 
                 # Store the count in the database
                 room.chat_member_count = member_count

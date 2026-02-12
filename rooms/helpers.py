@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from telegram.error import TelegramError
@@ -16,14 +17,14 @@ def ban_user_in_all_chats(user: User, is_permanent=True):
 
     for room in Room.objects.filter(chat_id__isnull=False):
         try:
-            chat_member = bot.get_chat_member(room.chat_id, user.telegram_id)
+            chat_member = asyncio.run(bot.get_chat_member(room.chat_id, user.telegram_id))
             if chat_member:
-                is_ok = bot.ban_chat_member(room.chat_id, user.telegram_id)
+                is_ok = asyncio.run(bot.ban_chat_member(room.chat_id, user.telegram_id))
                 if is_ok:
                     log.info(f"User {user.slug} banned in chat {room.slug}")
                     if not is_permanent:
                         # banning-unbanning the user works like kicking from the chat
-                        bot.unban_chat_member(room.chat_id, user.telegram_id)
+                        asyncio.run(bot.unban_chat_member(room.chat_id, user.telegram_id))
         except TelegramError as ex:
             log.warning(f"Failed to ban user {user.slug} in chat {room.slug}: {ex}")
 
@@ -35,7 +36,7 @@ def unban_user_in_all_chats(user: User):
 
     for room in Room.objects.filter(chat_id__isnull=False):
         try:
-            is_ok = bot.unban_chat_member(room.chat_id, user.telegram_id)
+            is_ok = asyncio.run(bot.unban_chat_member(room.chat_id, user.telegram_id))
             if is_ok:
                 log.info(f"User {user.slug} unbanned in chat {room.slug}")
         except TelegramError as ex:

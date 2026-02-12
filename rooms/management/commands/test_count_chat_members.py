@@ -9,7 +9,7 @@ from django.test import TestCase
 from telegram import Chat as TgChat
 from telegram.error import TelegramError
 
-from notifications.telegram.tests import BaseTelegramTest
+from notifications.telegram.tests import BaseTelegramTest, HandlerResponse
 from rooms.models import Room
 
 
@@ -18,7 +18,7 @@ class CountChatMembersCommandTest(BaseTelegramTest, TestCase):
 
     tags = {"telegram", "telegram_bot"}
 
-    GET_CHAT_PATH = f"/{BaseTelegramTest.TOKEN}/getChat"
+    GET_CHAT_MEMBER_COUNT_PATH = f"/{BaseTelegramTest.TOKEN}/getChatMemberCount"
 
     def setUp(self):
         super().setUp()
@@ -56,16 +56,16 @@ class CountChatMembersCommandTest(BaseTelegramTest, TestCase):
 
     def test_updates_member_counts(self):
         """Should update chat_member_count for all rooms with chat_id"""
-        def handle_get_chat(request):
+        def handle_get_chat_member_count(request):
             chat_id = request.body["chat_id"]
             if chat_id == self.room1.chat_id:
-                # Return chat with 42 members
-                return '{"ok": true, "result": {"id": -100123456, "type": "supergroup", "title": "Test Room 1", "member_count": 42}}'
+                # Return count 42
+                return '{"ok": true, "result": 42}'
             else:
-                # Return chat with 99 members
-                return '{"ok": true, "result": {"id": -100789012, "type": "supergroup", "title": "Test Room 2", "member_count": 99}}'
+                # Return count 99
+                return '{"ok": true, "result": 99}'
 
-        self.server.add_route(self.GET_CHAT_PATH, handle_get_chat)
+        self.server.add_route(self.GET_CHAT_MEMBER_COUNT_PATH, handle_get_chat_member_count)
 
         # Capture stdout
         out = StringIO()
@@ -74,10 +74,10 @@ class CountChatMembersCommandTest(BaseTelegramTest, TestCase):
         # Verify output
         self.assertIn("Done 🥙", out.getvalue())
 
-        # Verify getChat was called for both rooms with chat_id
-        get_chat_requests = [r for r in self.server.requests_received if r.path == self.GET_CHAT_PATH]
-        self.assertEqual(len(get_chat_requests), 2)
-        chat_ids = {r.body["chat_id"] for r in get_chat_requests}
+        # Verify getChatMemberCount was called for both rooms with chat_id
+        get_count_requests = [r for r in self.server.requests_received if r.path == self.GET_CHAT_MEMBER_COUNT_PATH]
+        self.assertEqual(len(get_count_requests), 2)
+        chat_ids = {r.body["chat_id"] for r in get_count_requests}
         self.assertEqual(chat_ids, {self.room1.chat_id, self.room2.chat_id})
 
         # Verify member counts were updated in database
@@ -94,16 +94,19 @@ class CountChatMembersCommandTest(BaseTelegramTest, TestCase):
         """Should handle TelegramError and continue to next room"""
         call_count = {"count": 0}
 
-        def handle_get_chat(request):
+        def handle_get_chat_member_count(request):
             call_count["count"] += 1
             if call_count["count"] == 1:
-                # First call (room1) - return error
-                return '{"ok": false, "error_code": 400, "description": "Bad Request: chat not found"}'
+                # First call (room1) - return HTTP 400 error
+                return HandlerResponse(
+                    body='{"ok": false, "error_code": 400, "description": "Bad Request: chat not found"}',
+                    status_code=400
+                )
             else:
                 # Second call (room2) - succeed
-                return '{"ok": true, "result": {"id": -100789012, "type": "supergroup", "title": "Test Room 2", "member_count": 99}}'
+                return '{"ok": true, "result": 99}'
 
-        self.server.add_route(self.GET_CHAT_PATH, handle_get_chat)
+        self.server.add_route(self.GET_CHAT_MEMBER_COUNT_PATH, handle_get_chat_member_count)
 
         # Capture stdout and logs
         out = StringIO()
@@ -113,9 +116,9 @@ class CountChatMembersCommandTest(BaseTelegramTest, TestCase):
         # Verify warning was logged
         self.assertTrue(any("Failed to get member count" in log for log in logs.output))
 
-        # Verify getChat was called once via HTTP (for room2)
-        get_chat_requests = [r for r in self.server.requests_received if r.path == self.GET_CHAT_PATH]
-        self.assertEqual(len(get_chat_requests), 1)
+        # Verify getChatMemberCount was called twice (once for each room)
+        get_count_requests = [r for r in self.server.requests_received if r.path == self.GET_CHAT_MEMBER_COUNT_PATH]
+        self.assertEqual(len(get_count_requests), 2)
 
         # Verify room1 was not updated (error), but room2 was
         self.room1.refresh_from_db()

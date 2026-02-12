@@ -34,6 +34,18 @@ class Request:
 
 
 @dataclass
+class HandlerResponse:
+    body: str
+    status_code: int = 200
+
+
+@dataclass
+class RouteConfig:
+    response: str | Callable[[Request], str | HandlerResponse]
+    status_code: int = 200
+
+
+@dataclass
 class ExpectedRequest:
     request: Request
     response: str
@@ -93,20 +105,29 @@ class MockTelegramHandler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(expected_request.response.encode())
         else:
             # Fall back to route-based matching
-            route_response = server.get_route_response(request)
+            route_config = server.get_route_config(request)
 
-            if route_response is None:
+            if route_config is None:
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(f"No expected request or route for {request.path}".encode())
                 server.test_case.fail(f"Unexpected request to {request.path}")
                 return
 
-            self.send_response(200)
+            handler_result = route_config.response(request) if callable(route_config.response) else route_config.response
+
+            if isinstance(handler_result, HandlerResponse):
+                status_code = handler_result.status_code
+                response_body = handler_result.body
+            else:
+                status_code = route_config.status_code
+                response_body = handler_result
+
+            self.send_response(status_code)
             self.send_header("Content-Type", "application/json")
             self.send_header("Connection", "close")  # Force connection close
             self.end_headers()
-            self.wfile.write(route_response.encode())
+            self.wfile.write(response_body.encode())
 
     def do_POST(self):
         try:
@@ -189,26 +210,20 @@ class MockTelegramServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
     # Inherit default server_activate(), get_request(), and handle_error() from TCPServer
 
-    def add_route(self, path: str, response: str | Callable[[Request], str]):
+    def add_route(self, path: str, response: str | Callable[[Request], str], status_code: int = 200):
         """Register a route that responds to requests for the given path.
 
         Args:
             path: The request path to match (e.g., "/bot123/sendMessage")
             response: Either a static response string or a callable that takes
                      a Request and returns a response string
+            status_code: HTTP status code to return (default: 200)
         """
-        self.routes[path] = response
+        self.routes[path] = RouteConfig(response=response, status_code=status_code)
 
-    def get_route_response(self, request: Request) -> str | None:
-        """Get the response for a route-matched request."""
-        route = self.routes.get(request.path)
-        if route is None:
-            return None
-
-        if callable(route):
-            return route(request)
-        else:
-            return route
+    def get_route_config(self, request: Request) -> RouteConfig | None:
+        """Get the route configuration for a request."""
+        return self.routes.get(request.path)
 
     def log_request(self, request: Request):
         """Log all requests received by the server."""
