@@ -111,6 +111,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "Это бот, глупышка",
+                        "reply_parameters": "{\"message_id\": 1}",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -141,6 +142,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                     {
                         "chat_id": "12345",
                         "text": "🤨 Пользователь не найден в Клубе. Гоните его, насмехайтесь над ним!",
+                        "reply_parameters": "{\"message_id\": 1}",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),
@@ -175,6 +177,7 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
                         "chat_id": "12345",
                         "text": expected_text,
                         "parse_mode": "HTML",
+                        "reply_parameters": "{\"message_id\": 1}",
                     },
                 ),
                 SEND_MESSAGE_RESPONSE(),

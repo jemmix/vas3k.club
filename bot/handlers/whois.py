@@ -43,10 +43,12 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
         if getattr(original_message, 'sender_chat', None):
             await update.message.reply_text(
                 "Сообщение отправлено от имени чата/канала",
-                )
+                do_quote=True,
+            )
             return
         await update.message.reply_text(
             "Это бот, глупышка",
+            do_quote=True,
         )
         return None
 
@@ -55,6 +57,7 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
     if not user:
         await update.message.reply_text(
             f"🤨 Пользователь не найден в Клубе. Гоните его, насмехайтесь над ним!",
+            do_quote=True,
         )
         return None
 
@@ -65,6 +68,7 @@ async def command_whois(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(
         f"""Кажется, это <a href="{profile_url}">{user.full_name}</a>""",
         parse_mode=ParseMode.HTML,
+        do_quote=True,
     )
 
     return None
