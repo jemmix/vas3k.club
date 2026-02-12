@@ -482,7 +482,7 @@ class PublishQuestionTest(QuestionTestBase):
         link = await publish_question(update, user_data)
 
         # Verify question created
-        question = Question.objects.filter(user=self.user).first()
+        question = await Question.objects.filter(user=self.user).afirst()
         self.assertIsNotNone(question)
         self.assertEqual(question.channel_msg_id, "12345")
 
@@ -525,7 +525,7 @@ class PublishQuestionTest(QuestionTestBase):
             link = await publish_question(update, user_data)
 
         # Verify question created with room info
-        question = Question.objects.filter(user=self.user).first()
+        question = await Question.objects.filter(user=self.user).afirst()
         self.assertIsNotNone(question)
         self.assertEqual(question.channel_msg_id, "12345")
         self.assertEqual(question.room_chat_msg_id, "67890")
