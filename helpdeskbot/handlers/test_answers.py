@@ -76,8 +76,8 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
 
     @patch("helpdeskbot.handlers.answers.log")
     async def test_handles_missing_forward_message_id(self, mock_log):
-        """Should log error when forward_from_message_id is None"""
-        # Create a reply update but without forward metadata
+        """Should log error when forward_origin is missing"""
+        # Create a reply update without forward metadata (no forward_origin)
         update = create_reply_update(
             bot=self.bot,
             telegram_id=222,
@@ -85,8 +85,7 @@ class HandleAnswerFromChannelTest(AnswersTestBase):
             text="Answer",
             reply_to_text="Question"
         )
-        # Explicitly set forward_from_message_id to None
-        update.message.reply_to_message.forward_from_message_id = None
+        # reply_to_message won't have forward_origin by default
 
         result = await handle_answer_from_channel(update)
 
@@ -171,9 +170,10 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
 
         with patch.dict("helpdeskbot.handlers.answers.rooms", {"-100123456789": mock_room_ref}, clear=False):
             with patch("helpdeskbot.handlers.answers.Question.objects") as mock_q:
-                mock_q.filter.return_value.select_related.return_value.first.return_value = mock_question
+                # afirst() is async, so we need AsyncMock
+                mock_q.filter.return_value.select_related.return_value.afirst = AsyncMock(return_value=mock_question)
 
-                handle_answer_from_room_chat(update)
+                await handle_answer_from_room_chat(update)
 
         # Verify answer was created
         mock_create_answer.assert_called_once()
@@ -186,17 +186,16 @@ class HandleAnswerFromRoomChatTest(AnswersTestBase):
 
     @patch("helpdeskbot.handlers.answers.log")
     async def test_handles_missing_message_id(self, mock_log):
-        """Should log error when reply_to_message.message_id is None"""
-        # Create update with reply_to_message but no message_id
-        update = create_message_update(
+        """Should log error when reply_to_message.message_id is 0 (falsy)"""
+        # Create a reply update with message_id=0 (falsy value)
+        update = create_reply_update(
             bot=self.bot,
             telegram_id=222,
             chat_id=-100123456789,
-            text="Answer"
+            text="Answer",
+            reply_to_text="Question",
+            reply_to_message_id=0  # Falsy value
         )
-        # Add a reply_to_message but with None message_id
-        update.message.reply_to_message = MagicMock()
-        update.message.reply_to_message.message_id = None
 
         result = await handle_answer_from_room_chat(update)
 
@@ -247,7 +246,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
     @patch("helpdeskbot.handlers.answers.log")
     async def test_handles_question_without_user(self, mock_log):
         """Should log info when question has no user"""
-        question_no_user = Question.objects.create(
+        question_no_user = await Question.objects.acreate(
             user=None,
             channel_msg_id=99999,
             json_text={"title": "Test", "body": "Body"},
@@ -265,7 +264,7 @@ class NotifyUserAboutAnswerTest(AnswersTestBase):
         self.assertIsNone(result)
         mock_log.info.assert_called_once()
 
-        question_no_user.delete()
+        await question_no_user.adelete()
 
     @patch("helpdeskbot.handlers.answers.log")
     async def test_skips_notification_for_self_reply(self, mock_log):
@@ -315,43 +314,48 @@ class OnReplyMessageTest(AnswersTestBase):
             text="Answer text",
             reply_to_text="Question in room"
         )
-        # Explicitly set forward_from_chat to None (not forwarded)
-        update.message.reply_to_message.forward_from_chat = None
+        # create_reply_update creates non-forwarded messages by default (no forward_origin)
 
         with patch.dict("helpdeskbot.handlers.answers.rooms", {"-100123456": MagicMock()}, clear=False):
-            on_reply_message(update, None)
+            await on_reply_message(update, None)
 
         mock_handle_room.assert_called_once_with(update)
 
     async def test_returns_none_for_invalid_update(self):
         """Should return None for updates without proper structure"""
-        # No message
-        update_no_msg = create_message_update(
-            bot=self.bot,
-            telegram_id=222,
-            chat_id=12345,
-            text="text"
-        )
-        update_no_msg.message = None
-        self.assertIsNone(on_reply_message(update_no_msg, None))
+        from telegram import Update, Message
+        import time
 
-        # No reply_to_message
-        update_no_reply = create_message_update(
-            bot=self.bot,
-            telegram_id=222,
-            chat_id=12345,
-            text="text"
-        )
-        update_no_reply.message.reply_to_message = None
-        self.assertIsNone(on_reply_message(update_no_reply, None))
+        # No message - create Update with message=None
+        update_no_msg = Update(update_id=1, message=None)
+        self.assertIsNone(await on_reply_message(update_no_msg, None))
 
-        # No text
-        update_no_text = create_reply_update(
-            bot=self.bot,
-            telegram_id=222,
-            chat_id=12345,
-            text="reply",
-            reply_to_text="original"
-        )
-        update_no_text.message.text = None
-        self.assertIsNone(on_reply_message(update_no_text, None))
+        # No reply_to_message - create Message without reply_to_message using de_json
+        msg_dict = {
+            "message_id": 1,
+            "date": int(time.time()),
+            "chat": {"id": 12345, "type": "private"},
+            "from": {"id": 222, "is_bot": False, "first_name": "Test"},
+            "text": "text"
+        }
+        message = Message.de_json(msg_dict, self.bot)
+        update_no_reply = Update(update_id=2, message=message)
+        self.assertIsNone(await on_reply_message(update_no_reply, None))
+
+        # No text - create reply message with text=None
+        reply_msg_dict = {
+            "message_id": 1,
+            "date": int(time.time()),
+            "chat": {"id": 12345, "type": "private"},
+            "from": {"id": 222, "is_bot": False, "first_name": "Test"},
+            "reply_to_message": {
+                "message_id": 0,
+                "date": int(time.time()) - 100,
+                "chat": {"id": 12345, "type": "private"},
+                "from": {"id": 111, "is_bot": False, "first_name": "Original"},
+                "text": "original"
+            }
+        }
+        message_no_text = Message.de_json(reply_msg_dict, self.bot)
+        update_no_text = Update(update_id=3, message=message_no_text)
+        self.assertIsNone(await on_reply_message(update_no_text, None))

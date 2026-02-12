@@ -108,7 +108,7 @@ class StartTest(QuestionTestBase):
         mock_get_user.return_value = self.user
 
         # Create banned HelpDeskUser (banned_until in future means banned)
-        HelpDeskUser.objects.create(
+        await HelpDeskUser.objects.acreate(
             user=self.user,
             banned_until=datetime.utcnow() + timedelta(days=7)
         )
@@ -129,7 +129,7 @@ class StartTest(QuestionTestBase):
         mock_send.assert_called_once()
         self.assertIn("забанили", mock_send.call_args[0][1])
 
-        HelpDeskUser.objects.filter(user=self.user).delete()
+        await HelpDeskUser.objects.filter(user=self.user).adelete()
 
     @patch("helpdeskbot.handlers.question.send_reply", new_callable=AsyncMock)
     @patch("helpdeskbot.handlers.question.config.DAILY_QUESTION_LIMIT", 3)
@@ -141,7 +141,7 @@ class StartTest(QuestionTestBase):
         # Create 3 questions in last 24h
         now = datetime.utcnow()
         for i in range(3):
-            Question.objects.create(
+            await Question.objects.acreate(
                 user=self.user,
                 channel_msg_id=str(1000 + i),
                 json_text={"title": f"Q{i}", "body": "body"},
@@ -165,7 +165,7 @@ class StartTest(QuestionTestBase):
         self.assertIn("лимит", mock_send.call_args[0][1])
 
         # Cleanup
-        Question.objects.filter(user=self.user).delete()
+        await Question.objects.filter(user=self.user).adelete()
 
 
 class RequestFieldValueTest(QuestionTestBase):
@@ -525,7 +525,7 @@ class PublishQuestionTest(QuestionTestBase):
             link = await publish_question(update, user_data)
 
         # Verify question created with room info
-        question = await Question.objects.filter(user=self.user).afirst()
+        question = await Question.objects.filter(user=self.user).select_related("room").afirst()
         self.assertIsNotNone(question)
         self.assertEqual(question.channel_msg_id, "12345")
         self.assertEqual(question.room_chat_msg_id, "67890")
@@ -670,31 +670,37 @@ class UpdateDiscussionMessageIdTest(QuestionTestBase):
 
     async def test_updates_discussion_message_id(self):
         """Should update question with discussion_msg_id from forward"""
-        # Create a message that represents a forward from a channel
-        from telegram import Chat as TgChat, User as TgUser, Message
+        # Create a message that represents a forward from a channel using de_json
+        from telegram import Message, Update
 
-        tg_user = TgUser(id=123, is_bot=False, first_name="Test")
-        tg_chat = TgChat(id=12345, type="group")
-        tg_chat.set_bot(self.bot)
-
-        forward_from_chat = TgChat(id=-1001234567890, type="channel")
-        forward_from_chat.set_bot(self.bot)
-
-        message = Message(
-            message_id=67890,
-            date=int(time.time()),
-            chat=tg_chat,
-            from_user=tg_user,
-            text="Forwarded discussion",
-            forward_from_chat=forward_from_chat,
-            forward_from_message_id=12345,  # This is the channel message ID
-        )
-        message.set_bot(self.bot)
-
+        message_dict = {
+            "message_id": 67890,
+            "date": int(time.time()),
+            "chat": {
+                "id": 12345,
+                "type": "group"
+            },
+            "from": {
+                "id": 123,
+                "is_bot": False,
+                "first_name": "Test"
+            },
+            "text": "Forwarded discussion",
+            "forward_origin": {
+                "type": "channel",
+                "date": int(time.time()) - 100,
+                "chat": {
+                    "id": -1001234567890,
+                    "type": "channel"
+                },
+                "message_id": 12345  # This is the channel message ID
+            }
+        }
+        message = Message.de_json(message_dict, self.bot)
         update = Update(update_id=1, message=message)
 
         await update_discussion_message_id(update)
 
         # Refresh from DB
-        self.question.refresh_from_db()
+        await self.question.arefresh_from_db()
         self.assertEqual(self.question.discussion_msg_id, "67890")

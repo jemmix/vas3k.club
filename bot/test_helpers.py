@@ -156,26 +156,31 @@ def create_message_update(
     Returns:
         telegram.Update with a Message
     """
-    tg_user = TgUser(id=telegram_id, is_bot=False, first_name="Test")
-    # Detect group chats by negative ID starting with -100
+    # Create message using de_json to properly handle reply_to_message and entities
     chat_type = "supergroup" if str(chat_id).startswith("-100") else "private"
-    tg_chat = TgChat(id=chat_id, type=chat_type)
-    tg_chat.set_bot(bot)
 
-    message = Message(
-        message_id=message_id,
-        date=int(time.time()),
-        chat=tg_chat,
-        from_user=tg_user,
-        text=text,
-    )
-    message.set_bot(bot)
+    message_dict = {
+        "message_id": message_id,
+        "date": int(time.time()),
+        "chat": {
+            "id": chat_id,
+            "type": chat_type
+        },
+        "from": {
+            "id": telegram_id,
+            "is_bot": False,
+            "first_name": "Test"
+        },
+        "text": text,
+    }
 
     if reply_to_message:
-        message.reply_to_message = reply_to_message
+        message_dict["reply_to_message"] = reply_to_message.to_dict()
 
     if entities:
-        message.entities = entities
+        message_dict["entities"] = [e.to_dict() if hasattr(e, 'to_dict') else e for e in entities]
+
+    message = Message.de_json(message_dict, bot)
 
     return Update(update_id=1, message=message)
 
@@ -300,22 +305,28 @@ def create_reply_update(
     Returns:
         telegram.Update with a Message that has reply_to_message set
     """
-    reply_to_user = TgUser(id=reply_to_user_id, is_bot=False, first_name="ReplyUser")
+    # Create reply_to_message using de_json to properly handle entities
     chat_type = "supergroup" if str(chat_id).startswith("-100") else "private"
-    tg_chat = TgChat(id=chat_id, type=chat_type)
-    tg_chat.set_bot(bot)
 
-    reply_to_message = Message(
-        message_id=reply_to_message_id,
-        date=int(time.time()) - 100,
-        chat=tg_chat,
-        text=reply_to_text,
-        from_user=reply_to_user,
-    )
-    reply_to_message.set_bot(bot)
+    reply_to_dict = {
+        "message_id": reply_to_message_id,
+        "date": int(time.time()) - 100,
+        "chat": {
+            "id": chat_id,
+            "type": chat_type
+        },
+        "from": {
+            "id": reply_to_user_id,
+            "is_bot": False,
+            "first_name": "ReplyUser"
+        },
+        "text": reply_to_text,
+    }
 
     if reply_to_entities:
-        reply_to_message.entities = reply_to_entities
+        reply_to_dict["entities"] = [e.to_dict() if hasattr(e, 'to_dict') else e for e in reply_to_entities]
+
+    reply_to_message = Message.de_json(reply_to_dict, bot)
 
     return create_message_update(
         bot=bot,
