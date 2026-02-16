@@ -1,5 +1,6 @@
 import logging
 
+from asgiref.sync import async_to_sync
 from django.urls import reverse
 from django_q.tasks import async_task
 from telegram import Update
@@ -110,7 +111,7 @@ async def reply_to_comment(update: Update, context: CallbackContext) -> None:
     LinkedPost.create_links_from_text(reply.post, text)
 
     # send all notifications
-    async_task(notify_on_comment_created, reply)
+    async_task(async_to_sync(notify_on_comment_created), reply)
 
     new_comment_url = settings.APP_HOST + reverse("show_comment", kwargs={
         "post_slug": reply.post.slug,
@@ -182,7 +183,7 @@ async def comment_to_post(update: Update, context: CallbackContext) -> None:
     LinkedPost.create_links_from_text(post, text)
 
     # send notifications
-    async_task(notify_on_comment_created, reply)
+    async_task(async_to_sync(notify_on_comment_created), reply)
 
     new_comment_url = settings.APP_HOST + reverse("show_comment", kwargs={
         "post_slug": reply.post.slug,

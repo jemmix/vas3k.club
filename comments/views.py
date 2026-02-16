@@ -1,5 +1,6 @@
 import logging
 
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.db.models import Q
 from django.http import Http404
@@ -83,7 +84,7 @@ def create_comment(request, post_slug):
             LinkedPost.create_links_from_text(post, comment.text)
 
             # send all kind of notifications
-            async_task(notify_on_comment_created, comment)
+            async_task(async_to_sync(notify_on_comment_created), comment)
 
             return redirect(comment.get_absolute_url())
         else:
