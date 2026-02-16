@@ -1,18 +1,18 @@
-# Улучшения перед апгрейдом telegram SDK
+# Улучшения, найденные при работе над telegram SDK
 
-Предлагаю выделить из ветки [`telegram-upgrade`](https://github.com/vas3k/vas3k.club/tree/telegram-upgrade) и смержить в master до основного апгрейда:
+В процессе работы над апгрейдом telegram SDK нашёл несколько улучшений, которые имеет смысл применить независимо:
 
 ## Баги
-- Опечатка "от о комментариев" → "от комментариев" в [`bot/handlers/posts.py`](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/bot/handlers/posts.py#L60)
-- Некорректная проверка `delete()` в unsubscribe (всегда True) → [`bot/handlers/posts.py`](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/bot/handlers/posts.py#L47-L60)
+- **Опечатка** "от о комментариев" → "от комментариев" в [`bot/handlers/posts.py`](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/bot/handlers/posts.py#L60)
+- **Некорректная проверка unsubscribe** — сейчас проверяем tuple вместо count, всегда показываем "успешно отписались" даже если не были подписаны → [`bot/handlers/posts.py`](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/bot/handlers/posts.py#L47-L60)
 
 ## Архитектура
-- Middleware для `close_old_connections` через Django signals (handler groups -1/1000) → [`bot/middleware.py`](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/bot/middleware.py)
+- **Middleware для DB connections** — использовать handler groups (-1/1000) для автоматического вызова `close_old_connections()` через Django signals вместо ручных вызовов в декораторах → [`bot/middleware.py`](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/bot/middleware.py)
 
-## Async-подготовка
-- Обёртки `async_to_sync()` для `async_task(notify_*)` в 12 файлах (views, godmode)
-- Async-варианты методов моделей (`subscribe_async`, `upvote_async` и т.д.) с sync-обёртками → [4 файла](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/posts/models/)
+## Подготовка к async (для будущего апгрейда)
+- **Обёртки async_to_sync** — обернуть `async_task(notify_*)` сейчас, чтобы потом не менять все вызовы при миграции на async уведомления (12 файлов: views, godmode)
+- **Async-варианты методов** — добавить `subscribe_async()`, `upvote_async()` и т.д. с sync-обёртками для совместимости, используя Django 5.1 async ORM → [4 файла models](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/posts/models/)
 
-**Итого:** 19 файлов, ~178 LOC, все backward compatible
+**Все изменения backward compatible, ничего не ломают.**
 
 [Детали →](https://github.com/vas3k/vas3k.club/blob/telegram-upgrade/PRE_UPGRADE_IMPROVEMENTS.md)
