@@ -174,43 +174,359 @@ This can be committed to master NOW without any SDK upgrade. The middleware patt
 
 ---
 
----
+## 3. **Async Notification Wrappers** ⭐ PREPARATION
 
-## Summary
+### What
+Wrap all notification function calls with `async_to_sync()` in django_q task submissions.
 
-**Total Extractable Improvements:** 2
+### Why
+- Prepares for async notification layer without breaking anything
+- Sync functions work fine when wrapped in `async_to_sync()`
+- Makes SDK upgrade PR smaller
+- Zero behavioral change now, enables async later
 
-1. **Typo fix** (1 line) - Can commit NOW
-2. **Middleware pattern** (51 LOC, new file) - Can commit NOW
+### Files Changed (12 files, ~20 LOC)
+**Views:**
+- `authn/views/email.py` - 1 call
+- `badges/views.py` - 2 calls
+- `comments/views.py` - 1 call
+- `posts/views/posts.py` - 6 calls
+- `tickets/views.py` - 1 call
+- `users/views/intro.py` - 1 call
 
-Everything else is tightly coupled to the async/SDK upgrade and should stay together in the main upgrade PR.
+**Godmode:**
+- `godmode/actions/user_achievement.py` - 2 calls
+- `godmode/actions/user_ping.py` - 2 calls
+- `godmode/actions/user_unmoderate.py` - 1 call
+- `godmode/pages/mass_achievement.py` - 1 call
 
----
+### Pattern
+```python
+# Before
+from django_q.tasks import async_task
+async_task(notify_user_auth, user, code)
 
-## Recommended Action
-
-### Option A: Extract Both (RECOMMENDED)
-```bash
-# Create branch from master
-git checkout -b pre-upgrade-improvements origin/master
-
-# Apply typo fix
-# Edit bot/handlers/posts.py line 60
-
-# Add middleware
-# Copy bot/middleware.py from telegram-upgrade branch
-# Update bot/main.py to call setup_middleware_handlers()
-
-# Commit
-git add bot/handlers/posts.py bot/middleware.py bot/main.py
-git commit -m "Pre-upgrade improvements: typo fix + middleware pattern"
-
-# Test
-python manage.py test bot.handlers.test_posts::UnsubscribeTest
-
-# Create PR to master
+# After
+from asgiref.sync import async_to_sync
+from django_q.tasks import async_task
+async_task(async_to_sync(notify_user_auth), user, code)
 ```
 
-### Option B: Just Merge Everything
-The middleware and typo are such small changes that it's probably easier to just review and merge the entire `telegram-upgrade` branch.
+### Benefits
+- ✅ Works with current sync notification functions
+- ✅ When notifications become async, wrapper still works
+- ✅ No code changes needed in notification modules yet
+- ✅ Gradual migration path
+
+### Testing
+```bash
+# All existing tests should pass
+python manage.py test authn badges comments posts tickets users godmode
+```
+
+### Commit Message
+```
+chore: wrap notification calls with async_to_sync for future async migration
+
+Wrap all async_task(notify_*) calls with async_to_sync() wrapper.
+This is preparatory for async notification layer - sync functions work
+fine wrapped, and when notifications become async, wrapper continues working.
+
+Zero behavioral change now, enables async later.
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+---
+
+## 4. **Async Model Methods (Dual API)** ⭐ PREPARATION
+
+### What
+Add async variants to model methods, maintaining sync wrappers for existing callers.
+
+### Why
+- Prepares models for async telegram handlers
+- Zero breaking changes (sync wrappers maintained)
+- Uses Django 5.1 async ORM properly
+- Independent of SDK upgrade
+
+### Files Changed (4 files, ~100 LOC)
+
+**posts/models/subscriptions.py:**
+```python
+@classmethod
+async def subscribe_async(cls, user, post, type=TYPE_TOP_LEVEL_ONLY):
+    return await cls.objects.aupdate_or_create(
+        user=user, post=post, defaults=dict(type=type)
+    )
+
+@classmethod
+def subscribe(cls, user, post, type=TYPE_TOP_LEVEL_ONLY):
+    """Sync wrapper for subscribe_async"""
+    return async_to_sync(cls.subscribe_async)(user, post, type)
+
+@classmethod
+async def unsubscribe_async(cls, user, post):
+    return await cls.objects.filter(user=user, post=post).adelete()
+
+@classmethod
+def unsubscribe(cls, user, post):
+    """Sync wrapper for unsubscribe_async"""
+    return async_to_sync(cls.unsubscribe_async)(user, post)
+```
+
+**posts/models/votes.py:**
+```python
+@classmethod
+async def upvote_async(cls, user, post):
+    if not user.is_god and user.id == post.author_id:
+        return None, False
+
+    post_vote, is_vote_created = await cls.objects.aget_or_create(
+        user=user,
+        post=post,
+        defaults=dict(ipaddress="0.0.0.0"),
+    )
+
+    if is_vote_created:
+        await Post.objects.filter(id=post.id).aupdate(upvotes=F("upvotes") + 1)
+        await User.objects.filter(id=post.author_id).aupdate(upvotes=F("upvotes") + 1)
+
+    return post_vote, is_vote_created
+
+@classmethod
+def upvote(cls, user, post):
+    """Sync wrapper for upvote_async"""
+    return async_to_sync(cls.upvote_async)(user, post)
+```
+
+**comments/models.py:**
+```python
+@classmethod
+async def upvote_async(cls, user, comment, request=None):
+    if not user.is_god and user.id == comment.author_id:
+        return None, False
+
+    post_vote, is_vote_created = await cls.objects.aget_or_create(
+        user=user,
+        comment=comment,
+        defaults=dict(ipaddress="0.0.0.0"),
+    )
+
+    if is_vote_created:
+        # Use F() expressions for atomic updates (prevents race conditions!)
+        await Comment.objects.filter(id=comment.id).aupdate(upvotes=F("upvotes") + 1)
+        await User.objects.filter(id=comment.author_id).aupdate(upvotes=F("upvotes") + 1)
+
+    return post_vote, is_vote_created
+
+@classmethod
+def upvote(cls, user, comment, request=None):
+    """Sync wrapper for upvote_async"""
+    return async_to_sync(cls.upvote_async)(user, comment, request)
+```
+
+**posts/models/post.py:**
+```python
+async def unpublish_async(self):
+    self.visibility = Post.VISIBILITY_DRAFT
+    self.published_at = None
+    await self.asave()
+
+def unpublish(self):
+    """Sync wrapper - use unpublish_async in async contexts"""
+    self.visibility = Post.VISIBILITY_DRAFT
+    self.published_at = None
+    self.save()
+```
+
+### Benefits
+- ✅ Django 5.1 native async ORM (`aupdate_or_create`, `adelete`, `asave`)
+- ✅ F() expressions for atomic counter updates (bonus improvement!)
+- ✅ Clear naming convention (`_async` suffix)
+- ✅ All existing sync callers unchanged
+- ✅ Ready for async handlers without model changes
+
+### Testing
+```bash
+# Existing sync tests continue passing
+python manage.py test posts.tests comments.tests
+
+# Add async variant tests (optional)
+```
+
+### Commit Message
+```
+feat: add async model methods with sync wrappers
+
+Add async_* variants to model methods used by telegram bot:
+- PostSubscription: subscribe_async, unsubscribe_async
+- PostVote: upvote_async (with F() expressions)
+- CommentVote: upvote_async (with F() expressions)
+- Post: unpublish_async
+
+Uses Django 5.1 async ORM. Sync wrappers maintained for all existing
+callers (views, admin, django_q). Zero breaking changes.
+
+Bonus: F() expressions in upvote methods prevent race conditions.
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+---
+
+## Summary Table
+
+| # | Improvement | Files | LOC | Risk | Can Commit Now? |
+|---|-------------|-------|-----|------|----------------|
+| 1 | Typo fix | 1 | 1 | Zero | ✅ YES |
+| 2 | Middleware | 1 new | 51 | Low | ✅ YES |
+| 3 | Async wrappers | 12 | ~20 | Zero | ✅ YES |
+| 4 | Async models | 4 | ~100 | Low | ✅ YES |
+| **TOTAL** | | **18** | **~172** | **Low** | **All ready** |
+
+---
+
+## What CANNOT Be Extracted (Must Stay in SDK Upgrade)
+
+1. **Import path changes** - `ParseMode`, `filters`, etc. (SDK-specific)
+2. **Handler async conversions** - All `bot/handlers/*.py` (requires v22)
+3. **Bot infrastructure** - Updater → Application (requires v22)
+4. **Test conversions** - All `test_*.py` files (requires async handlers)
+5. **Notification implementations** - Internal async conversion (requires v22)
+6. **Rooms helpers** - Uses `ban_chat_member()` from v20+ API
+
+---
+
+## Recommended Extraction Strategy
+
+### Option A: All 4 Improvements as Separate PRs (Most Safe)
+```bash
+# PR #1: Typo fix (2 min review)
+git checkout -b fix-unsubscribe-typo origin/master
+# Edit bot/handlers/posts.py line 60
+git commit -m "fix: typo in unsubscribe message"
+
+# PR #2: Middleware (15 min review)
+git checkout -b feat-connection-middleware origin/master
+# Add bot/middleware.py, update bot/main.py
+git commit -m "feat: add middleware pattern for connection management"
+
+# PR #3: Async wrappers (10 min review)
+git checkout -b chore-async-wrappers origin/master
+# Wrap 18 async_task calls
+git commit -m "chore: wrap notification calls with async_to_sync"
+
+# PR #4: Async models (30 min review)
+git checkout -b feat-async-models origin/master
+# Add async methods to 4 model files
+git commit -m "feat: add async model methods with sync wrappers"
+```
+
+**Total review time: ~60 minutes across 4 PRs**
+
+### Option B: All 4 Together as One Pre-Upgrade PR (Faster)
+```bash
+git checkout -b pre-upgrade-improvements origin/master
+# Apply all 4 improvements
+git commit -m "Pre-upgrade improvements: typo, middleware, async prep"
+```
+
+**Review time: ~45 minutes for one PR**
+
+### Option C: Just Merge the Whole Branch (Fastest)
+Skip extraction, merge entire `telegram-upgrade` branch.
+
+**Review time: 4-6 hours for entire SDK upgrade**
+
+---
+
+## Impact Analysis
+
+### If Extracted (Option A or B)
+
+**SDK Upgrade PR becomes:**
+- 18 fewer files
+- ~172 fewer LOC
+- Focuses purely on SDK-specific changes
+- Preparatory work already tested in production
+
+**Review burden:**
+- Pre-upgrade: 45-60 min (incremental, low risk)
+- SDK upgrade: 3-4 hours (down from 4-6 hours)
+
+**Risk reduction:**
+- Preparatory changes independently tested
+- Easier to bisect if issues arise
+- Can roll back individual pieces
+
+### If Not Extracted (Option C)
+
+**SDK Upgrade PR:**
+- All 50 files, ~2000 LOC
+- Single large review
+- All or nothing deployment
+
+**Review burden:**
+- One PR: 4-6 hours
+
+---
+
+## Testing Strategy
+
+### For Each Pre-Upgrade PR
+
+**PR #1 (Typo):**
+```bash
+python manage.py test bot.handlers.test_posts::UnsubscribeTest
+```
+
+**PR #2 (Middleware):**
+```bash
+python manage.py test bot.handlers
+# Verify middleware registered in shell
+```
+
+**PR #3 (Async wrappers):**
+```bash
+python manage.py test authn badges comments posts tickets users godmode
+# All existing tests should pass unchanged
+```
+
+**PR #4 (Async models):**
+```bash
+python manage.py test posts.tests comments.tests
+# Existing sync tests should pass
+```
+
+---
+
+## Rollback Plan
+
+Each PR is independent:
+- PR #1 fails → Revert typo fix only
+- PR #2 fails → Revert middleware only
+- PR #3 fails → Revert async wrappers only
+- PR #4 fails → Revert async models only
+
+No cascading dependencies between PRs.
+
+---
+
+## Recommendation
+
+**For your situation: Option B (All 4 Together)**
+
+Why:
+- 18 files is still reviewable in one sitting (~45 min)
+- Gets all prep work out of the way at once
+- Makes SDK upgrade PR significantly cleaner
+- Low risk (all changes backward compatible)
+- Can test together before merging
+
+**Then:**
+- SDK upgrade PR is ~15% smaller
+- Focused on SDK-specific changes only
+- Easier to review and understand
+- Production gets improvements earlier
 
