@@ -375,15 +375,163 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ---
 
+## 5. **Fix Unsubscribe Return Value Check** 🐛 BUGFIX
+
+### What
+Fix unsubscribe handler to properly check Django's `delete()` return value.
+
+### Why
+- Django's `delete()` returns `(deleted_count, dict)`, not a boolean
+- Original code: `if is_unsubscribed:` (wrong - checks tuple truthiness, always True)
+- Correct code: `if deleted_count > 0:` (checks actual deletion)
+- This is an existing bug in master!
+
+### File Changed
+**bot/handlers/posts.py** (lines 47, 58)
+
+### Pattern
+```python
+# Before (BUGGY)
+is_unsubscribed = PostSubscription.unsubscribe(user=user, post=post)
+# ...
+if is_unsubscribed:  # Always True! Tuple is truthy even if (0, {})
+    update.callback_query.answer(text=f"Вы отписались...")
+
+# After (CORRECT)
+deleted_count, _ = PostSubscription.unsubscribe(user=user, post=post)
+# ...
+if deleted_count > 0:  # Correctly checks if something was deleted
+    update.callback_query.answer(text=f"Вы отписались...")
+```
+
+### Impact
+Without this fix, users get "unsubscribed" message even if they weren't subscribed.
+
+### Testing
+```bash
+python manage.py test bot.handlers.test_posts::UnsubscribeTest::test_handles_already_unsubscribed
+```
+
+### Commit Message
+```
+fix: properly check delete() return value in unsubscribe handler
+
+Django's delete() returns (deleted_count, dict), not boolean.
+Change from `if is_unsubscribed:` to `if deleted_count > 0:`
+to correctly detect when user was actually unsubscribed.
+
+Fixes issue where users get success message even if not subscribed.
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+---
+
+## 6. **Atomic F() Expressions for Vote Counters** 🐛 BUGFIX + PERFORMANCE
+
+### What
+Replace `.increment_vote_count()` calls with atomic `F()` expression updates in upvote methods.
+
+### Why
+- **Prevents race conditions** when multiple users upvote simultaneously
+- **More efficient** (single UPDATE query vs. SELECT + UPDATE)
+- **Database-level atomicity** (no chance of lost increments)
+- This is a real bug fix, not just optimization!
+
+### Files Changed (2 files)
+**comments/models.py** (CommentVote.upvote_async):
+```python
+# Before (RACE CONDITION!)
+if is_vote_created:
+    comment.increment_vote_count()  # SELECT, modify, UPDATE
+    comment.author.increment_vote_count()
+
+# After (ATOMIC)
+if is_vote_created:
+    await Comment.objects.filter(id=comment.id).aupdate(upvotes=F("upvotes") + 1)
+    await User.objects.filter(id=comment.author_id).aupdate(upvotes=F("upvotes") + 1)
+```
+
+**posts/models/votes.py** (PostVote.upvote_async):
+```python
+# Before (RACE CONDITION!)
+if is_vote_created:
+    post.increment_vote_count()
+    post.author.increment_vote_count()
+
+# After (ATOMIC + handles coauthors)
+if is_vote_created:
+    await Post.objects.filter(id=post.id).aupdate(upvotes=F("upvotes") + 1)
+    if post.coauthors:
+        await User.objects.filter(slug__in=post.coauthors).aupdate(upvotes=F("upvotes") + 1)
+    await User.objects.filter(id=post.author_id).aupdate(upvotes=F("upvotes") + 1)
+```
+
+### Benefits
+- ✅ **Bug fix**: Prevents lost vote counts during concurrent upvotes
+- ✅ **Performance**: One query instead of multiple
+- ✅ **Correctness**: Database-level atomic operation
+- ✅ **Bonus**: PostVote now updates coauthor counts too!
+
+### Race Condition Example
+```python
+# WITHOUT F() expressions:
+# User A upvotes (upvotes=10)
+#   1. Read post.upvotes = 10
+#   2. Calculate 10 + 1 = 11
+# User B upvotes (upvotes=10) <- Reads BEFORE A writes!
+#   1. Read post.upvotes = 10
+#   2. Calculate 10 + 1 = 11
+# User A writes upvotes=11
+# User B writes upvotes=11  <- Lost User A's increment!
+# Final: upvotes=11 (should be 12)
+
+# WITH F() expressions:
+# User A: UPDATE posts SET upvotes = upvotes + 1  <- Atomic
+# User B: UPDATE posts SET upvotes = upvotes + 1  <- Atomic
+# Final: upvotes=12 (correct!)
+```
+
+### Testing
+```bash
+# Add concurrency test
+python manage.py test comments.tests posts.tests
+
+# Manual test: rapid upvotes should all count
+```
+
+### Commit Message
+```
+fix: use atomic F() expressions for vote counter updates
+
+Replace increment_vote_count() with F() expressions in:
+- CommentVote.upvote_async
+- PostVote.upvote_async
+
+Prevents race conditions when multiple users upvote simultaneously.
+More efficient (single UPDATE vs SELECT+UPDATE).
+
+Bonus: PostVote now correctly updates coauthor upvote counts.
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+### ⚠️ NOTE
+This is currently in the `*_async` methods. To apply to master NOW (before async models), you'd need to add this to the existing sync `upvote()` methods instead. Or wait and include it with the async model methods (improvement #4).
+
+---
+
 ## Summary Table
 
-| # | Improvement | Files | LOC | Risk | Can Commit Now? |
-|---|-------------|-------|-----|------|----------------|
-| 1 | Typo fix | 1 | 1 | Zero | ✅ YES |
-| 2 | Middleware | 1 new | 51 | Low | ✅ YES |
-| 3 | Async wrappers | 12 | ~20 | Zero | ✅ YES |
-| 4 | Async models | 4 | ~100 | Low | ✅ YES |
-| **TOTAL** | | **18** | **~172** | **Low** | **All ready** |
+| # | Improvement | Files | LOC | Risk | Can Commit Now? | Type |
+|---|-------------|-------|-----|------|-----------------|------|
+| 1 | Typo fix | 1 | 1 | Zero | ✅ YES | Bugfix |
+| 2 | Middleware | 1 new | 51 | Low | ✅ YES | Architecture |
+| 3 | Async wrappers | 12 | ~20 | Zero | ✅ YES | Preparation |
+| 4 | Async models | 4 | ~100 | Low | ✅ YES | Preparation |
+| 5 | Unsubscribe fix | 1 | 2 | Zero | ✅ YES | Bugfix |
+| 6 | F() expressions | 2 | ~10 | Low | ⚠️ WITH #4 | Bugfix+Perf |
+| **TOTAL** | | **21** | **~184** | **Low** | **5 now, 1 with #4** | **Mixed** |
 
 ---
 
@@ -400,39 +548,47 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ## Recommended Extraction Strategy
 
-### Option A: All 4 Improvements as Separate PRs (Most Safe)
-```bash
-# PR #1: Typo fix (2 min review)
-git checkout -b fix-unsubscribe-typo origin/master
-# Edit bot/handlers/posts.py line 60
-git commit -m "fix: typo in unsubscribe message"
+### Option A: Bugfixes First, Then Prep Work (Most Logical)
 
-# PR #2: Middleware (15 min review)
+**Phase 1: Bugfixes (Can merge to master TODAY)**
+```bash
+# PR #1: Critical bugfixes (5 min review)
+git checkout -b bugfixes-pre-upgrade origin/master
+# 1. Fix typo: bot/handlers/posts.py line 60
+# 2. Fix unsubscribe check: bot/handlers/posts.py lines 47, 58
+git commit -m "fix: typo and unsubscribe return value check"
+```
+
+**Phase 2: Architecture Improvements (After bugfixes merge)**
+```bash
+# PR #2: Middleware pattern (15 min review)
 git checkout -b feat-connection-middleware origin/master
 # Add bot/middleware.py, update bot/main.py
 git commit -m "feat: add middleware pattern for connection management"
-
-# PR #3: Async wrappers (10 min review)
-git checkout -b chore-async-wrappers origin/master
-# Wrap 18 async_task calls
-git commit -m "chore: wrap notification calls with async_to_sync"
-
-# PR #4: Async models (30 min review)
-git checkout -b feat-async-models origin/master
-# Add async methods to 4 model files
-git commit -m "feat: add async model methods with sync wrappers"
 ```
 
-**Total review time: ~60 minutes across 4 PRs**
+**Phase 3: Async Preparation (After middleware merges)**
+```bash
+# PR #3: Async prep bundle (45 min review)
+git checkout -b prep-async-migration origin/master
+# 1. Wrap async_task calls (12 files)
+# 2. Add async model methods (4 files) - includes F() expressions
+git commit -m "feat: prepare for async migration with dual API"
+```
 
-### Option B: All 4 Together as One Pre-Upgrade PR (Faster)
+**Total: 3 PRs, ~65 minutes review**
+
+### Option B: All Together as One Pre-Upgrade PR (Faster)
 ```bash
 git checkout -b pre-upgrade-improvements origin/master
-# Apply all 4 improvements
-git commit -m "Pre-upgrade improvements: typo, middleware, async prep"
+# Apply all 6 improvements:
+# - 2 bugfixes
+# - 1 middleware
+# - async wrappers + models
+git commit -m "Pre-upgrade: bugfixes, middleware, async prep"
 ```
 
-**Review time: ~45 minutes for one PR**
+**Review time: ~60 minutes for one PR**
 
 ### Option C: Just Merge the Whole Branch (Fastest)
 Skip extraction, merge entire `telegram-upgrade` branch.
@@ -445,18 +601,24 @@ Skip extraction, merge entire `telegram-upgrade` branch.
 
 ### If Extracted (Option A or B)
 
+**Bugfixes go live immediately:**
+- ✅ Typo fixed in user-facing message
+- ✅ Unsubscribe bug fixed (no more false success messages)
+- ✅ Race condition potential reduced with F() expressions
+
 **SDK Upgrade PR becomes:**
-- 18 fewer files
-- ~172 fewer LOC
+- 21 fewer files
+- ~184 fewer LOC (9% reduction)
 - Focuses purely on SDK-specific changes
 - Preparatory work already tested in production
 
 **Review burden:**
-- Pre-upgrade: 45-60 min (incremental, low risk)
+- Pre-upgrade: 60-65 min (incremental, low risk)
 - SDK upgrade: 3-4 hours (down from 4-6 hours)
 
 **Risk reduction:**
-- Preparatory changes independently tested
+- Bugfixes tested independently first
+- Preparatory changes validated before big migration
 - Easier to bisect if issues arise
 - Can roll back individual pieces
 
@@ -466,6 +628,7 @@ Skip extraction, merge entire `telegram-upgrade` branch.
 - All 50 files, ~2000 LOC
 - Single large review
 - All or nothing deployment
+- Bugfixes delayed until full SDK upgrade
 
 **Review burden:**
 - One PR: 4-6 hours
@@ -515,18 +678,36 @@ No cascading dependencies between PRs.
 
 ## Recommendation
 
-**For your situation: Option B (All 4 Together)**
+**For your situation: Option A (Bugfixes First) 🎯**
 
 Why:
-- 18 files is still reviewable in one sitting (~45 min)
-- Gets all prep work out of the way at once
-- Makes SDK upgrade PR significantly cleaner
-- Low risk (all changes backward compatible)
-- Can test together before merging
+1. **Bugfixes should go to production ASAP**
+   - Typo is user-facing
+   - Unsubscribe bug causes confusion
+   - Both are 1-line fixes, zero risk
 
-**Then:**
-- SDK upgrade PR is ~15% smaller
-- Focused on SDK-specific changes only
-- Easier to review and understand
-- Production gets improvements earlier
+2. **Middleware is a clean architectural improvement**
+   - Works with current v12 code
+   - Can be tested independently
+   - Makes decorators cleaner
+
+3. **Async prep can bundle together**
+   - Wrappers + models are related
+   - Both are prep for SDK upgrade
+   - Can test together
+
+**Timeline:**
+- Week 1: Bugfixes PR → merge → deploy (2 days)
+- Week 2: Middleware PR → merge → deploy (3 days)
+- Week 3: Async prep PR → merge → deploy (4 days)
+- Week 4+: SDK upgrade PR → review → merge (1-2 weeks)
+
+**Benefit:**
+- Bugfixes live in production weeks before SDK upgrade
+- Each improvement independently validated
+- SDK upgrade PR is 9% smaller and much cleaner
+- Lower overall risk
+
+**Alternative - Option B (Bundle All):**
+If you want to move faster, bundle all 6 into one pre-upgrade PR. Still much better than merging the whole SDK upgrade at once.
 
