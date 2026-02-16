@@ -174,72 +174,7 @@ This can be committed to master NOW without any SDK upgrade. The middleware patt
 
 ---
 
-## 3. **Async Notification Wrappers** ⭐ PREPARATION
-
-### What
-Wrap all notification function calls with `async_to_sync()` in django_q task submissions.
-
-### Why
-- Prepares for async notification layer without breaking anything
-- Sync functions work fine when wrapped in `async_to_sync()`
-- Makes SDK upgrade PR smaller
-- Zero behavioral change now, enables async later
-
-### Files Changed (12 files, ~20 LOC)
-**Views:**
-- `authn/views/email.py` - 1 call
-- `badges/views.py` - 2 calls
-- `comments/views.py` - 1 call
-- `posts/views/posts.py` - 6 calls
-- `tickets/views.py` - 1 call
-- `users/views/intro.py` - 1 call
-
-**Godmode:**
-- `godmode/actions/user_achievement.py` - 2 calls
-- `godmode/actions/user_ping.py` - 2 calls
-- `godmode/actions/user_unmoderate.py` - 1 call
-- `godmode/pages/mass_achievement.py` - 1 call
-
-### Pattern
-```python
-# Before
-from django_q.tasks import async_task
-async_task(notify_user_auth, user, code)
-
-# After
-from asgiref.sync import async_to_sync
-from django_q.tasks import async_task
-async_task(async_to_sync(notify_user_auth), user, code)
-```
-
-### Benefits
-- ✅ Works with current sync notification functions
-- ✅ When notifications become async, wrapper still works
-- ✅ No code changes needed in notification modules yet
-- ✅ Gradual migration path
-
-### Testing
-```bash
-# All existing tests should pass
-python manage.py test authn badges comments posts tickets users godmode
-```
-
-### Commit Message
-```
-chore: wrap notification calls with async_to_sync for future async migration
-
-Wrap all async_task(notify_*) calls with async_to_sync() wrapper.
-This is preparatory for async notification layer - sync functions work
-fine wrapped, and when notifications become async, wrapper continues working.
-
-Zero behavioral change now, enables async later.
-
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-```
-
----
-
-## 4. **Async Model Methods (Dual API)** ⭐ PREPARATION
+## 3. **Async Model Methods (Dual API)** ⭐ PREPARATION
 
 ### What
 Add async variants to model methods, maintaining sync wrappers for existing callers.
@@ -314,7 +249,6 @@ async def upvote_async(cls, user, comment, request=None):
     )
 
     if is_vote_created:
-        # Use F() expressions for atomic updates (prevents race conditions!)
         await Comment.objects.filter(id=comment.id).aupdate(upvotes=F("upvotes") + 1)
         await User.objects.filter(id=comment.author_id).aupdate(upvotes=F("upvotes") + 1)
 
@@ -342,7 +276,6 @@ def unpublish(self):
 
 ### Benefits
 - ✅ Django 5.1 native async ORM (`aupdate_or_create`, `adelete`, `asave`)
-- ✅ F() expressions for atomic counter updates (bonus improvement!)
 - ✅ Clear naming convention (`_async` suffix)
 - ✅ All existing sync callers unchanged
 - ✅ Ready for async handlers without model changes
@@ -361,21 +294,20 @@ feat: add async model methods with sync wrappers
 
 Add async_* variants to model methods used by telegram bot:
 - PostSubscription: subscribe_async, unsubscribe_async
-- PostVote: upvote_async (with F() expressions)
-- CommentVote: upvote_async (with F() expressions)
+- PostVote: upvote_async
+- CommentVote: upvote_async
 - Post: unpublish_async
 
-Uses Django 5.1 async ORM. Sync wrappers maintained for all existing
-callers (views, admin, django_q). Zero breaking changes.
-
-Bonus: F() expressions in upvote methods prevent race conditions.
+Uses Django 5.1 async ORM (aupdate_or_create, adelete, asave).
+Sync wrappers maintained for all existing callers (views, admin,
+django_q). Zero breaking changes.
 
 Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ```
 
 ---
 
-## 5. **Fix Unsubscribe Return Value Check** 🐛 BUGFIX
+## 4. **Fix Unsubscribe Return Value Check** 🐛 BUGFIX
 
 ### What
 Fix unsubscribe handler to properly check Django's `delete()` return value.
@@ -427,12 +359,6 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ---
 
-4. **Test conversions** - All `test_*.py` files (requires async handlers)
-5. **Notification implementations** - Internal async conversion (requires v22)
-6. **Rooms helpers** - Uses `ban_chat_member()` from v20+ API
-
----
-
 ## Recommended Extraction Strategy
 
 ### Option A: Bugfixes First, Then Prep Work (Most Logical)
@@ -456,26 +382,25 @@ git commit -m "feat: add middleware pattern for connection management"
 
 **Phase 3: Async Preparation (After middleware merges)**
 ```bash
-# PR #3: Async prep bundle (45 min review)
+# PR #3: Async model methods (30 min review)
 git checkout -b prep-async-migration origin/master
-# 1. Wrap async_task calls (12 files)
-# 2. Add async model methods (4 files) - includes F() expressions
-git commit -m "feat: prepare for async migration with dual API"
+# Add async model methods (4 files)
+git commit -m "feat: add async model methods with sync wrappers"
 ```
 
-**Total: 3 PRs, ~65 minutes review**
+**Total: 3 PRs, ~50 minutes review**
 
 ### Option B: All Together as One Pre-Upgrade PR (Faster)
 ```bash
 git checkout -b pre-upgrade-improvements origin/master
-# Apply all 5 improvements:
-# - 2 bugfixes
-# - 1 middleware
-# - async wrappers + models
+# Apply all 4 improvements:
+# - 2 bugfixes (typo + unsubscribe check)
+# - 1 middleware pattern
+# - async model methods
 git commit -m "Pre-upgrade: bugfixes, middleware, async prep"
 ```
 
-**Review time: ~60 minutes for one PR**
+**Review time: ~50 minutes for one PR**
 
 ### Option C: Just Merge the Whole Branch (Fastest)
 Skip extraction, merge entire `telegram-upgrade` branch.
@@ -491,16 +416,15 @@ Skip extraction, merge entire `telegram-upgrade` branch.
 **Bugfixes go live immediately:**
 - ✅ Typo fixed in user-facing message
 - ✅ Unsubscribe bug fixed (no more false success messages)
-- ✅ Race condition potential reduced with F() expressions
 
 **SDK Upgrade PR becomes:**
-- 18 fewer files
-- ~174 fewer LOC (9% reduction)
+- 6 fewer files modified
+- ~155 fewer LOC
 - Focuses purely on SDK-specific changes
 - Preparatory work already tested in production
 
 **Review burden:**
-- Pre-upgrade: 60-65 min (incremental, low risk)
+- Pre-upgrade: ~50 min (incremental, low risk)
 - SDK upgrade: 3-4 hours (down from 4-6 hours)
 
 **Risk reduction:**
@@ -537,13 +461,7 @@ python manage.py test bot.handlers
 # Verify middleware registered in shell
 ```
 
-**PR #3 (Async wrappers):**
-```bash
-python manage.py test authn badges comments posts tickets users godmode
-# All existing tests should pass unchanged
-```
-
-**PR #4 (Async models):**
+**PR #3 (Async models):**
 ```bash
 python manage.py test posts.tests comments.tests
 # Existing sync tests should pass
@@ -554,10 +472,9 @@ python manage.py test posts.tests comments.tests
 ## Rollback Plan
 
 Each PR is independent:
-- PR #1 fails → Revert typo fix only
+- PR #1 fails → Revert bugfixes only
 - PR #2 fails → Revert middleware only
-- PR #3 fails → Revert async wrappers only
-- PR #4 fails → Revert async models only
+- PR #3 fails → Revert async models only
 
 No cascading dependencies between PRs.
 
@@ -578,10 +495,10 @@ Why:
    - Can be tested independently
    - Makes decorators cleaner
 
-3. **Async prep can bundle together**
-   - Wrappers + models are related
-   - Both are prep for SDK upgrade
-   - Can test together
+3. **Async model methods prepare for SDK upgrade**
+   - Adds dual API (async + sync wrappers)
+   - Zero breaking changes
+   - Ready for async handlers
 
 **Timeline:**
 - Week 1: Bugfixes PR → merge → deploy (2 days)
@@ -592,9 +509,9 @@ Why:
 **Benefit:**
 - Bugfixes live in production weeks before SDK upgrade
 - Each improvement independently validated
-- SDK upgrade PR is 9% smaller and much cleaner
+- SDK upgrade PR is smaller and much cleaner
 - Lower overall risk
 
 **Alternative - Option B (Bundle All):**
-If you want to move faster, bundle all 6 into one pre-upgrade PR. Still much better than merging the whole SDK upgrade at once.
+If you want to move faster, bundle all 4 into one pre-upgrade PR. Still much better than merging the whole SDK upgrade at once.
 
