@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django_q.tasks import async_task
 
 from authn.helpers import check_user_permissions
+from asgiref.sync import async_to_sync
 from authn.decorators.auth import require_auth
 from club.exceptions import AccessDenied, ContentDuplicated, RateLimitException
 from notifications.telegram.posts import send_published_post_to_moderators, notify_author_friends, \
@@ -189,9 +190,9 @@ def create_or_edit(request, post_type, post=None, mode="create"):
         if action == "publish":
             post.publish()
 
-            async_task(send_published_post_to_moderators, post=post)
-            async_task(notify_author_friends, post=post)
-            async_task(announce_in_online_channel, post=post)
+            async_task(async_to_sync(send_published_post_to_moderators), post=post)
+            async_task(async_to_sync(notify_author_friends), post=post)
+            async_task(async_to_sync(announce_in_online_channel), post=post)
 
         # update post and room stats
         if post.visibility != Post.VISIBILITY_DRAFT:
@@ -203,14 +204,14 @@ def create_or_edit(request, post_type, post=None, mode="create"):
 
         # track label and coauthors changes
         if "label_code" in form.changed_data:
-            async_task(notify_post_label_changed, post)
+            async_task(async_to_sync(notify_post_label_changed), post)
 
         if "coauthors" in form.changed_data:
-            async_task(notify_post_coauthors_changed, post)
+            async_task(async_to_sync(notify_post_coauthors_changed), post)
 
         # track intro changes
         if post.type == Post.TYPE_INTRO and not post.is_draft:
-            async_task(send_intro_changes_to_moderators, post=post)
+            async_task(async_to_sync(send_intro_changes_to_moderators), post=post)
 
         return redirect("show_post", post.type, post.slug)
 

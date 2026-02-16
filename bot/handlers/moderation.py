@@ -59,8 +59,8 @@ async def approve_post(update: Update, context: CallbackContext) -> None:
     await update.callback_query.edit_message_reply_markup(reply_markup=None)
 
     # send notifications
-    notify_post_approved(post)
-    announce_in_club_chats(post)
+    await notify_post_approved(post)
+    await announce_in_club_chats(post)
 
     if post.collectible_tag_code:
         async_task(notify_post_collectible_tag_owners, post)
@@ -142,7 +142,7 @@ async def reject_post(update: Update, context: CallbackContext) -> None:
 
     SearchIndex.update_post_index(post)
 
-    notify_post_rejected(post, reason)
+    await notify_post_rejected(post, reason)
 
     await update.effective_chat.send_message(
         f"👎 Пост «{post.title}» перенесен в черновики по причине «{reason.value}» ({update.effective_user.full_name})"
