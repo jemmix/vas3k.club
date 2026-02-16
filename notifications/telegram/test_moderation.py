@@ -33,13 +33,13 @@ class NotifyModeratorsOnMentionTest(TestCase):
         )
 
     @patch("notifications.telegram.moderation.render_html_message")
-    @patch("notifications.telegram.moderation.send_telegram_message")
+    @patch("notifications.telegram.moderation.send_telegram_message_async")
     async def test_sends_to_admin_and_vibes_chats(self, mock_send_msg, mock_render):
         from notifications.telegram.moderation import notify_moderators_on_mention
 
         mock_render.return_value = "<b>Moderator mention</b>"
 
-        notify_moderators_on_mention(self.comment)
+        await notify_moderators_on_mention(self.comment)
 
         self.assertEqual(mock_send_msg.call_count, 2)
 
@@ -48,12 +48,12 @@ class NotifyModeratorsOnMentionTest(TestCase):
         self.assertIn(VIBES_CHAT, chats_called)
 
     @patch("notifications.telegram.moderation.render_html_message")
-    @patch("notifications.telegram.moderation.send_telegram_message")
+    @patch("notifications.telegram.moderation.send_telegram_message_async")
     async def test_renders_template_with_comment(self, mock_send_msg, mock_render):
         from notifications.telegram.moderation import notify_moderators_on_mention
 
         mock_render.return_value = "<b>rendered</b>"
 
-        notify_moderators_on_mention(self.comment)
+        await notify_moderators_on_mention(self.comment)
 
         mock_render.assert_called_with("moderator_mention.html", comment=self.comment)
