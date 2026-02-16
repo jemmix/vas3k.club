@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from uuid import uuid4
 
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.db import models
 from django.db.models import F
@@ -190,11 +191,11 @@ class CommentVote(models.Model):
         return self.created_at >= datetime.utcnow() - settings.RETRACT_VOTE_TIMEDELTA
 
     @classmethod
-    def upvote(cls, user, comment, request=None):
+    async def upvote_async(cls, user, comment, request=None):
         if not user.is_god and user.id == comment.author_id:
             return None, False
 
-        post_vote, is_vote_created = CommentVote.objects.get_or_create(
+        post_vote, is_vote_created = await CommentVote.objects.aget_or_create(
             user=user,
             comment=comment,
             defaults=dict(
@@ -204,10 +205,15 @@ class CommentVote(models.Model):
         )
 
         if is_vote_created:
-            comment.increment_vote_count()
-            comment.author.increment_vote_count()
+            await Comment.objects.filter(id=comment.id).aupdate(upvotes=F("upvotes") + 1)
+            await User.objects.filter(id=comment.author_id).aupdate(upvotes=F("upvotes") + 1)
 
         return post_vote, is_vote_created
+
+    @classmethod
+    def upvote(cls, user, comment, request=None):
+        """Sync wrapper for upvote_async"""
+        return async_to_sync(cls.upvote_async)(user, comment, request)
 
     @classmethod
     def retract_vote(cls, request, user, comment):

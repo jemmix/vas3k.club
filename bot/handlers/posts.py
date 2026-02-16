@@ -1,6 +1,5 @@
 import logging
 
-from asgiref.sync import sync_to_async
 from django.urls import reverse
 from telegram import Update
 from telegram.ext import CallbackContext
@@ -23,7 +22,7 @@ async def subscribe(update: Update, context: CallbackContext) -> None:
     if not post:
         return None
 
-    _, is_created = await sync_to_async(PostSubscription.subscribe)(
+    _, is_created = await PostSubscription.subscribe_async(
         user=user,
         post=post,
         type=PostSubscription.TYPE_TOP_LEVEL_ONLY,
@@ -45,7 +44,7 @@ async def unsubscribe(update: Update, context: CallbackContext) -> None:
     if not post:
         return None
 
-    deleted_count, _ = await sync_to_async(PostSubscription.unsubscribe)(
+    deleted_count, _ = await PostSubscription.unsubscribe_async(
         user=user,
         post=post,
     )

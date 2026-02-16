@@ -1,6 +1,5 @@
 import logging
 
-from asgiref.sync import sync_to_async
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -34,7 +33,7 @@ async def upvote(update: Update, context: CallbackContext) -> None:
     if COMMENT_EMOJI_RE.match(reply_text_start):
         comment = await get_club_comment(update)
         if comment:
-            _, is_created = await sync_to_async(CommentVote.upvote)(
+            _, is_created = await CommentVote.upvote_async(
                 user=user,
                 comment=comment,
             )
@@ -43,7 +42,7 @@ async def upvote(update: Update, context: CallbackContext) -> None:
     if POST_EMOJI_RE.match(reply_text_start):
         post = await get_club_post(update)
         if post:
-            _, is_created = await sync_to_async(PostVote.upvote)(
+            _, is_created = await PostVote.upvote_async(
                 user=user,
                 post=post,
             )
@@ -65,7 +64,7 @@ async def upvote_comment(update: Update, context: CallbackContext) -> None:
         log.info("Original comment not found. Skipping.")
         return None
 
-    _, is_created = await sync_to_async(CommentVote.upvote)(
+    _, is_created = await CommentVote.upvote_async(
         user=user,
         comment=comment,
     )
@@ -91,7 +90,7 @@ async def upvote_post(update: Update, context: CallbackContext) -> None:
         log.info("Original post not found. Skipping.")
         return None
 
-    _, is_created = await sync_to_async(PostVote.upvote)(
+    _, is_created = await PostVote.upvote_async(
         user=user,
         post=post,
     )

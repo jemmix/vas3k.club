@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from asgiref.sync import async_to_sync
 from django.db import models
 
 from posts.models.post import Post
@@ -30,12 +31,22 @@ class PostSubscription(models.Model):
         return cls.objects.filter(user=user, post=post).first()
 
     @classmethod
+    async def subscribe_async(cls, user, post, type=TYPE_TOP_LEVEL_ONLY):
+        return await cls.objects.aupdate_or_create(user=user, post=post, defaults=dict(type=type))
+
+    @classmethod
     def subscribe(cls, user, post, type=TYPE_TOP_LEVEL_ONLY):
-        return cls.objects.update_or_create(user=user, post=post, defaults=dict(type=type))
+        """Sync wrapper for subscribe_async"""
+        return async_to_sync(cls.subscribe_async)(user, post, type)
+
+    @classmethod
+    async def unsubscribe_async(cls, user, post):
+        return await cls.objects.filter(user=user, post=post).adelete()
 
     @classmethod
     def unsubscribe(cls, user, post):
-        return cls.objects.filter(user=user, post=post).delete()
+        """Sync wrapper for unsubscribe_async"""
+        return async_to_sync(cls.unsubscribe_async)(user, post)
 
     @classmethod
     def post_subscribers(cls, post):

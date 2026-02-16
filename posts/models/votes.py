@@ -1,8 +1,10 @@
 from datetime import datetime
 from uuid import uuid4
 
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.db import models
+from django.db.models import F
 
 from common.request import parse_ip_address
 from posts.models.post import Post
@@ -24,11 +26,11 @@ class PostVote(models.Model):
         unique_together = [["user", "post"]]
 
     @classmethod
-    def upvote(cls, user, post, request=None):
+    async def upvote_async(cls, user, post, request=None):
         if not user.is_god and (user.id == post.author_id or user.slug in post.coauthors):
             return None, False
 
-        post_vote, is_vote_created = PostVote.objects.get_or_create(
+        post_vote, is_vote_created = await PostVote.objects.aget_or_create(
             user=user,
             post=post,
             defaults=dict(
@@ -37,10 +39,17 @@ class PostVote(models.Model):
         )
 
         if is_vote_created:
-            post.increment_vote_count()
-            post.author.increment_vote_count()
+            await Post.objects.filter(id=post.id).aupdate(upvotes=F("upvotes") + 1)
+            if post.coauthors:
+                await User.objects.filter(slug__in=post.coauthors).aupdate(upvotes=F("upvotes") + 1)
+            await User.objects.filter(id=post.author_id).aupdate(upvotes=F("upvotes") + 1)
 
         return post_vote, is_vote_created
+
+    @classmethod
+    def upvote(cls, user, post, request=None):
+        """Sync wrapper for upvote_async"""
+        return async_to_sync(cls.upvote_async)(user, post, request)
 
     @property
     def is_retractable(self):

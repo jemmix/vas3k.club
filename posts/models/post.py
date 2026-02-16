@@ -404,7 +404,13 @@ class Post(models.Model, ModelDiffMixin):
         self.last_activity_at = datetime.utcnow()
         self.save()
 
+    async def unpublish_async(self):
+        self.visibility = Post.VISIBILITY_DRAFT
+        self.published_at = None
+        await self.asave()
+
     def unpublish(self):
+        """Sync wrapper - use unpublish_async in async contexts"""
         self.visibility = Post.VISIBILITY_DRAFT
         self.published_at = None
         self.save()

@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime, timedelta
 
-from asgiref.sync import sync_to_async
 from django.conf import settings
 from django.urls import reverse
 from django_q.tasks import async_task
@@ -138,7 +137,7 @@ async def reject_post(update: Update, context: CallbackContext) -> None:
         return None
 
     post.moderation_status = Post.MODERATION_REJECTED
-    await sync_to_async(post.unpublish)()
+    await post.unpublish_async()
 
     SearchIndex.update_post_index(post)
 
@@ -184,7 +183,7 @@ async def approve_user_profile(update: Update, context: CallbackContext) -> None
         intro.published_at = datetime.utcnow()
     await intro.asave()
 
-    await sync_to_async(PostSubscription.subscribe)(user, intro, type=PostSubscription.TYPE_ALL_COMMENTS)
+    await PostSubscription.subscribe_async(user, intro, type=PostSubscription.TYPE_ALL_COMMENTS)
 
     SearchIndex.update_user_index(user)
 
