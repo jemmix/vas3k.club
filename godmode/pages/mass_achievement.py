@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django import forms
 from django.template.loader import render_to_string
 from django_q.tasks import async_task
@@ -50,7 +51,7 @@ def mass_achievement(request, admin_page):
                 )
                 if is_created:
                     async_task(send_new_achievement_email, user_achievement)
-                    async_task(notify_user_new_achievement, user_achievement)
+                    async_task(async_to_sync(notify_user_new_achievement), user_achievement)
 
             some_user_not_found = len(slugs) != users.count()
             return render_to_string("godmode/pages/message.html", {

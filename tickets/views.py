@@ -2,6 +2,7 @@ import logging
 import os
 
 import stripe
+from asgiref.sync import async_to_sync
 from django.http import HttpResponse
 from django.template import loader
 from django_q.tasks import async_task
@@ -96,7 +97,7 @@ def stripe_ticket_sale_webhook(request):
                         )
                         if is_created:
                             async_task(send_new_achievement_email, user_achievement)
-                            async_task(notify_user_new_achievement, user_achievement)
+                            async_task(async_to_sync(notify_user_new_achievement), user_achievement)
 
             # Send confirmation emails (unique by ticket code)
             emails_to_send = Ticket.objects.filter(code__in=ticket_codes_processed)
