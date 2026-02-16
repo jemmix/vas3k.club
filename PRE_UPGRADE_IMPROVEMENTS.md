@@ -427,119 +427,6 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ---
 
-## 6. **Atomic F() Expressions for Vote Counters** 🐛 BUGFIX + PERFORMANCE
-
-### What
-Replace `.increment_vote_count()` calls with atomic `F()` expression updates in upvote methods.
-
-### Why
-- **Prevents race conditions** when multiple users upvote simultaneously
-- **More efficient** (single UPDATE query vs. SELECT + UPDATE)
-- **Database-level atomicity** (no chance of lost increments)
-- This is a real bug fix, not just optimization!
-
-### Files Changed (2 files)
-**comments/models.py** (CommentVote.upvote_async):
-```python
-# Before (RACE CONDITION!)
-if is_vote_created:
-    comment.increment_vote_count()  # SELECT, modify, UPDATE
-    comment.author.increment_vote_count()
-
-# After (ATOMIC)
-if is_vote_created:
-    await Comment.objects.filter(id=comment.id).aupdate(upvotes=F("upvotes") + 1)
-    await User.objects.filter(id=comment.author_id).aupdate(upvotes=F("upvotes") + 1)
-```
-
-**posts/models/votes.py** (PostVote.upvote_async):
-```python
-# Before (RACE CONDITION!)
-if is_vote_created:
-    post.increment_vote_count()
-    post.author.increment_vote_count()
-
-# After (ATOMIC + handles coauthors)
-if is_vote_created:
-    await Post.objects.filter(id=post.id).aupdate(upvotes=F("upvotes") + 1)
-    if post.coauthors:
-        await User.objects.filter(slug__in=post.coauthors).aupdate(upvotes=F("upvotes") + 1)
-    await User.objects.filter(id=post.author_id).aupdate(upvotes=F("upvotes") + 1)
-```
-
-### Benefits
-- ✅ **Bug fix**: Prevents lost vote counts during concurrent upvotes
-- ✅ **Performance**: One query instead of multiple
-- ✅ **Correctness**: Database-level atomic operation
-- ✅ **Bonus**: PostVote now updates coauthor counts too!
-
-### Race Condition Example
-```python
-# WITHOUT F() expressions:
-# User A upvotes (upvotes=10)
-#   1. Read post.upvotes = 10
-#   2. Calculate 10 + 1 = 11
-# User B upvotes (upvotes=10) <- Reads BEFORE A writes!
-#   1. Read post.upvotes = 10
-#   2. Calculate 10 + 1 = 11
-# User A writes upvotes=11
-# User B writes upvotes=11  <- Lost User A's increment!
-# Final: upvotes=11 (should be 12)
-
-# WITH F() expressions:
-# User A: UPDATE posts SET upvotes = upvotes + 1  <- Atomic
-# User B: UPDATE posts SET upvotes = upvotes + 1  <- Atomic
-# Final: upvotes=12 (correct!)
-```
-
-### Testing
-```bash
-# Add concurrency test
-python manage.py test comments.tests posts.tests
-
-# Manual test: rapid upvotes should all count
-```
-
-### Commit Message
-```
-fix: use atomic F() expressions for vote counter updates
-
-Replace increment_vote_count() with F() expressions in:
-- CommentVote.upvote_async
-- PostVote.upvote_async
-
-Prevents race conditions when multiple users upvote simultaneously.
-More efficient (single UPDATE vs SELECT+UPDATE).
-
-Bonus: PostVote now correctly updates coauthor upvote counts.
-
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-```
-
-### ⚠️ NOTE
-This is currently in the `*_async` methods. To apply to master NOW (before async models), you'd need to add this to the existing sync `upvote()` methods instead. Or wait and include it with the async model methods (improvement #4).
-
----
-
-## Summary Table
-
-| # | Improvement | Files | LOC | Risk | Can Commit Now? | Type |
-|---|-------------|-------|-----|------|-----------------|------|
-| 1 | Typo fix | 1 | 1 | Zero | ✅ YES | Bugfix |
-| 2 | Middleware | 1 new | 51 | Low | ✅ YES | Architecture |
-| 3 | Async wrappers | 12 | ~20 | Zero | ✅ YES | Preparation |
-| 4 | Async models | 4 | ~100 | Low | ✅ YES | Preparation |
-| 5 | Unsubscribe fix | 1 | 2 | Zero | ✅ YES | Bugfix |
-| 6 | F() expressions | 2 | ~10 | Low | ⚠️ WITH #4 | Bugfix+Perf |
-| **TOTAL** | | **21** | **~184** | **Low** | **5 now, 1 with #4** | **Mixed** |
-
----
-
-## What CANNOT Be Extracted (Must Stay in SDK Upgrade)
-
-1. **Import path changes** - `ParseMode`, `filters`, etc. (SDK-specific)
-2. **Handler async conversions** - All `bot/handlers/*.py` (requires v22)
-3. **Bot infrastructure** - Updater → Application (requires v22)
 4. **Test conversions** - All `test_*.py` files (requires async handlers)
 5. **Notification implementations** - Internal async conversion (requires v22)
 6. **Rooms helpers** - Uses `ban_chat_member()` from v20+ API
@@ -581,7 +468,7 @@ git commit -m "feat: prepare for async migration with dual API"
 ### Option B: All Together as One Pre-Upgrade PR (Faster)
 ```bash
 git checkout -b pre-upgrade-improvements origin/master
-# Apply all 6 improvements:
+# Apply all 5 improvements:
 # - 2 bugfixes
 # - 1 middleware
 # - async wrappers + models
@@ -607,8 +494,8 @@ Skip extraction, merge entire `telegram-upgrade` branch.
 - ✅ Race condition potential reduced with F() expressions
 
 **SDK Upgrade PR becomes:**
-- 21 fewer files
-- ~184 fewer LOC (9% reduction)
+- 18 fewer files
+- ~174 fewer LOC (9% reduction)
 - Focuses purely on SDK-specific changes
 - Preparatory work already tested in production
 
