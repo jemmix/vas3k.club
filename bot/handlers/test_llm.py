@@ -56,13 +56,6 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
             moderation_status=User.MODERATION_STATUS_APPROVED,
         )
 
-        # HACK: the hack in bot.handlers.common.get_club_user() causes 'connection is closed' errors in tests,
-        # this is a work-around
-        self.close_old_connections_patch = patch(
-            "bot.handlers.common.close_old_connections"
-        )
-        self.close_old_connections_patch.start()
-
         # Mock rate limiter to avoid Redis connection
         self.rate_limiter_patch = patch("bot.handlers.llm.is_rate_limited", return_value=False)
         self.rate_limiter_patch.start()
@@ -70,7 +63,6 @@ class LLMResponseTest(BaseTelegramTest, TestCase):
     def tearDown(self):
         super().tearDown()
         self.test_user.delete()
-        self.close_old_connections_patch.stop()
         self.rate_limiter_patch.stop()
 
     def _create_update(

@@ -37,11 +37,9 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
         # Mock cache functions
         self.flush_cache_patch = patch("bot.handlers.auth.flush_users_cache")
         self.cached_users_patch = patch("bot.handlers.auth.cached_telegram_users")
-        self.close_db_patch = patch("bot.decorators.close_old_connections")
 
         self.flush_cache_patch.start()
         self.cached_users_patch.start()
-        self.close_db_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -49,7 +47,6 @@ class CommandAuthTest(BaseTelegramTest, TestCase):
         self.user_unapproved.delete()
         self.flush_cache_patch.stop()
         self.cached_users_patch.stop()
-        self.close_db_patch.stop()
 
     async def test_no_code_provided(self):
         """Should send error message when no code provided"""

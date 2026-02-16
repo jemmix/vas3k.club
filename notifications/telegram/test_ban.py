@@ -21,11 +21,11 @@ class NotifyUserBanTest(TestCase):
             telegram_id="123456",
         )
 
-    @patch("notifications.telegram.ban.send_telegram_message")
+    @patch("notifications.telegram.ban.send_telegram_message_async")
     async def test_sends_message_to_user_with_telegram_id(self, mock_send_msg):
         from notifications.telegram.ban import notify_user_ban
 
-        notify_user_ban(self.user, days=7, reason="spam")
+        await notify_user_ban(self.user, days=7, reason="spam")
 
         mock_send_msg.assert_called_once()
         call_kwargs = mock_send_msg.call_args
@@ -33,14 +33,14 @@ class NotifyUserBanTest(TestCase):
         self.assertIn("7 дней", call_kwargs.kwargs["text"])
         self.assertIn("spam", call_kwargs.kwargs["text"])
 
-    @patch("notifications.telegram.ban.send_telegram_message")
+    @patch("notifications.telegram.ban.send_telegram_message_async")
     async def test_skips_user_without_telegram_id(self, mock_send_msg):
         from notifications.telegram.ban import notify_user_ban
 
         self.user.telegram_id = None
-        self.user.save()
+        await self.user.asave()
 
-        notify_user_ban(self.user, days=7, reason="spam")
+        await notify_user_ban(self.user, days=7, reason="spam")
 
         mock_send_msg.assert_not_called()
 
@@ -58,11 +58,11 @@ class NotifyAdminsOnBanTest(TestCase):
             moderation_status=User.MODERATION_STATUS_APPROVED,
         )
 
-    @patch("notifications.telegram.ban.send_telegram_message")
+    @patch("notifications.telegram.ban.send_telegram_message_async")
     async def test_sends_to_admin_and_vibes_chats(self, mock_send_msg):
         from notifications.telegram.ban import notify_admins_on_ban
 
-        notify_admins_on_ban(self.user, days=3, reason="toxicity")
+        await notify_admins_on_ban(self.user, days=3, reason="toxicity")
 
         self.assertEqual(mock_send_msg.call_count, 2)
 

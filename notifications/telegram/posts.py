@@ -206,9 +206,8 @@ async def notify_author_friends(post):
             notified_user_ids.add(user.id)
 
     # notify friends about new posts
-    from asgiref.sync import sync_to_async
-    friends = await sync_to_async(lambda: list(Friend.friends_for_user(post.author)))()
-    for friend in friends:
+    friends = Friend.friends_for_user(post.author)
+    async for friend in friends:
         if friend.user_from.telegram_id \
             and friend.is_subscribed_to_posts \
             and friend.user_from.id not in notified_user_ids:
@@ -221,9 +220,8 @@ async def notify_author_friends(post):
 
 async def notify_post_room_subscribers(post):
     if post.room:
-        from asgiref.sync import sync_to_async
-        subscribers = await sync_to_async(lambda: list(RoomSubscription.room_subscribers(post.room)))()
-        for subscriber in subscribers:
+        subscribers = RoomSubscription.room_subscribers(post.room)
+        async for subscriber in subscribers:
             if subscriber.user.telegram_id:
                 await send_telegram_message_async(
                     chat=Chat(id=subscriber.user.telegram_id),

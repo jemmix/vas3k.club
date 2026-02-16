@@ -55,13 +55,11 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         self.announce_in_club_chats_patch = patch("bot.handlers.moderation.announce_in_club_chats")
         self.notify_collectible_patch = patch("bot.handlers.moderation.async_task")
         self.update_search_index_patch = patch("bot.handlers.moderation.SearchIndex.update_post_index")
-        self.close_old_connections_patch = patch("bot.decorators.close_old_connections")
 
         self.notify_post_approved_patch.start()
         self.announce_in_club_chats_patch.start()
         self.notify_collectible_patch.start()
         self.update_search_index_patch.start()
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -72,7 +70,6 @@ class ApprovePostTest(BaseTelegramTest, TestCase):
         self.announce_in_club_chats_patch.stop()
         self.notify_collectible_patch.stop()
         self.update_search_index_patch.stop()
-        self.close_old_connections_patch.stop()
 
     @override_settings(APP_HOST="https://vas3k.club", TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_approves_post(self):
@@ -245,10 +242,8 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
         )
 
         self.update_search_index_patch = patch("bot.handlers.moderation.SearchIndex.update_post_index")
-        self.close_old_connections_patch = patch("bot.decorators.close_old_connections")
 
         self.update_search_index_patch.start()
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -256,7 +251,6 @@ class ForgivePostTest(BaseTelegramTest, TestCase):
         self.author.delete()
         self.moderator.delete()
         self.update_search_index_patch.stop()
-        self.close_old_connections_patch.stop()
 
     @override_settings(APP_HOST="https://vas3k.club", TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_forgives_post(self):
@@ -329,11 +323,9 @@ class RejectPostTest(BaseTelegramTest, TestCase):
 
         self.notify_post_rejected_patch = patch("bot.handlers.moderation.notify_post_rejected")
         self.update_search_index_patch = patch("bot.handlers.moderation.SearchIndex.update_post_index")
-        self.close_old_connections_patch = patch("bot.decorators.close_old_connections")
 
         self.notify_post_rejected_patch.start()
         self.update_search_index_patch.start()
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -342,7 +334,6 @@ class RejectPostTest(BaseTelegramTest, TestCase):
         self.moderator.delete()
         self.notify_post_rejected_patch.stop()
         self.update_search_index_patch.stop()
-        self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_post_with_default_reason(self):
@@ -460,13 +451,11 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
         self.send_welcome_drink_patch = patch("bot.handlers.moderation.send_welcome_drink")
         self.announce_in_club_chats_patch = patch("bot.handlers.moderation.announce_in_club_chats")
         self.update_search_index_patch = patch("bot.handlers.moderation.SearchIndex.update_user_index")
-        self.close_old_connections_patch = patch("bot.decorators.close_old_connections")
 
         self.notify_user_approved_patch.start()
         self.send_welcome_drink_patch.start()
         self.announce_in_club_chats_patch.start()
         self.update_search_index_patch.start()
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -477,7 +466,6 @@ class ApproveUserProfileTest(BaseTelegramTest, TestCase):
         self.send_welcome_drink_patch.stop()
         self.announce_in_club_chats_patch.stop()
         self.update_search_index_patch.stop()
-        self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_approves_user_profile(self):
@@ -595,11 +583,9 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
         # Mock notification functions
         self.notify_user_rejected_patch = patch("bot.handlers.moderation.notify_user_profile_rejected")
         self.send_user_rejected_email_patch = patch("bot.handlers.moderation.send_user_rejected_email")
-        self.close_old_connections_patch = patch("bot.decorators.close_old_connections")
 
         self.notify_user_rejected_patch.start()
         self.send_user_rejected_email_patch.start()
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -607,7 +593,6 @@ class RejectUserProfileTest(BaseTelegramTest, TestCase):
         self.moderator.delete()
         self.notify_user_rejected_patch.stop()
         self.send_user_rejected_email_patch.stop()
-        self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_rejects_user_with_default_reason(self):

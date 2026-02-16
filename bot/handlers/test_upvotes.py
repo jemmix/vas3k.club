@@ -45,8 +45,6 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
         )
 
         # Mock close_old_connections from common.py (called by get_club_user)
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -55,7 +53,6 @@ class UpvoteCommentTest(BaseTelegramTest, TestCase):
         Post.objects.filter(id=self.post.id).delete()
         self.author.delete()
         self.user.delete()
-        self.close_old_connections_patch.stop()
 
     async def test_upvote_comment_success(self):
         """Should create new upvote and show success message"""
@@ -183,8 +180,6 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
         )
 
         # Mock close_old_connections from common.py (called by get_club_user)
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
@@ -192,7 +187,6 @@ class UpvotePostTest(BaseTelegramTest, TestCase):
         Post.objects.filter(id=self.post.id).delete()
         self.author.delete()
         self.user.delete()
-        self.close_old_connections_patch.stop()
 
     async def test_upvote_post_success(self):
         """Should create new upvote and show success message"""
@@ -324,8 +318,6 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         )
 
         # Mock close_old_connections from common.py (called by get_club_user)
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_old_connections_patch.start()
 
         # Mock cached_telegram_users for @is_club_member decorator
         self.cached_users_patch = patch("bot.decorators.cached_telegram_users")
@@ -347,7 +339,6 @@ class UpvoteReplyTest(BaseTelegramTest, TestCase):
         Post.objects.filter(id=self.post.id).delete()
         self.author.delete()
         self.user.delete()
-        self.close_old_connections_patch.stop()
         self.cached_users_patch.stop()
         self.get_club_comment_patch.stop()
         self.get_club_post_patch.stop()

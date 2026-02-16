@@ -92,8 +92,6 @@ class CommandTopTest(BaseTelegramTest, TestCase):
         )
 
         # Mock close_old_connections
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_old_connections_patch.start()
 
         # Mock cached_telegram_users for @is_club_member decorator
         self.cached_users_patch = patch("bot.decorators.cached_telegram_users")
@@ -110,7 +108,6 @@ class CommandTopTest(BaseTelegramTest, TestCase):
             self.comment_post.id,
         ]).delete()
         self.user.delete()
-        self.close_old_connections_patch.stop()
         self.cached_users_patch.stop()
 
     @patch("bot.handlers.top.render_html_message")

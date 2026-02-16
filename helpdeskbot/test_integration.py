@@ -110,12 +110,6 @@ class HelpdeskBotIntegrationTest(BaseTelegramTest, TestCase):
             moderation_status=User.MODERATION_STATUS_APPROVED,
         )
 
-        # Patch close_old_connections to prevent 'connection is closed' errors in tests
-        self.close_old_connections_patch = patch(
-            "bot.handlers.common.close_old_connections"
-        )
-        self.close_old_connections_patch.start()
-
         # Override settings for helpdesk bot
         self.settings_override = override_settings(
             TELEGRAM_BASE_URL=telegram_base_url,
@@ -146,7 +140,6 @@ class HelpdeskBotIntegrationTest(BaseTelegramTest, TestCase):
 
         # Clean up
         self.test_user.delete()
-        self.close_old_connections_patch.stop()
         self.settings_override.disable()
 
         for p in self.config_patches:

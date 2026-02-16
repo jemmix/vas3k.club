@@ -2,8 +2,6 @@ import logging
 from enum import Enum
 from typing import Optional
 
-from asgiref.sync import sync_to_async
-from django.db import close_old_connections
 from telegram import Update
 from telegram.constants import ParseMode
 
@@ -42,10 +40,6 @@ class PostRejectReason(Enum):
 
 
 async def get_club_user(update: Update):
-    # HACK: Django 5+ kills long-running db connections randomly,
-    # this could help, but I'm not sure
-    await sync_to_async(close_old_connections)()
-
     # Use Django's native async ORM (available in Django 4.1+)
     user = await User.objects.filter(telegram_id=update.effective_user.id).afirst()
     if not user:

@@ -27,13 +27,10 @@ class CommentRouterTest(BaseTelegramTest, TestCase):
         self.user = create_test_user(telegram_id="111")
 
         # Mock close_old_connections to prevent DB connection issues
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
         self.user.delete()
-        self.close_old_connections_patch.stop()
 
     async def test_skips_non_reply(self):
         """Should skip messages that are not replies"""
@@ -137,7 +134,6 @@ class ReplyToCommentTest(BaseTelegramTest, TestCase):
         )
 
         # Mock functions
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
         self.rate_limit_patch = patch("bot.handlers.comments.is_comment_rate_limit_exceeded", return_value=False)
         self.async_task_patch = patch("bot.handlers.comments.async_task")
         self.update_counters_patch = patch("bot.handlers.comments.Comment.update_post_counters")
@@ -147,7 +143,6 @@ class ReplyToCommentTest(BaseTelegramTest, TestCase):
         self.create_links_patch = patch("bot.handlers.comments.LinkedPost.create_links_from_text")
         self.cached_users_patch = patch("bot.decorators.cached_telegram_users", return_value={str(self.user.telegram_id): self.user.id})
 
-        self.close_old_connections_patch.start()
         self.rate_limit_patch.start()
         self.async_task_patch.start()
         self.update_counters_patch.start()
@@ -162,7 +157,6 @@ class ReplyToCommentTest(BaseTelegramTest, TestCase):
         Comment.objects.filter(post=self.post).delete()
         Post.objects.filter(id=self.post.id).delete()
         self.user.delete()
-        self.close_old_connections_patch.stop()
         self.rate_limit_patch.stop()
         self.async_task_patch.stop()
         self.update_counters_patch.stop()
@@ -285,7 +279,6 @@ class CommentToPostTest(BaseTelegramTest, TestCase):
         )
 
         # Mock functions
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
         self.rate_limit_patch = patch("bot.handlers.comments.is_comment_rate_limit_exceeded", return_value=False)
         self.async_task_patch = patch("bot.handlers.comments.async_task")
         self.update_counters_patch = patch("bot.handlers.comments.Comment.update_post_counters")
@@ -295,7 +288,6 @@ class CommentToPostTest(BaseTelegramTest, TestCase):
         self.create_links_patch = patch("bot.handlers.comments.LinkedPost.create_links_from_text")
         self.cached_users_patch = patch("bot.decorators.cached_telegram_users", return_value={str(self.user.telegram_id): self.user.id})
 
-        self.close_old_connections_patch.start()
         self.rate_limit_patch.start()
         self.async_task_patch.start()
         self.update_counters_patch.start()
@@ -310,7 +302,6 @@ class CommentToPostTest(BaseTelegramTest, TestCase):
         Comment.objects.filter(post=self.post).delete()
         Post.objects.filter(id=self.post.id).delete()
         self.user.delete()
-        self.close_old_connections_patch.stop()
         self.rate_limit_patch.stop()
         self.async_task_patch.stop()
         self.update_counters_patch.stop()

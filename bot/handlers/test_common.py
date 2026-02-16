@@ -43,15 +43,12 @@ class GetClubUserTest(BaseTelegramTest, TestCase):
             moderation_status=User.MODERATION_STATUS_INTRO,
         )
 
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
         self.active_user.delete()
         self.banned_user.delete()
         self.inactive_user.delete()
-        self.close_old_connections_patch.stop()
 
     async def test_returns_active_user(self):
         """Should return user for active member"""

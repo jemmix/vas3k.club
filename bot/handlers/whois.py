@@ -4,13 +4,12 @@ from telegram import Chat as TGChat
 from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
 
-from bot.decorators import is_club_member, ensure_fresh_db_connection
+from bot.decorators import is_club_member
 from club import settings
 from users.models.user import User
 
 
 @is_club_member
-@ensure_fresh_db_connection
 async def command_whois(update: Update, context: CallbackContext) -> None:
     # In v20+, forward info is in forward_origin
     is_private_forward = update.message is not None \

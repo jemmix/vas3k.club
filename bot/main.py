@@ -21,6 +21,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, CallbackCo
 from bot.cache import cached_telegram_users
 from bot.config import WELCOME_MESSAGE, BOT_MENTION_RE, ANONYMOUS_MESSAGE
 from bot.handlers import moderation, comments, upvotes, auth, whois, fun, top, posts, llm
+from bot.middleware import setup_middleware_handlers
 
 log = logging.getLogger(__name__)
 
@@ -85,6 +86,9 @@ def start_server() -> Server:
         builder = builder.base_url(base_url)
 
     application = builder.build()
+
+    # Setup middleware handlers for database connection management
+    setup_middleware_handlers(application)
 
     # Admin callbacks
     application.add_handler(CallbackQueryHandler(moderation.approve_post, pattern=r"^approve_post:.+"))

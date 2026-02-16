@@ -1,5 +1,4 @@
 import telegram
-from asgiref.sync import sync_to_async
 from django.urls import reverse
 
 from club import settings
@@ -31,8 +30,8 @@ async def notify_on_comment_created(comment):
     ])
 
     # notify post subscribers
-    post_subscribers = await sync_to_async(lambda: list(PostSubscription.post_subscribers(comment.post)))()
-    for post_subscriber in post_subscribers:
+    post_subscribers = PostSubscription.post_subscribers(comment.post)
+    async for post_subscriber in post_subscribers:
         if post_subscriber.user_id in muted_author_user_ids:
             continue
 
@@ -78,8 +77,8 @@ async def notify_on_comment_created(comment):
 
     # notify friends about your comments (not replies)
     if not comment.reply_to:
-        friends = await sync_to_async(lambda: list(Friend.friends_for_user(comment.author)))()
-        for friend in friends:
+        friends = Friend.friends_for_user(comment.author)
+        async for friend in friends:
             if friend.user_from.telegram_id \
                     and friend.is_subscribed_to_comments \
                     and friend.user_from.id not in notified_user_ids:

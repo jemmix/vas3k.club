@@ -32,15 +32,12 @@ class SubscribeTest(BaseTelegramTest, TestCase):
             title="Test Post",
             text="Test content",
         )
-        self.close_db_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_db_patch.start()
 
     def tearDown(self):
         super().tearDown()
         PostSubscription.objects.filter(post=self.post).delete()
         Post.objects.filter(id=self.post.id).delete()
         self.user.delete()
-        self.close_db_patch.stop()
 
     async def test_subscribes_user_to_post(self):
         """Should subscribe user to post"""
@@ -89,15 +86,12 @@ class UnsubscribeTest(BaseTelegramTest, TestCase):
             title="Test Post",
             text="Test content",
         )
-        self.close_db_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_db_patch.start()
 
     def tearDown(self):
         super().tearDown()
         PostSubscription.objects.filter(post=self.post).delete()
         Post.objects.filter(id=self.post.id).delete()
         self.user.delete()
-        self.close_db_patch.stop()
 
     async def test_unsubscribes_user_from_post(self):
         """Should unsubscribe user from post"""

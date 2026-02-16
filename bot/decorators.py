@@ -1,8 +1,4 @@
-from functools import wraps
-
-from asgiref.sync import sync_to_async
 from django.conf import settings
-from django.db import close_old_connections
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import CallbackContext
@@ -16,9 +12,6 @@ def is_moderator(callback):
         if update.effective_chat.id != int(settings.TELEGRAM_ADMIN_CHAT_ID):
             await update.effective_chat.send_message("❌ Для этого действия нужно быть в чате модераторов")
             return None
-
-        # HACK: remove when you figure out how to fix it
-        await sync_to_async(close_old_connections)()
 
         # Use Django's native async ORM (available in Django 4.1+)
         moderator = await User.objects.filter(telegram_id=update.effective_user.id).afirst()
@@ -49,15 +42,4 @@ def is_club_member(callback):
 
         return await callback(update, context, *args, **kwargs)
 
-    return wrapper
-
-
-def ensure_fresh_db_connection(func):
-    @wraps(func)
-    async def wrapper(*args, **kwargs):
-        await sync_to_async(close_old_connections)()
-        try:
-            return await func(*args, **kwargs)
-        finally:
-            await sync_to_async(close_old_connections)()
     return wrapper

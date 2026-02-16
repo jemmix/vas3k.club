@@ -30,14 +30,6 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
     def setUp(self):
         super().setUp()
 
-        # Mock close_old_connections BEFORE creating users
-        self.close_old_connections_patch = patch("bot.handlers.common.close_old_connections")
-        self.close_old_connections_patch.start()
-
-        # Mock close_old_connections from django.db (used by ensure_fresh_db_connection decorator)
-        self.django_close_patch = patch("bot.decorators.close_old_connections")
-        self.django_close_patch.start()
-
         self.user = create_test_user(telegram_id="111", slug="test-user")
         self.target_user = create_test_user(telegram_id="222", slug="target-user", full_name="Target User")
 
@@ -50,8 +42,6 @@ class CommandWhoisTest(BaseTelegramTest, TestCase):
         super().tearDown()
         self.target_user.delete()
         self.user.delete()
-        self.close_old_connections_patch.stop()
-        self.django_close_patch.stop()
         self.cached_users_patch.stop()
 
     async def test_no_reply_or_forward(self):

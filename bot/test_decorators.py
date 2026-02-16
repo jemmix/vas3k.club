@@ -41,14 +41,11 @@ class IsModeratorDecoratorTest(BaseTelegramTest, TestCase):
             roles=[],
         )
 
-        self.close_old_connections_patch = patch("bot.decorators.close_old_connections")
-        self.close_old_connections_patch.start()
 
     def tearDown(self):
         super().tearDown()
         self.moderator.delete()
         self.regular_user.delete()
-        self.close_old_connections_patch.stop()
 
     @override_settings(TELEGRAM_ADMIN_CHAT_ID=12345)
     async def test_allows_moderator_in_admin_chat(self):

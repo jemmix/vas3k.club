@@ -117,12 +117,6 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
             moderation_status=User.MODERATION_STATUS_APPROVED,
         )
 
-        # Patch close_old_connections to prevent 'connection is closed' errors in tests
-        self.close_old_connections_patch = patch(
-            "bot.handlers.common.close_old_connections"
-        )
-        self.close_old_connections_patch.start()
-
         # Build the webhook URL that the bot will tell Telegram to use
         webhook_url = f"http://{settings.TELEGRAM_BOT_WEBHOOK_HOST}:{settings.TELEGRAM_BOT_WEBHOOK_PORT}/"
 
@@ -146,7 +140,6 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
 
         # Clean up
         self.test_user.delete()
-        self.close_old_connections_patch.stop()
         self.settings_override.disable()
 
         # NB: shut down bot_server first, then the API (in super()):
