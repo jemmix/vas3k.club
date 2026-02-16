@@ -188,9 +188,9 @@ async def approve_user_profile(update: Update, context: CallbackContext) -> None
 
     SearchIndex.update_user_index(user)
 
-    notify_user_profile_approved(user)
+    await notify_user_profile_approved(user)
     send_welcome_drink(user)
-    announce_in_club_chats(intro)
+    await announce_in_club_chats(intro)
 
     await update.effective_chat.send_message(
         f"✅ Пользователь «{user.full_name}» одобрен ({update.effective_user.full_name})"
@@ -233,7 +233,7 @@ async def reject_user_profile(update: Update, context: CallbackContext):
     user.moderation_status = User.MODERATION_STATUS_REJECTED
     await user.asave()
 
-    notify_user_profile_rejected(user, reason)
+    await notify_user_profile_rejected(user, reason)
     send_user_rejected_email(user, reason)
 
     await update.effective_chat.send_message(

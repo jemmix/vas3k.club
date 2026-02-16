@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django.shortcuts import redirect, render
 from django_q.tasks import async_task
 
@@ -31,7 +32,7 @@ def intro(request):
             Geo.update_for_user(user)
 
             # notify moderators to review profile
-            async_task(notify_profile_needs_review, user, intro_post)
+            async_task(async_to_sync(notify_profile_needs_review), user, intro_post)
 
             return redirect("on_review")
     else:

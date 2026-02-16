@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django import forms
 from django.shortcuts import render
 
@@ -30,7 +31,7 @@ def post_unmoderate_action(request, user: User, **context):
             user.moderation_status = User.MODERATION_STATUS_REJECTED
             user.save()
             send_unmoderated_email(user)
-            notify_admin_user_unmoderate(user)
+            async_to_sync(notify_admin_user_unmoderate)(user)
 
         return render(request, "godmode/message.html", {
             **context,

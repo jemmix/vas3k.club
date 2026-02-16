@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import redirect, render
@@ -33,7 +34,7 @@ def email_login(request):
 
     code = Code.create_for_user(user=user, recipient=user.email, length=settings.AUTH_CODE_LENGTH)
     async_task(send_auth_email, user, code)
-    async_task(notify_user_auth, user, code)
+    async_task(async_to_sync(notify_user_auth), user, code)
 
     return render(request, "auth/email.html", {
         "email": user.email,

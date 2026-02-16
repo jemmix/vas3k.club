@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django import forms
 from django.shortcuts import render
 
@@ -31,8 +32,8 @@ def post_ping_action(request, user: User, **context):
         # Ping
         if data["ping"]:
             send_ping_email(user, message=data["ping"])
-            notify_user_ping(user, message=data["ping"])
-            notify_admin_user_ping(user, message=data["ping"])
+            async_to_sync(notify_user_ping)(user, message=data["ping"])
+            async_to_sync(notify_admin_user_ping)(user, message=data["ping"])
 
         return render(request, "godmode/message.html", {
             **context,
