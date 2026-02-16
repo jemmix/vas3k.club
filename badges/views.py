@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django_q.tasks import async_task
@@ -55,7 +56,7 @@ def create_badge_for_post(request, post_slug):
 
     # send notifications
     async_task(send_new_badge_email, user_badge)
-    async_task(send_new_badge_message, user_badge)
+    async_task(async_to_sync(send_new_badge_message), user_badge)
 
     # bump post on home page by updating its last_activity_at
     Post.objects.filter(id=post.id).update(last_activity_at=datetime.utcnow())
@@ -119,7 +120,7 @@ def create_badge_for_comment(request, comment_id):
 
     # send notifications
     async_task(send_new_badge_email, user_badge)
-    async_task(send_new_badge_message, user_badge)
+    async_task(async_to_sync(send_new_badge_message), user_badge)
 
     # bump post on home page by updating its last_activity_at
     Post.objects.filter(id=comment.post_id).update(last_activity_at=datetime.utcnow())
