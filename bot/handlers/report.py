@@ -14,7 +14,7 @@ from rooms.models import Room
 
 @is_club_member
 @ensure_fresh_db_connection
-def command_report(update: Update, context: CallbackContext) -> None:
+def command_report(update: Update, context: CallbackContext) -> None:  # noqa: C901
     message = update.message
 
     if not message:

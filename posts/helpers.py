@@ -29,7 +29,7 @@ def extract_any_image(post):
     return None
 
 
-def sort_feed(posts, ordering, ordering_param=None):
+def sort_feed(posts, ordering, ordering_param=None):  # noqa: C901
     if not ordering:
         return posts
 

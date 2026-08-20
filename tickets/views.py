@@ -24,7 +24,7 @@ STRIPE_TICKETS_WEBHOOK_SECRET = os.getenv("STRIPE_TICKETS_WEBHOOK_SECRET")
 STRIPE_TICKETS_API_KEY = os.getenv("STRIPE_TICKETS_API_KEY")
 
 
-def stripe_ticket_sale_webhook(request):
+def stripe_ticket_sale_webhook(request):  # noqa: C901
     try:
         event = parse_stripe_webhook_event(
             request=request,

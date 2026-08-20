@@ -11,7 +11,7 @@ from authn.helpers import get_access_denied_reason
 from club.exceptions import ApiAccessDenied, ApiException, ClubException, ApiAuthRequired
 
 
-def api(require_auth=True, scopes=None):
+def api(require_auth=True, scopes=None):  # noqa: C901
     def decorator(view):
         @functools.wraps(view)
         def wrapper(request, *args, **kwargs):

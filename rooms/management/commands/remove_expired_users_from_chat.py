@@ -31,7 +31,7 @@ class Command(BaseCommand):
             help="Actually remove users from chat (false by default)",
         )
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # noqa: C901
         chat_id_raw = options.get("chat_id")
         execute = options.get("execute", False)
 

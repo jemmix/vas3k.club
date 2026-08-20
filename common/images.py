@@ -12,7 +12,7 @@ from common.url_security import is_url_safe_for_fetch
 log = logging.getLogger(__name__)
 
 
-def upload_image_multipart(
+def upload_image_multipart(  # noqa: C901
     filename, data, resize=(192, 192), convert_to=None, quality=None
 ):
     if not data:

@@ -65,7 +65,7 @@ class Command(BaseCommand):
 
         self.stdout.write("Done 🥙")
 
-    def send_stage(self, stage, production):
+    def send_stage(self, stage, production):  # noqa: C901
         if not production:
             users = User.objects.filter(
                 email__in=settings.ADMINS,

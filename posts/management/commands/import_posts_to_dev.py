@@ -63,7 +63,7 @@ class Command(BaseCommand):
             help="service_token приложения, требуется для приватных постов и парсинга комментариев. Получить можно тут: https://vas3k.club/apps/create/",
         )
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # noqa: C901
         if not settings.DEBUG:
             return self.stdout.write("☢️  Только для запуска в DEBUG режиме")
 

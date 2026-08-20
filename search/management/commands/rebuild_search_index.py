@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 class Command(BaseCommand):
     help = "Rebuild search index for comments, posts and users"
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # noqa: C901
         SearchIndex.objects.all().delete()
         indexed_comment_count = 0
         indexed_post_count = 0

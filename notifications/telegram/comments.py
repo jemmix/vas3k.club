@@ -12,7 +12,7 @@ from users.models.mute import UserMuted
 from users.models.user import User
 
 
-def notify_on_comment_created(comment):
+def notify_on_comment_created(comment):  # noqa: C901
     notified_user_ids = set()
     muted_author_user_ids = set(
         UserMuted.who_muted_user(comment.author_id).values_list("user_from_id", flat=True)

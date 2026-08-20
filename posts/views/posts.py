@@ -169,7 +169,7 @@ def edit_post(request, post_slug):
     return create_or_edit(request, post.type, post=post, mode="edit")
 
 
-def create_or_edit(request, post_type, post=None, mode="create"):
+def create_or_edit(request, post_type, post=None, mode="create"):  # noqa: C901
     FormClass = POST_TYPE_MAP.get(post_type) or PostTextForm
 
     if post_type == Post.TYPE_DOCS and not request.me.is_god:
