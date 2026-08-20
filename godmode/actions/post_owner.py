@@ -44,3 +44,4 @@ def post_owner_action(request, post: Post, **context):
             "item": post,
             "form": form,
         })
+

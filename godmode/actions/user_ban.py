@@ -122,3 +122,4 @@ def post_ban_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
+

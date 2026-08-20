@@ -204,3 +204,4 @@ class ClubAdmin:
 
     def has_access(self, user: User) -> bool:
         return bool(set(user.roles or []) & set(self.access_roles or []))
+

@@ -45,3 +45,4 @@ def post_ping_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
+

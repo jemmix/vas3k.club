@@ -31,3 +31,4 @@ def badge_generator(request, admin_page):
         "hide_badges": request.GET.get("hide_badges"),
         "repeat": repeat,
     }, request=request)
+

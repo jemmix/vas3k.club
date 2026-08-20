@@ -53,3 +53,4 @@ def post_achievement_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
+

@@ -90,3 +90,4 @@ def post_hat_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
+

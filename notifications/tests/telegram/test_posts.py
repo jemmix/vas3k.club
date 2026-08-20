@@ -279,3 +279,4 @@ class TestSendPublishedPostToModerators(TestCase):
 
         mock_send.assert_called_once()
         mock_ai.assert_not_called()
+

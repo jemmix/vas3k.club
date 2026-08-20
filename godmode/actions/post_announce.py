@@ -62,3 +62,4 @@ def post_announce_action(request, post: Post, **context):
             "item": post,
             "form": form,
         })
+

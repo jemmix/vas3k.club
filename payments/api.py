@@ -31,3 +31,4 @@ def api_gift_days(request, days, user_slug):
     return JsonResponse({
         "status": "success",
     })
+
