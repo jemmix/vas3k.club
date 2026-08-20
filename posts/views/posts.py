@@ -70,7 +70,7 @@ def show_post(request, post_type, post_slug):
 def unpublish_post(request, post_slug):
     if request.method != "POST":
         return render(request, "confirm.html", {
-            "title": f"Перенести пост в черновики?",
+            "title": "Перенести пост в черновики?",
             "message": "Пост больше не будет виден в фиде, но останется у вас в черновиках",
             "button": "Да, в черновики его!"
         })
@@ -96,7 +96,7 @@ def unpublish_post(request, post_slug):
 def clear_post(request, post_slug):
     if request.method != "POST":
         return render(request, "confirm.html", {
-            "title": f"Очистить пост?",
+            "title": "Очистить пост?",
             "message": "Контент поста будет удален, а автор анонимизирован. "
                        "От поста останется только заголовок и комментарии под ним",
             "button": "Очищаем!"
@@ -121,7 +121,7 @@ def delete_post(request, post_slug):
         # restore post
         if request.method != "POST":
             return render(request, "confirm.html", {
-                "title": f"Восстановить пост?",
+                "title": "Восстановить пост?",
                 "message": "Он снова появится у вас в черновиках",
                 "button": "Да, восстанавливаем"
             })
@@ -131,7 +131,7 @@ def delete_post(request, post_slug):
         # delete post
         if request.method != "POST":
             return render(request, "confirm.html", {
-                "title": f"Удалить пост?",
+                "title": "Удалить пост?",
                 "message": "Он пропадёт с главной и из ваших черновиков",
                 "button": "Да, удаляем"
             })

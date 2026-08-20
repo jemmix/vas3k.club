@@ -94,8 +94,8 @@ def create_comment(request, post_slug):
             log.error(f"Comment form error: {form.errors}")
             return render(request, "error.html", {
                 "title": "Какая-то ошибка при публикации комментария 🤷‍♂️",
-                "message": f"Мы уже получили оповещение и скоро пофиксим. "
-                           f"Ваш коммент мы сохранили чтобы вы могли скопировать его и запостить еще раз:",
+                "message": "Мы уже получили оповещение и скоро пофиксим. "
+                           "Ваш коммент мы сохранили чтобы вы могли скопировать его и запостить еще раз:",
                 "data": {"saved_text": request.POST.get("text")}
             }, status=500)
 

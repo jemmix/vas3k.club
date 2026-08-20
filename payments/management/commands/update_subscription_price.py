@@ -70,7 +70,7 @@ class Command(BaseCommand):
 
                 send_transactional_email(
                     recipient=customer_email,
-                    subject=f"🥲 Долор уже не тот, что раньше",
+                    subject="🥲 Долор уже не тот, что раньше",
                     html=email,
                 )
 
@@ -78,7 +78,7 @@ class Command(BaseCommand):
             else:
                 failure_count += 1
 
-            self.stdout.write(f"Next one...")
+            self.stdout.write("Next one...")
 
         self.stdout.write(f"""
         Price update completed:

@@ -30,4 +30,3 @@ def sunday_posts(request, admin_page):
     return render_to_string("godmode/pages/posts.html", {
         "posts": posts
     }, request=request)
-

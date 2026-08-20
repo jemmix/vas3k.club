@@ -190,7 +190,7 @@ def notify_post_rejected(post, reason):
     try:
         text = render_html_message(f"post_rejected/{reason.value}.html", post=post)
     except TemplateDoesNotExist:
-        text = render_html_message(f"post_rejected/draft.html", post=post)
+        text = render_html_message("post_rejected/draft.html", post=post)
 
     if post.author.telegram_id:
         send_telegram_message(

@@ -44,7 +44,7 @@ async def command_auth(update: Update, context: CallbackContext) -> None:
     await update.message.delete()
 
     if user.moderation_status != User.MODERATION_STATUS_APPROVED:
-        await update.effective_chat.send_message(f"Теперь осталось пройти модерацию. Бот заработает сразу после этого")
+        await update.effective_chat.send_message("Теперь осталось пройти модерацию. Бот заработает сразу после этого")
 
     # Refresh the cache by deleting and requesting it again
     flush_users_cache()

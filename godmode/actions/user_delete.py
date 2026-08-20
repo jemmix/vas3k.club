@@ -83,7 +83,7 @@ def post_delete_action(request, user: User, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Юзера {user.full_name} был удален",
-            "message": f"Он получит сообщение на почту и в телеграм, а через 3 дня все его данные будут удалены.",
+            "message": "Он получит сообщение на почту и в телеграм, а через 3 дня все его данные будут удалены.",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -91,4 +91,3 @@ def post_delete_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

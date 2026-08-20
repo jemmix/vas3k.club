@@ -278,4 +278,3 @@ class User(models.Model, ModelDiffMixin):
         return cls.objects.filter(
             moderation_status=User.MODERATION_STATUS_APPROVED
         )
-

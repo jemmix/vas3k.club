@@ -25,7 +25,6 @@ class PostPinForm(forms.Form):
     )
 
 
-
 def get_pin_action(request, post: Post, **context):
     return render(request, "godmode/action.html", {
         **context,
@@ -59,4 +58,3 @@ def post_pin_action(request, post: Post, **context):
             "item": post,
             "form": form,
         })
-

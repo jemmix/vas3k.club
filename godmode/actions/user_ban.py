@@ -78,7 +78,7 @@ def post_ban_action(request, user: User, **context):
             return render(request, "godmode/message.html", {
                 **context,
                 "title": f"Юзер {user.full_name} разбанен",
-                "message": f"Снова может щитпостить",
+                "message": "Снова может щитпостить",
             })
 
         is_banned = False
@@ -111,7 +111,7 @@ def post_ban_action(request, user: User, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Юзер {user.full_name} забанен" if is_banned else "Ошибка",
-            "message": f"Ура 🎉" if is_banned else "😭 Вы забыли поставить галочку или случилась какая-то ошибка",
+            "message": "Ура 🎉" if is_banned else "😭 Вы забыли поставить галочку или случилась какая-то ошибка",
         })
     else:
         return render(request, "godmode/actions/user_ban.html", {
@@ -119,4 +119,3 @@ def post_ban_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

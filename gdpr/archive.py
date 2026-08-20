@@ -96,7 +96,7 @@ def dump_user_posts(user_dir, user):
 
         # dump post comments
         post_comments = Comment.objects.filter(post=post).select_related("author", "post")
-        with open(os.path.join(post_dir, f"comments.json"), "w", encoding="utf-8") as f:
+        with open(os.path.join(post_dir, "comments.json"), "w", encoding="utf-8") as f:
             f.write(json.dumps(comments_to_json(post_comments), ensure_ascii=False))
 
 
@@ -115,7 +115,7 @@ def dump_user_comments(user_dir, user):
 
         # dump replies
         comment_replies = Comment.objects.filter(reply_to=comment).select_related("author", "post")
-        with open(os.path.join(comment_dir, f"replies.json"), "w", encoding="utf-8") as f:
+        with open(os.path.join(comment_dir, "replies.json"), "w", encoding="utf-8") as f:
             f.write(json.dumps(comments_to_json(comment_replies), ensure_ascii=False))
 
 

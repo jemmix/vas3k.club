@@ -37,7 +37,7 @@ def post_ping_action(request, user: User, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Юзера {user.full_name} пинганули",
-            "message": f"Он получит сообщение на почту и в телеграм",
+            "message": "Он получит сообщение на почту и в телеграм",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -45,4 +45,3 @@ def post_ping_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

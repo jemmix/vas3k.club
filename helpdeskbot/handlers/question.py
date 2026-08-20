@@ -162,8 +162,8 @@ async def request_body_value(update: Update, context: CallbackContext) -> State:
     context.user_data[CUR_FIELD_KEY] = QuestionKeyboard.BODY.value
     await send_reply(
         update,
-        f"Введите текст вопроса. Опишите побольше деталей и контекста. "
-        f"Например, ваш город/страну и уже опробованные варианты решений.",
+        "Введите текст вопроса. Опишите побольше деталей и контекста. "
+        "Например, ваш город/страну и уже опробованные варианты решений.",
         reply_markup=ReplyKeyboardRemove()
     )
 
@@ -312,7 +312,7 @@ async def finish_review(update: Update, context: CallbackContext) -> State:
     else:
         await send_reply(
             update,
-            f"😱 Неожиданная команда. Можем начать заново - /start",
+            "😱 Неожиданная команда. Можем начать заново - /start",
             reply_markup=start_markup
         )
         return ConversationHandler.END

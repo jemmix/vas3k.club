@@ -15,7 +15,7 @@ from users.models.user import User
 async def command_whois(update: Update, context: CallbackContext) -> None:  # noqa: C901
     if not update.message:
         return None
-          
+
     message = update.message
     is_private_forward = message is not None \
         and message.forward_origin is not None \
@@ -108,7 +108,7 @@ async def command_whois(update: Update, context: CallbackContext) -> None:  # no
     user = User.objects.filter(telegram_id=telegram_id).first()
     if not user:
         await update.message.reply_text(
-            f"🤨 Пользователь не найден в Клубе. Гоните его, насмехайтесь над ним!",
+            "🤨 Пользователь не найден в Клубе. Гоните его, насмехайтесь над ним!",
             do_quote=True
         )
         return None

@@ -61,7 +61,7 @@ def post_hat_action(request, user: User, **context):
             return render(request, "godmode/message.html", {
                 **context,
                 "title": f"У юзера {user.full_name} отобрали шапку",
-                "message": f"Штош...",
+                "message": "Штош...",
             })
 
         if data["add_hat"]:
@@ -82,7 +82,7 @@ def post_hat_action(request, user: User, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Юзеру {user.full_name} выдали шапку {user.hat.get('title', 'без названия')}",
-            "message": f"Ура 🎉",
+            "message": "Ура 🎉",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -90,4 +90,3 @@ def post_hat_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

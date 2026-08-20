@@ -224,7 +224,7 @@ def godmode_show_page(request, page_name):
         return render(request, "godmode/message.html", {
             "admin": ADMIN,
             "title": "🥲 Страницу еще не напрограммировали",
-            "message": f"Вам нужно объявить view у страницы и написать функцию её обработки.",
+            "message": "Вам нужно объявить view у страницы и написать функцию её обработки.",
         })
 
     return render(request, "godmode/page.html", {

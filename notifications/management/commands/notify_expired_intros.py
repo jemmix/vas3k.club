@@ -92,7 +92,7 @@ class Command(BaseCommand):
 
                         send_mass_email(
                             recipient=user.email,
-                            subject=f"Время обновлять интро 👴",
+                            subject="Время обновлять интро 👴",
                             html=email,
                             unsubscribe_link=f"{settings.APP_HOST}/notifications/unsubscribe/{user.id}/{secret_code}/"
                         )

@@ -63,4 +63,3 @@ def send_custom_mass_email(emails_or_slugs: list[str], title: str, text: str, is
             )
 
     return True
-

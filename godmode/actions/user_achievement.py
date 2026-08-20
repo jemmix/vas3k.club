@@ -45,7 +45,7 @@ def post_achievement_action(request, user: User, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Юзер {user.full_name} получил ачивку {achievement.name}",
-            "message": f"Ура 🎉",
+            "message": "Ура 🎉",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -53,4 +53,3 @@ def post_achievement_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

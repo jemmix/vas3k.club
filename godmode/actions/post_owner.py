@@ -15,7 +15,6 @@ class PostOwnerForm(forms.Form):
     )
 
 
-
 def get_owner_action(request, post: Post, **context):
     return render(request, "godmode/action.html", {
         **context,
@@ -39,7 +38,7 @@ def post_owner_action(request, post: Post, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Настройки поста «{post.title}» сохранены",
-            "message": f"Ура 🎉",
+            "message": "Ура 🎉",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -47,4 +46,3 @@ def post_owner_action(request, post: Post, **context):
             "item": post,
             "form": form,
         })
-

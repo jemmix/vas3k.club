@@ -93,7 +93,7 @@ def write_to_crew(request, crew):
         text = request.POST.get("text")
         if not text:
             return render(request, "error.html", {
-                "title": f"Надо написать какой-то текст",
+                "title": "Надо написать какой-то текст",
                 "message": "А то что мы будем читать-то?"
             })
 
@@ -112,7 +112,6 @@ def write_to_crew(request, crew):
             "title": "✅ Ваше письмо отправлено",
             "message": "Мы его прочитаем и обсудим."
         })
-
 
     return render(request, "pages/write_to_crew.html", {
         "crew": CREWS[crew],

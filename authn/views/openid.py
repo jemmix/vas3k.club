@@ -29,7 +29,7 @@ def openid_authorize(request):
             })
         except (UnsupportedResponseTypeError, UnsupportedGrantTypeError, InvalidScopeError):
             return render(request, "error.html", {
-                "title": f"Неправильные параметры запроса OAuth",
+                "title": "Неправильные параметры запроса OAuth",
                 "message": "Параметры response_type, grant, scope где-то потерялись. "
                            "Попробуйте вернуться назад и авторизоваться еще раз, обычно помогает."
             })

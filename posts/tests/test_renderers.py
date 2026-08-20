@@ -192,7 +192,7 @@ class TestRenderPostCommentPostReference(RendererTestBase):
 
         self.assertEqual(response.status_code, 200)
         content = response.content.decode()
-        self.assertIn(f"#comment-", content)
+        self.assertIn("#comment-", content)
 
     def test_deleted_comment_shows_by_whom(self):
         """Deleted comment should show who deleted it (uses comment.post.author_id)."""

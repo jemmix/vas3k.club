@@ -35,7 +35,7 @@ async def handle_answer_from_channel(update: Update) -> None:
     origin = update.message.reply_to_message.forward_origin
     channel_msg_id = origin.message_id
     if not channel_msg_id:
-        log.error(f"forward_origin.message_id is null")
+        log.error("forward_origin.message_id is null")
         return None
 
     question = Question.objects \
@@ -55,7 +55,7 @@ async def handle_answer_from_channel(update: Update) -> None:
 async def handle_answer_from_room_chat(update: Update) -> None:
     room_chat_msg_id = update.message.reply_to_message.message_id
     if not room_chat_msg_id:
-        log.error(f"reply_to_message.message_id is null")
+        log.error("reply_to_message.message_id is null")
         return None
 
     room_chat_id = str(update.message.chat.id)

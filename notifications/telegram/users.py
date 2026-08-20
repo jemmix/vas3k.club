@@ -90,7 +90,7 @@ def notify_user_profile_rejected(user: User, reason: UserRejectReason):
     try:
         text = render_html_message(f"rejected/{reason.value}.html", user=user)
     except TemplateDoesNotExist:
-        text = render_html_message(f"rejected/intro.html", user=user)
+        text = render_html_message("rejected/intro.html", user=user)
 
     if user.telegram_id:
         send_telegram_message(

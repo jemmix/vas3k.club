@@ -202,7 +202,5 @@ class ClubAdmin:
                     return model
         return None
 
-
     def has_access(self, user: User) -> bool:
         return bool(set(user.roles or []) & set(self.access_roles or []))
-

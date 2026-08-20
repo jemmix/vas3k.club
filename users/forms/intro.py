@@ -88,7 +88,6 @@ class UserInitialIntroForm(ModelForm):
         label="Даю согласие на обработку своих персональных данных", required=True
     )
 
-
     class Meta:
         model = User
         fields = [

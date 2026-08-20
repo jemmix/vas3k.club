@@ -42,7 +42,7 @@ def post_role_action(request, user: User, **context):
                 return render(request, "godmode/message.html", {
                     **context,
                     "title": f"Юзеру {user.full_name} выдали роль {role}",
-                    "message": f"Ура 🎉",
+                    "message": "Ура 🎉",
                 })
 
             if data["role_action"] == "delete" and role in user.roles:
@@ -51,13 +51,13 @@ def post_role_action(request, user: User, **context):
                 return render(request, "godmode/message.html", {
                     **context,
                     "title": f"У юзера {user.full_name} отобрали роль {role}",
-                    "message": f"Ура 🎉",
+                    "message": "Ура 🎉",
                 })
 
         return render(request, "godmode/message.html", {
             **context,
-            "title": f"Ничего не произошло...",
-            "message": f"Странна",
+            "title": "Ничего не произошло...",
+            "message": "Странна",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -65,4 +65,3 @@ def post_role_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

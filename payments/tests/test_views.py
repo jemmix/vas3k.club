@@ -60,7 +60,7 @@ class TestMembershipExpiredView(TestCase):
 
         # when
         response = client.get(reverse('membership_expired'))
-        self.assertRedirects(response=response, expected_url=f'/', fetch_redirect_response=False)
+        self.assertRedirects(response=response, expected_url='/', fetch_redirect_response=False)
 
 
 class TestDoneView(TestCase):
@@ -175,7 +175,7 @@ class TestPayView(TestCase):
     def test_negative_new_user_with_broken_email(self, mocked_stripe):
         # given
         product_code = "club1"
-        broken_email = f"email-invalid"
+        broken_email = "email-invalid"
 
         # when
         response = self.client.get(reverse("pay"),

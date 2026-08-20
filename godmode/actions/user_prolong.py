@@ -13,7 +13,6 @@ class UserProlongForm(forms.Form):
     )
 
 
-
 def get_prolong_action(request, user: User, **context):
     return render(request, "godmode/action.html", {
         **context,
@@ -44,7 +43,7 @@ def post_prolong_action(request, user: User, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Юзеру {user.full_name} добавили {data['add_membership_days']} дней членства",
-            "message": f"Заслужил 👍",
+            "message": "Заслужил 👍",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -52,4 +51,3 @@ def post_prolong_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

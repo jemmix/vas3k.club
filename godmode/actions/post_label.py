@@ -58,7 +58,7 @@ def post_label_action(request, post: Post, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Посту «{post.title}» выдан лейбл «{data['new_label']}»",
-            "message": f"Ура 🎉",
+            "message": "Ура 🎉",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -66,4 +66,3 @@ def post_label_action(request, post: Post, **context):
             "item": post,
             "form": form,
         })
-

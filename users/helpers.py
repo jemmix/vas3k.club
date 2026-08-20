@@ -78,4 +78,3 @@ def calculate_progressive_ban_days(user: User, min_days: int) -> int:
 
     # or just return the biggest one
     return PROGRESSIVE_BAN_DAYS[-1]
-

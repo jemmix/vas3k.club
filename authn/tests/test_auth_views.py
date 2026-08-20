@@ -62,7 +62,7 @@ class ViewsAuthTests(TestCase):
 
         response = self.client.post(reverse("logout"))
 
-        self.assertRedirects(response=response, expected_url=f"/", fetch_redirect_response=False)
+        self.assertRedirects(response=response, expected_url="/", fetch_redirect_response=False)
         self.assertFalse(self.client.is_authorised())
 
     def test_logout_unauthorised(self):
@@ -172,20 +172,20 @@ class ViewEmailLoginTests(TestCase):
 
     def test_email_login_missed_input_data(self):
         response = self.client.post(reverse("email_login"), data={})
-        self.assertRedirects(response=response, expected_url=f"/auth/login/",
+        self.assertRedirects(response=response, expected_url="/auth/login/",
                              fetch_redirect_response=False)
 
     def test_email_login_wrong_method(self):
         response = self.client.get(reverse("email_login"))
-        self.assertRedirects(response=response, expected_url=f"/auth/login/",
+        self.assertRedirects(response=response, expected_url="/auth/login/",
                              fetch_redirect_response=False)
 
         response = self.client.put(reverse("email_login"))
-        self.assertRedirects(response=response, expected_url=f"/auth/login/",
+        self.assertRedirects(response=response, expected_url="/auth/login/",
                              fetch_redirect_response=False)
 
         response = self.client.delete(reverse("email_login"))
-        self.assertRedirects(response=response, expected_url=f"/auth/login/",
+        self.assertRedirects(response=response, expected_url="/auth/login/",
                              fetch_redirect_response=False)
 
 
@@ -220,7 +220,7 @@ class ViewEmailLoginCodeTests(TestCase):
 
     def test_empty_params(self):
         response = self.client.get(reverse("email_login_code"), data={})
-        self.assertRedirects(response=response, expected_url=f"/auth/login/",
+        self.assertRedirects(response=response, expected_url="/auth/login/",
                              fetch_redirect_response=False)
         self.assertFalse(self.client.is_authorised())
         self.assertFalse(User.objects.get(id=self.new_user.id).is_email_verified)
@@ -361,7 +361,7 @@ class ViewPatreonOauthCallbackTests(TestCase):
         response = self.client.get(reverse("patreon_sync_callback"), data={"code": "1234"})
 
         # then
-        self.assertRedirects(response=response, expected_url=f"/user/ujlbu4/",
+        self.assertRedirects(response=response, expected_url="/user/ujlbu4/",
                              fetch_redirect_response=False)
         self.assertTrue(self.client.is_authorised())
         # user updated attributes

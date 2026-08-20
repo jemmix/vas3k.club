@@ -50,7 +50,6 @@ def post_join_tag_action(request, tag: Tag, **context):
 
         Tag.objects.filter(code=tag_to_delete.code).delete()
 
-
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Теш «{tag_to_delete.name}» объединен с тегом «{new_main_tag.name}»",

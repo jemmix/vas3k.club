@@ -35,7 +35,7 @@ def post_unmoderate_action(request, user: User, **context):
         return render(request, "godmode/message.html", {
             **context,
             "title": f"Юзера {user.full_name} размодерировали",
-            "message": f"Теперь ждем когда он перепишет интро",
+            "message": "Теперь ждем когда он перепишет интро",
         })
     else:
         return render(request, "godmode/action.html", {
@@ -43,4 +43,3 @@ def post_unmoderate_action(request, user: User, **context):
             "item": user,
             "form": form,
         })
-

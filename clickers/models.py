@@ -31,7 +31,6 @@ class Click(models.Model):
         else:
             return True
 
-
     def to_dict(self):
         return {
             "user": self.user.to_dict(),

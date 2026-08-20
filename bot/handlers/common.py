@@ -43,26 +43,26 @@ async def get_club_user(update: Update):
     user = User.objects.filter(telegram_id=update.effective_user.id).first()
     if not user:
         if update.callback_query:
-            await update.callback_query.answer(text=f"☝️ Привяжи бота к профилю, братишка")
+            await update.callback_query.answer(text="☝️ Привяжи бота к профилю, братишка")
         else:
             await update.message.reply_text(
-                f"😐 Привяжи <a href=\"https://vas3k.club/user/me/edit/bot/\">бота</a> к профилю, братишка",
+                "😐 Привяжи <a href=\"https://vas3k.club/user/me/edit/bot/\">бота</a> к профилю, братишка",
                 parse_mode=ParseMode.HTML
             )
         return None
 
     if user.is_banned:
         if update.callback_query:
-            await update.callback_query.answer(text=f"🙈 Ты в бане, мы больше не дружим")
+            await update.callback_query.answer(text="🙈 Ты в бане, мы больше не дружим")
         else:
-            await update.message.reply_text(f"🙈 Ты в бане, мы больше не дружим")
+            await update.message.reply_text("🙈 Ты в бане, мы больше не дружим")
         return None
 
     if not user.is_member:
         if update.callback_query:
-            await update.callback_query.answer(text=f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
+            await update.callback_query.answer(text="😣 Твой профиль в Клубе неактивен. Плоти долор!")
         else:
-            await update.message.reply_text(f"😣 Твой профиль в Клубе неактивен. Плоти долор!")
+            await update.message.reply_text("😣 Твой профиль в Клубе неактивен. Плоти долор!")
         return None
 
     return user
@@ -110,7 +110,7 @@ async def get_club_post(update: Update) -> Optional[Post]:
 
     post = Post.objects.filter(slug=post_id).first()
     if not post or not post.is_commentable:
-        await update.message.reply_text(f"🤨 Пост был удален, скрыт или украден, сорян")
+        await update.message.reply_text("🤨 Пост был удален, скрыт или украден, сорян")
         return None
 
     return post

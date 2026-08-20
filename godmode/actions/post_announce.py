@@ -29,8 +29,6 @@ class PostAnnounceForm(forms.Form):
     )
 
 
-
-
 def get_announce_action(request, post: Post, **context):
     initial = {
         "text": render_html_message("channel_post_announce.html", post=post),
@@ -55,7 +53,7 @@ def post_announce_action(request, post: Post, **context):
 
         return render(request, "godmode/message.html", {
             **context,
-            "title": f"Запощено ✅",
+            "title": "Запощено ✅",
             "message": f"Пост «{post.title}» анонсирован на канале",
         })
     else:
@@ -64,4 +62,3 @@ def post_announce_action(request, post: Post, **context):
             "item": post,
             "form": form,
         })
-

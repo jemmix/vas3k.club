@@ -159,7 +159,7 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = False
 
-# Prefer HTTPS when urlize expands scheme-less URLs 
+# Prefer HTTPS when urlize expands scheme-less URLs
 URLIZE_ASSUME_HTTPS = True
 
 # Static files (CSS, JavaScript, Images)
