@@ -60,8 +60,7 @@ class Command(BaseCommand):
 
         parser.add_argument(
             "--service-token",
-            help="service_token приложения, требуется для приватных постов и парсинга комментариев. "
-                 "Получить можно тут: https://vas3k.club/apps/create/",
+            help="service_token приложения, требуется для приватных постов и парсинга комментариев. Получить можно тут: https://vas3k.club/apps/create/",
         )
 
     def handle(self, *args, **options):  # noqa: C901
@@ -127,8 +126,7 @@ class Command(BaseCommand):
                 )
 
                 if item['_club']['type'] == "project":
-                    # хак для постов типа "проект", чтобы не лазить по вастрику лишний раз
-                    defaults['image'] = author.avatar,
+                    defaults['image'] = author.avatar,  # хак для постов типа "проект", чтобы не лазить по вастрику лишний раз
 
                 try:
                     post = Post.objects.get(id=item['id'])

@@ -5,9 +5,7 @@ from datetime import datetime, timedelta
 SEARCH_TYPES = {"post", "comment", "user"}
 
 CUSTOM_FILTER_RE = re.compile(
-    r'(?:(?<=^)|(?<=[\s(]))'
-    r'(?P<operator>-author:|author:|-type:|type:|-title:|title:|since:|until:)'
-    r'(?P<value>"[^"]+"|[^\s()]+)',
+    r'(?:(?<=^)|(?<=[\s(]))(?P<operator>-author:|author:|-type:|type:|-title:|title:|since:|until:)(?P<value>"[^"]+"|[^\s()]+)',
     re.IGNORECASE,
 )
 

@@ -46,11 +46,7 @@ def mass_email(request, admin_page):
     if request.method == "POST":
         form = GodmodeMassEmailForm(request.POST, request.FILES)
         if form.is_valid():
-            emails_or_slugs = [
-                u.strip().lstrip("@")
-                for u in form.cleaned_data["recipients"].strip().split(",")
-                if u.strip()
-            ]
+            emails_or_slugs = [u.strip().lstrip("@") for u in form.cleaned_data["recipients"].strip().split(",") if u.strip()]
             async_task(
                 send_custom_mass_email,
                 emails_or_slugs=emails_or_slugs,

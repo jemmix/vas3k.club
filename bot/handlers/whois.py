@@ -84,8 +84,7 @@ async def command_whois(update: Update, context: CallbackContext) -> None:  # no
     if origin is not None:
         if origin.type == MessageOrigin.HIDDEN_USER:
             await update.message.reply_text(
-                f"🤨 Кажется, {origin.sender_user_name} скрыл свой профиль для пересылаемых сообщений. "
-                f"Попробуй дать команду в ответ на исходное сообщение",
+                f"🤨 Кажется, {origin.sender_user_name} скрыл свой профиль для пересылаемых сообщений. Попробуй дать команду в ответ на исходное сообщение",
                 do_quote=True,
             )
             return None

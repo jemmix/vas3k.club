@@ -284,16 +284,9 @@ class ViewPatreonLoginTests(TestCase):
                            PATREON_REDIRECT_URL="http://x-redirect_url.com",
                            PATREON_SCOPE="x-scope"):
             response = self.client.get(reverse("patreon_sync"), )
-            self.assertRedirects(
-                response=response,
-                expected_url=(
-                    "https://www.patreon.com/oauth2/authorize"
-                    "?client_id=x-client_id"
-                    "&redirect_uri=http%3A%2F%2Fx-redirect_url.com"
-                    "&response_type=code&scope=x-scope"
-                ),
-                fetch_redirect_response=False,
-            )
+            self.assertRedirects(response=response,
+                                 expected_url="https://www.patreon.com/oauth2/authorize?client_id=x-client_id&redirect_uri=http%3A%2F%2Fx-redirect_url.com&response_type=code&scope=x-scope",
+                                 fetch_redirect_response=False)
 
 
 @unittest.skipIf(not features.PATREON_AUTH_ENABLED, reason="Patreon auth was disabled")

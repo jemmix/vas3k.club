@@ -51,11 +51,7 @@ def godmode_list_model(request, model_name):
     queryset = admin_model.model.objects.all()
 
     # Apply filters and sorting using the filters module
-    queryset = apply_filters(
-        queryset, admin_model.model,
-        filter_field, filter_operator, filter_value,
-        sort_field, sort_direction
-    )
+    queryset = apply_filters(queryset, admin_model.model, filter_field, filter_operator, filter_value, sort_field, sort_direction)
 
     paginator = Paginator(queryset, ITEMS_PER_PAGE)
 

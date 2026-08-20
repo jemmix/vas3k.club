@@ -75,7 +75,4 @@ class TestBookmarksView(TestCase):
         response = self.client.get("/bookmarks/")
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            [post.slug for post in response.context["posts"].object_list],
-            ["bookmark-second", "bookmark-first"],
-        )
+        self.assertEqual([post.slug for post in response.context["posts"].object_list], ["bookmark-second", "bookmark-first"])
