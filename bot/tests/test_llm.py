@@ -9,15 +9,15 @@ from unittest.mock import patch, MagicMock
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "club.settings")
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
-import django
+import django  # noqa: E402
 django.setup()
 
-from django.test import TransactionTestCase
-from telegram import Update, Message, User as TgUser, Chat as TgChat
+from django.test import TransactionTestCase  # noqa: E402
+from telegram import Update, Message, User as TgUser, Chat as TgChat  # noqa: E402
 
-from bot.handlers.llm import llm_response
-from notifications.tests.telegram.test_common import BaseTelegramTest, ExpectedRequest, Request
-from users.models.user import User
+from bot.handlers.llm import llm_response  # noqa: E402
+from notifications.tests.telegram.test_common import BaseTelegramTest, ExpectedRequest, Request  # noqa: E402
+from users.models.user import User  # noqa: E402
 
 
 class LLMResponseTest(BaseTelegramTest, TransactionTestCase):

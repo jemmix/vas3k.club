@@ -18,13 +18,13 @@ import bot.config
 
 django.setup()
 
-import requests
-import urllib3
-from telegram import Update, Message, User as TgUser, Chat as TgChat, MessageEntity
-from telegram.ext import Application
+import requests  # noqa: E402
+import urllib3  # noqa: E402
+from telegram import Update, Message, User as TgUser, Chat as TgChat, MessageEntity  # noqa: E402
+from telegram.ext import Application  # noqa: E402
 
-from notifications.tests.telegram.test_common import BaseTelegramTest, ExpectedRequest, Request
-from users.models.user import User
+from notifications.tests.telegram.test_common import BaseTelegramTest, ExpectedRequest, Request  # noqa: E402
+from users.models.user import User  # noqa: E402
 
 log = logging.getLogger(__name__)
 

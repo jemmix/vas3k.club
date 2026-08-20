@@ -11,14 +11,14 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 django.setup()
 # THE END
 
-from helpdeskbot import config
-from helpdeskbot.handlers.question import update_discussion_message_id, QuestionHandler
-from helpdeskbot.handlers.answers import on_reply_message
+from helpdeskbot import config  # noqa: E402
+from helpdeskbot.handlers.question import update_discussion_message_id, QuestionHandler  # noqa: E402
+from helpdeskbot.handlers.answers import on_reply_message  # noqa: E402
 
-from django.conf import settings
-from telegram import Update, MessageOrigin
-from telegram.constants import ParseMode
-from telegram.ext import Application, CommandHandler, CallbackContext, filters, MessageHandler
+from django.conf import settings  # noqa: E402
+from telegram import Update, MessageOrigin  # noqa: E402
+from telegram.constants import ParseMode  # noqa: E402
+from telegram.ext import Application, CommandHandler, CallbackContext, filters, MessageHandler  # noqa: E402
 
 log = logging.getLogger(__name__)
 

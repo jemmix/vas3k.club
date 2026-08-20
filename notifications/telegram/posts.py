@@ -10,13 +10,22 @@ from ai.moderation import ai_rate_post_quality
 from common.regexp import USERNAME_RE
 
 log = logging.getLogger(__name__)
-from notifications.telegram.common import Chat, CLUB_CHANNEL, send_telegram_message, render_html_message, \
-    send_telegram_image, CLUB_CHAT, ADMIN_CHAT, CLUB_ONLINE, VIBES_CHAT
-from posts.models.post import Post
-from rooms.models import RoomSubscription
-from tags.models import Tag, UserTag
-from users.models.friends import Friend
-from users.models.user import User
+from notifications.telegram.common import (  # noqa: E402
+    Chat,
+    CLUB_CHANNEL,
+    send_telegram_message,
+    render_html_message,
+    send_telegram_image,
+    CLUB_CHAT,
+    ADMIN_CHAT,
+    CLUB_ONLINE,
+    VIBES_CHAT,
+)
+from posts.models.post import Post  # noqa: E402
+from rooms.models import RoomSubscription  # noqa: E402
+from tags.models import Tag, UserTag  # noqa: E402
+from users.models.friends import Friend  # noqa: E402
+from users.models.user import User  # noqa: E402
 
 REJECT_POST_REASONS = {
     "post": [
