@@ -8,6 +8,7 @@ from debug.helpers import HelperClient
 from users.models.user import User
 from posts.models.post import Post
 
+
 class ModelCreator:
     _exist_posts = 0
     _exist_users = 0
@@ -32,6 +33,7 @@ class ModelCreator:
             moderation_status=User.MODERATION_STATUS_APPROVED,
             slug="ujlbu4_{}".format(self._exist_users),
         )
+
 
 class TestPostViews(TestCase):
     def setUp(self):

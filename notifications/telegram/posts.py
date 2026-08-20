@@ -9,7 +9,6 @@ from django.urls import reverse
 from ai.moderation import ai_rate_post_quality
 from common.regexp import USERNAME_RE
 
-log = logging.getLogger(__name__)
 from notifications.telegram.common import Chat, CLUB_CHANNEL, send_telegram_message, render_html_message, \
     send_telegram_image, CLUB_CHAT, ADMIN_CHAT, CLUB_ONLINE, VIBES_CHAT
 from posts.models.post import Post
@@ -17,6 +16,8 @@ from rooms.models import RoomSubscription
 from tags.models import Tag, UserTag
 from users.models.friends import Friend
 from users.models.user import User
+
+log = logging.getLogger(__name__)
 
 REJECT_POST_REASONS = {
     "post": [
@@ -213,6 +214,7 @@ def notify_post_collectible_tag_owners(post):
                         parse_mode=ParseMode.HTML,
                         reply_markup=post_reply_markup(post),
                     )
+
 
 def notify_author_friends(post):
     notified_user_ids = set()

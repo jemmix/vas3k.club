@@ -4,6 +4,7 @@ from django.conf import settings
 
 from comments.models import Comment
 
+
 def is_comment_rate_limit_exceeded(post, user):
     if user.is_moderator:
         return False

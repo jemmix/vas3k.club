@@ -6,6 +6,7 @@ from users.models.user import User
 
 MAX_CLICKER_ID_LEN = 40
 
+
 class Click(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 

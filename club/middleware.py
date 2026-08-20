@@ -10,6 +10,7 @@ from club.exceptions import ClubException, ApiException
 
 log = logging.getLogger(__name__)
 
+
 def me(get_response):
     def middleware(request):
         request.me, request.my_session = authorized_user_with_session(request)

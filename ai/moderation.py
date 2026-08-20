@@ -43,6 +43,7 @@ POST_QUALITY_PROMPT = """Ты помощник модераторов нашег
 [если есть проблемы: коротко красные флаги, на которые обратить внимание модератору]
 """
 
+
 def ai_rate_post_quality(post: Post) -> str:
     moderation_guides = Post.visible_objects()\
         .filter(slug__in=CLUB_INFO_POST_SLUGS)

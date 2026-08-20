@@ -12,6 +12,7 @@ class UserUnmoderateForm(forms.Form):
         required=True
     )
 
+
 def get_unmoderate_action(request, user: User, **context):
     return render(request, "godmode/action.html", {
         **context,

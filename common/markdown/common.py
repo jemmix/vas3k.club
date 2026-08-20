@@ -12,6 +12,7 @@ ALLOWED_CSS_CLASSES_IN_MARKDOWN = {
     "border",
 }
 
+
 def split_title_and_css_classes(value) -> tuple[str, list]:
     if value.startswith("."):
         try:

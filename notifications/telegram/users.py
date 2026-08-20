@@ -8,10 +8,11 @@ from django.urls import reverse
 
 from ai.moderation import ai_rate_intro_quality
 
-log = logging.getLogger(__name__)
 from notifications.telegram.common import Chat, ADMIN_CHAT, send_telegram_message, render_html_message
 from bot.handlers.common import UserRejectReason
 from users.models.user import User
+
+log = logging.getLogger(__name__)
 
 
 def notify_profile_needs_review(user, intro):
