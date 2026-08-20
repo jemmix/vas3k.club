@@ -12,7 +12,6 @@ from unittest.mock import patch
 
 from stripe.webhook import WebhookSignature
 
-
 from payments.models import Payment
 from payments.products import PRODUCTS
 from debug.helpers import HelperClient

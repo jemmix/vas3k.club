@@ -51,7 +51,6 @@ async def unsubscribe(update: Update, context: CallbackContext) -> None:
     )
 
     if user.telegram_id:
-
         if is_unsubscribed:
             await update.callback_query.answer(
                 text=f"Вы отписались от о комментариев к посту «{post.title}» 🔕"

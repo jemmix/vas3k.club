@@ -11,21 +11,15 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 django.setup()
 # THE END
 
-from django.conf import settings  # noqa: E402
-from telegram import Update  # noqa: E402
-from telegram.constants import ParseMode  # noqa: E402
-from telegram.ext import (  # noqa: E402
-    Application,
-    CommandHandler,
-    MessageHandler,
-    CallbackContext,
-    filters,
-    CallbackQueryHandler,
-)
+from django.conf import settings
+from telegram import Update
+from telegram.constants import ParseMode
+from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, filters, \
+    CallbackQueryHandler
 
-from bot.cache import cached_telegram_users  # noqa: E402
-from bot.config import WELCOME_MESSAGE, BOT_MENTION_RE, ANONYMOUS_MESSAGE  # noqa: E402
-from bot.handlers import moderation, comments, upvotes, auth, whois, fun, top, posts, llm  # noqa: E402
+from bot.cache import cached_telegram_users
+from bot.config import WELCOME_MESSAGE, BOT_MENTION_RE, ANONYMOUS_MESSAGE
+from bot.handlers import moderation, comments, upvotes, auth, whois, fun, top, posts, llm
 
 log = logging.getLogger(__name__)
 
