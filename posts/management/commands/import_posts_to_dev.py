@@ -128,7 +128,7 @@ class Command(BaseCommand):
 
                 if item['_club']['type'] == "project":
                     # хак для постов типа "проект", чтобы не лазить по вастрику лишний раз
-                    defaults['image'] = author.avatar,
+                    defaults['image'] = author.avatar
 
                 try:
                     post = Post.objects.get(id=item['id'])
