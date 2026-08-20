@@ -15,7 +15,7 @@ class Invite(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
     code = models.CharField(max_length=32, unique=True)
-    user = models.ForeignKey("users.User",  related_name="invites", on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", related_name="invites", on_delete=models.CASCADE)
     payment = models.ForeignKey("payments.Payment", related_name="invites", on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
