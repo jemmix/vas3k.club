@@ -6,7 +6,6 @@ from unittest.mock import patch
 from comments.models import Comment
 from comments.views import create_comment
 from debug.helpers import HelperClient
-from posts.models.post import Post
 from posts.models.subscriptions import PostSubscription
 from posts.tests.test_views import ModelCreator
 
@@ -226,7 +225,7 @@ class TestDeleteComment(TestCase):
         client = HelperClient(self.other_user)
         client.authorise()
 
-        response = client.post(self._delete_url())
+        client.post(self._delete_url())
 
         self.comment.refresh_from_db()
         self.assertTrue(self.comment.is_deleted)
@@ -247,7 +246,7 @@ class TestDeleteComment(TestCase):
     def test_anonymous_cannot_delete(self):
         client = HelperClient()
         url = self._delete_url()
-        response = client.post(url)
+        client.post(url)
 
         self.comment.refresh_from_db()
         self.assertFalse(self.comment.is_deleted)

@@ -12,7 +12,6 @@ from unittest.mock import patch
 
 from stripe.webhook import WebhookSignature
 
-import authn.models.session
 
 from payments.models import Payment
 from payments.products import PRODUCTS

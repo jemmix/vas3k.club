@@ -1,12 +1,10 @@
 import logging
 
-from django.urls import reverse
 from telegram import Update
 from telegram.ext import CallbackContext
 
 from bot.decorators import ensure_fresh_db_connection
 from bot.handlers.common import get_club_user
-from club import settings
 from posts.models.post import Post
 from posts.models.subscriptions import PostSubscription
 
@@ -53,10 +51,6 @@ async def unsubscribe(update: Update, context: CallbackContext) -> None:
     )
 
     if user.telegram_id:
-        post_url = settings.APP_HOST + reverse("show_post", kwargs={
-            "post_type": post.type,
-            "post_slug": post.slug,
-        })
 
         if is_unsubscribed:
             await update.callback_query.answer(

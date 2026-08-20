@@ -6,7 +6,6 @@ from django.db import connection
 from django.utils.safestring import SafeString
 
 from comments.models import Comment
-from common.markdown.markdown import markdown_text
 from comments.templatetags.comments import comment_tree, render_comment, TreeComment
 from posts.models.post import Post
 from posts.renderers import _warm_comment_html_cache

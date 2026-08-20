@@ -7,11 +7,10 @@ from django.core.cache import cache
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404
 
-from authn.decorators.auth import require_auth
 from club.exceptions import AccessDenied, NotFound
 
 from authn.decorators.api import api
-from notifications.digests import generate_daily_digest, generate_weekly_digest
+from notifications.digests import generate_weekly_digest
 from notifications.helpers import verify_notification_token
 from users.models.user import User
 

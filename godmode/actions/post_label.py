@@ -2,7 +2,6 @@ from django import forms
 from django.shortcuts import render
 
 from common.data.labels import LABELS
-from notifications.telegram.common import send_telegram_message, ADMIN_CHAT
 from notifications.telegram.posts import notify_admins_on_post_label_changed
 from posts.models.post import Post
 from users.models.achievements import UserAchievement, Achievement

@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import uuid
-from django.conf import settings
 from django.test import TestCase
 
 from payments.models import Payment
@@ -69,7 +68,7 @@ class TestPaymentModel(TestCase):
 
     def test_finish_non_existent_payment_exception(self):
         with self.assertRaises(PaymentNotFound):
-            result = Payment.finish(reference="wrong-not-existed-reference",
+            Payment.finish(reference="wrong-not-existed-reference",
                                     status=Payment.STATUS_FAILED,
                                     data={"some": "data"})
 

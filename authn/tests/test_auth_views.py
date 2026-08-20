@@ -7,14 +7,13 @@ from django.urls import reverse
 from django.http.response import HttpResponseNotAllowed, HttpResponseBadRequest
 from django_q import brokers
 from django_q.signing import SignedPackage
-from unittest import skip
 from unittest.mock import patch
 
 from authn.models.session import Code
 from authn.providers.common import Membership, Platform
 from authn.exceptions import PatreonException
 from club import features
-from debug.helpers import HelperClient, JWT_STUB_VALUES
+from debug.helpers import HelperClient
 from notifications.helpers import generate_notification_token
 from users.models.user import User
 
@@ -83,7 +82,7 @@ class ViewsAuthTests(TestCase):
         self.assertEqual(response.status_code, HttpResponseNotAllowed.status_code)
 
     def test_debug_dev_login_unauthorised(self):
-        response = self.client.post(reverse("debug_dev_login"))
+        self.client.post(reverse("debug_dev_login"))
         self.assertTrue(self.client.is_authorised())
 
         me = self.client.print_me()
@@ -98,14 +97,14 @@ class ViewsAuthTests(TestCase):
     def test_debug_dev_login_authorised(self):
         self.client.authorise()
 
-        response = self.client.post(reverse("debug_dev_login"))
+        self.client.post(reverse("debug_dev_login"))
         self.assertTrue(self.client.is_authorised())
 
         me = self.client.print_me()
         self.assertTrue(me["slug"], self.new_user.slug)
 
     def test_debug_random_login_unauthorised(self):
-        response = self.client.post(reverse("debug_random_login"))
+        self.client.post(reverse("debug_random_login"))
         self.assertTrue(self.client.is_authorised())
 
         me = self.client.print_me()

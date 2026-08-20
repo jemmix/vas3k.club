@@ -11,7 +11,7 @@ from typing import Any, Protocol
 from unittest.mock import patch
 from urllib.parse import parse_qsl
 
-from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 import django
 from django.test import TestCase

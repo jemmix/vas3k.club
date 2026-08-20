@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 
 from django.test import TestCase
 
-from notifications.telegram.common import Chat
 from notifications.telegram.posts import (
     announce_in_club_chats,
     announce_in_club_channel,

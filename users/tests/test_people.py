@@ -93,7 +93,7 @@ class TestTagsWithStats(TestCase):
     def test_returns_correct_user_counts_per_tag(self):
         tag_a = Tag.objects.create(code="tpeople_a", group=Tag.GROUP_TECH, name="Tag A", is_visible=True)
         tag_b = Tag.objects.create(code="tpeople_b", group=Tag.GROUP_TECH, name="Tag B", is_visible=True)
-        tag_c = Tag.objects.create(code="tpeople_c", group=Tag.GROUP_TECH, name="Tag C", is_visible=True)
+        Tag.objects.create(code="tpeople_c", group=Tag.GROUP_TECH, name="Tag C", is_visible=True)
 
         u1 = _create_user("u1")
         u2 = _create_user("u2")

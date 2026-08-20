@@ -70,7 +70,7 @@ def ask_assistant(user_input: str) -> str:
         try:
             tool_args = json.loads(tool_call.arguments)
             result = tool(**tool_args)
-        except Exception as e:
+        except Exception:
             log.exception(f"Error calling tool {tool_call.name}")
             input_messages.append(tool_call)
             input_messages.append({

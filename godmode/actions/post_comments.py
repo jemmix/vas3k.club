@@ -1,9 +1,7 @@
-from datetime import datetime, timedelta
 
 from django import forms
 from django.shortcuts import render
 
-from notifications.telegram.posts import notify_post_collectible_tag_owners
 from posts.models.post import Post
 
 
