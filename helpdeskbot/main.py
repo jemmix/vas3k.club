@@ -41,9 +41,9 @@ async def on_telegram_admin_bot_message(update: Update, context: CallbackContext
     message = update.message
     origin = message.forward_origin
     if message.chat.id == int(config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_DISCUSSION_ID) \
-        and origin is not None and origin.type == MessageOrigin.CHANNEL \
-        and origin.chat.id == int(config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID) \
-        and origin.message_id:
+            and origin is not None and origin.type == MessageOrigin.CHANNEL \
+            and origin.chat.id == int(config.TELEGRAM_HELP_DESK_BOT_QUESTION_CHANNEL_ID) \
+            and origin.message_id:
         await update_discussion_message_id(update)
 
 

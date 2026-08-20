@@ -233,8 +233,8 @@ def notify_author_friends(post):
     friends = Friend.friends_for_user(post.author)
     for friend in friends:
         if friend.user_from.telegram_id \
-            and friend.is_subscribed_to_posts \
-            and friend.user_from.id not in notified_user_ids:
+                and friend.is_subscribed_to_posts \
+                and friend.user_from.id not in notified_user_ids:
             send_telegram_message(
                 chat=Chat(id=friend.user_from.telegram_id),
                 text=render_html_message("friend_post.html", post=post),

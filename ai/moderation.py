@@ -61,14 +61,14 @@ def ai_rate_post_quality(post: Post) -> str:
         input=[
             {"role": "user", "content": "Основные правила и ценности Клуба:\n\n"
                                         + "\n\n".join(f"{p.title}.\n\n{p.text}" for p in moderation_guides)
-            },
+             },
             {"role": "user", "content": f"Новый пост выглядит вот так:\n"
                                         f"Тип: {post.type}\n"
                                         f"Видимость наружу: {post.is_public}\n"
                                         f"Категория (комната): {post.room_id}\n"
                                         f"Название: {post.title}\n"
                                         f"Текст (Markdown): {post.text}"
-            },
+             },
             {"role": "user", "content": f"Похожие посты: {post_duplicates}"},
         ],
         temperature=MODERATION_TEMPERATURE,
@@ -122,14 +122,14 @@ def ai_rate_intro_quality(user: User, intro: Post) -> str:
         input=[
             {"role": "user", "content": "Основные правила и ценности Клуба:\n\n"
                                         + "\n\n".join(f"{p.title}.\n\n{p.text}" for p in moderation_guides)
-            },
+             },
             {"role": "user", "content": f"Новый пользователь выглядит вот так:\n"
                                         f"Имя: {user.full_name}\n"
                                         f"Чем занимаемся: {user.position} @ {user.company}\n"
                                         f"Город и страна: {user.city} {user.country}\n"
                                         f"Контакты и био: {user.bio}\n"
                                         f"Интро (Markdown): {intro.text}"
-            },
+             },
         ],
         temperature=MODERATION_TEMPERATURE,
         max_output_tokens=MODERATION_MAX_OUTPUT_TOKENS,

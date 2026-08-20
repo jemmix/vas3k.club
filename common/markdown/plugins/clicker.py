@@ -53,7 +53,7 @@ def _rewrite_list_item(tok: Dict[str, Any]) -> None:
         m = clicker_item.match(text)
         if m:
             mark = m.group(1)
-            first_child["text"] = text[m.end() :]
+            first_child["text"] = text[m.end():]
 
             tok["type"] = "clicker_item"
             tok["attrs"] = {"checked": mark != "[ ]"}

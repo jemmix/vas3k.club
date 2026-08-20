@@ -101,17 +101,17 @@ class ClubAdminModel:
     def get_list_fields(self):
         fields = []
         if self.list_fields:
-            for field in self.list_fields:
-                if isinstance(field, ClubAdminField):
-                    field.model_field = self.model._meta.get_field(field.name)
-                    fields.append(field)
+            for club_field in self.list_fields:
+                if isinstance(club_field, ClubAdminField):
+                    club_field.model_field = self.model._meta.get_field(club_field.name)
+                    fields.append(club_field)
                 else:
-                    fields.append(ClubAdminField.from_model_field(self.model._meta.get_field(field)))
+                    fields.append(ClubAdminField.from_model_field(self.model._meta.get_field(club_field)))
         else:
             fields = [
-                ClubAdminField.from_model_field(field)
-                for field in self.model._meta.fields
-                if field.name not in self.hide_fields
+                ClubAdminField.from_model_field(club_field)
+                for club_field in self.model._meta.fields
+                if club_field.name not in self.hide_fields
             ]
         return fields
 
@@ -129,30 +129,30 @@ class ClubAdminModel:
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
 
-                for field_name, field in self.fields.items():
+                for field_name, form_field in self.fields.items():
                     model_field = admin_model.model._meta.get_field(field_name)
 
                     # Handle foreign key fields - show PK in a text input
                     if isinstance(model_field, models.ForeignKey):
-                        field.widget = forms.TextInput()
+                        form_field.widget = forms.TextInput()
                         # Set the display value to the related object"s string representation
                         if self.instance and self.instance.pk:
                             related_obj = getattr(self.instance, field_name, None)
                             if related_obj:
-                                field.initial = related_obj.pk
+                                form_field.initial = related_obj.pk
 
                     if isinstance(model_field, PostgresArrayField):
-                        field = self.fields[field_name] = SimpleArrayField(
+                        form_field = self.fields[field_name] = SimpleArrayField(
                             forms.CharField(max_length=model_field.base_field.max_length),
-                            label=field.label,
-                            initial=field.initial,
+                            label=form_field.label,
+                            initial=form_field.initial,
                         )
 
                     # Set required based on model constraints
                     if not model_field.null and not model_field.blank and not model_field.has_default():
-                        field.required = True
+                        form_field.required = True
                     else:
-                        field.required = False
+                        form_field.required = False
         return DynamicModelForm
 
 

@@ -142,7 +142,7 @@ class Command(BaseCommand):
 
                 except Post.DoesNotExist:
                     post = Post.objects.create(**defaults)
-                    post.last_activity_at=item['date_modified']
+                    post.last_activity_at = item['date_modified']
                     post.save()
                     result['post_created'] += 1
                     self.stdout.write(f" 📄 \"{item['title']}\" запись создана")

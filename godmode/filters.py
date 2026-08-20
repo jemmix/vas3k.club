@@ -81,7 +81,7 @@ def apply_field_filter(queryset, model, filter_field, filter_operator, filter_va
 
         return queryset.filter(**filter_kwargs)
 
-    except:
+    except Exception:
         # If field doesn't exist, ignore the filter
         return queryset
 

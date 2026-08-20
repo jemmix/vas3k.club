@@ -57,7 +57,7 @@ def godmode_list_model(request, model_name):
 
     try:
         page_obj = paginator.page(page)
-    except:
+    except Exception:
         page_obj = paginator.page(1)
 
     # Extract model fields for table columns
