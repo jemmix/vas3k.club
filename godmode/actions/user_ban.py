@@ -14,7 +14,10 @@ class UserBanForm(forms.Form):
 
     temporary_ban_reason = forms.ChoiceField(
         label="Причина",
-        choices=[(key, f"{reason.name} ({reason.min_duration}+ дней)") for key, reason in TEMPORARY_BAN_REASONS.items()],
+        choices=[
+            (key, f"{reason.name} ({reason.min_duration}+ дней)")
+            for key, reason in TEMPORARY_BAN_REASONS.items()
+        ],
         required=False,
     )
 

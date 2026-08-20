@@ -3,7 +3,6 @@ from uuid import uuid4
 from django.db import models
 
 
-
 class WebhookEvent(models.Model):
     TYPE_EMAIL_BOUNCE = "email_bounce"
     TYPE_EMAIL_COMPLAINT = "email_complaint"

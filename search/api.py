@@ -26,9 +26,9 @@ def api_search_users(request):
                 .order_by("-last_activity_at")[:MAX_RESULTS]
     elif query:
         users = [r.user for r in SearchIndex
-            .search(query)
-            .filter(type=SearchIndex.TYPE_USER)
-            .order_by("-user__last_activity_at") if r.user][:MAX_RESULTS]
+                 .search(query)
+                 .filter(type=SearchIndex.TYPE_USER)
+                 .order_by("-user__last_activity_at") if r.user][:MAX_RESULTS]
 
     return JsonResponse({
         "users": [{

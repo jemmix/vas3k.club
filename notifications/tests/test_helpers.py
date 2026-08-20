@@ -60,8 +60,9 @@ class NotificationTokenTest(TestCase):
         with patch("django.core.signing.time.time", return_value=now):
             token = self._token()
 
-        with patch("django.core.signing.time.time", return_value=now + settings.NOTIFICATION_TOKEN_EXPIRATION_TIMEDELTA.total_seconds() - 1):
+        expires_at = now + settings.NOTIFICATION_TOKEN_EXPIRATION_TIMEDELTA.total_seconds()
+        with patch("django.core.signing.time.time", return_value=expires_at - 1):
             self.assertTrue(verify_notification_token(self.user, token))
 
-        with patch("django.core.signing.time.time", return_value=now + settings.NOTIFICATION_TOKEN_EXPIRATION_TIMEDELTA.total_seconds() + 1):
+        with patch("django.core.signing.time.time", return_value=expires_at + 1):
             self.assertFalse(verify_notification_token(self.user, token))

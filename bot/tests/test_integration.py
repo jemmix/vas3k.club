@@ -207,7 +207,10 @@ class BotIntegrationTest(BaseTelegramTest, TestCase):
 
     def _send_webhook_update(self, update: Update) -> requests.Response:
         """Retries on ConnectionRefused — the webhook server starts asynchronously."""
-        webhook_url = f"http://{settings.TELEGRAM_BOT_WEBHOOK_HOST}:{settings.TELEGRAM_BOT_WEBHOOK_PORT}/{self.TELEGRAM_TOKEN_VALUE}"
+        webhook_url = (
+            f"http://{settings.TELEGRAM_BOT_WEBHOOK_HOST}:{settings.TELEGRAM_BOT_WEBHOOK_PORT}"
+            f"/{self.TELEGRAM_TOKEN_VALUE}"
+        )
         session = requests.Session()
         session.mount("http://", requests.adapters.HTTPAdapter(
             max_retries=urllib3.util.Retry(connect=5, backoff_factor=0.1),

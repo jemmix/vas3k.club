@@ -251,8 +251,8 @@ class TestStripeWebhookView(TestCase):
             # subscription prolongated
             user = User.objects.get(id=self.existed_user.id)
             self.assertAlmostEqual(user.membership_expires_at,
-                                    self.existed_user.membership_expires_at + product['data']['timedelta'],
-                                    delta=timedelta(seconds=10))
+                                   self.existed_user.membership_expires_at + product['data']['timedelta'],
+                                   delta=timedelta(seconds=10))
 
     @skip("do we need throw error in case payment not found?")
     def test_event_checkout_session_completed_negative_payment_not_found(self):
@@ -333,8 +333,8 @@ class TestStripeWebhookView(TestCase):
             # subscription prolonged
             user = User.objects.get(id=self.existed_user.id)
             self.assertAlmostEqual(user.membership_expires_at,
-                                    self.existed_user.membership_expires_at + product['data']['timedelta'],
-                                    delta=timedelta(seconds=10))
+                                   self.existed_user.membership_expires_at + product['data']['timedelta'],
+                                   delta=timedelta(seconds=10))
 
     @skip("do we need throw error in case payment not found?")
     def test_event_invoice_paid_negative_user_not_found(self):

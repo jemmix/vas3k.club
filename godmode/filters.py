@@ -40,8 +40,8 @@ def apply_any_field_filter(queryset, model, filter_value):
     text_fields = []
     for field in model._meta.fields:
         if isinstance(field, (models.CharField, models.TextField, models.EmailField,
-                             models.IntegerField, models.DecimalField, models.FloatField,
-                             models.DateField, models.DateTimeField, models.BooleanField)):
+                              models.IntegerField, models.DecimalField, models.FloatField,
+                              models.DateField, models.DateTimeField, models.BooleanField)):
             text_fields.append(field.name)
 
     if not text_fields:

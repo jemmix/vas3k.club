@@ -69,8 +69,8 @@ class TestPaymentModel(TestCase):
     def test_finish_non_existent_payment_exception(self):
         with self.assertRaises(PaymentNotFound):
             Payment.finish(reference="wrong-not-existed-reference",
-                                    status=Payment.STATUS_FAILED,
-                                    data={"some": "data"})
+                           status=Payment.STATUS_FAILED,
+                           data={"some": "data"})
 
 
 class TestProducts(TestCase):
@@ -97,7 +97,7 @@ class TestProducts(TestCase):
 
         user = User.objects.get(id=existed_user.id)
         self.assertAlmostEqual(user.membership_expires_at, future_membership_expiration + timedelta(days=366),
-                                delta=timedelta(seconds=10))
+                               delta=timedelta(seconds=10))
         self.assertEqual(user.membership_platform_type, User.MEMBERSHIP_PLATFORM_DIRECT)
         self.assertEqual(user.membership_platform_data, {"reference": new_payment.reference,
                                                          "recurrent": "yearly"})
@@ -124,7 +124,7 @@ class TestProducts(TestCase):
 
         user = User.objects.get(id=existed_user.id)
         self.assertAlmostEqual(user.membership_expires_at, datetime.utcnow() + timedelta(days=366),
-                                delta=timedelta(seconds=10))
+                               delta=timedelta(seconds=10))
         self.assertEqual(user.membership_platform_type, User.MEMBERSHIP_PLATFORM_DIRECT)
         self.assertEqual(user.membership_platform_data, {"reference": new_payment.reference,
                                                          "recurrent": "yearly"})
